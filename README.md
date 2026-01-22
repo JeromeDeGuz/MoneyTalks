@@ -1,11 +1,24 @@
-# MoneyTalks
+# 🧧MoneyTalks
+MoneyTalks is an offline-first expense tracking app that keeps money logging simple and stress-free. Users can quickly add daily expenses and clearly see where their money goes, without accounts, bank connections, or complicated setup. Everything stays local, private, and easy to manage.
 
-MoneyTalks is an offline first expense tracking app that helps people easily record daily spending and understand where their money goes. Many people rely on memory, notes apps, or spreadsheets to track spending, which often leads to missed entries and confusion. MoneyTalks lightens mental load, clear scattered notes, and replaces difficult to manage spreadsheets, with a focused and easy to use system that keeps expense tracking simple, and consistent.
 
-MoneyTalks allows for quick manual entry of expenses, with a few required fields. Such as, amount, date, and category, with additional optional fields for notes, sorting or filtering purposes. Providing a complete expense history with detailed views that can be accessed and edited when needed. This is an app designed for everyday users, from students managing limited budgets, working professionals tracking daily costs, parents handling household expenses, to part time workers trying to stay organized. Supporting different situational usage where routines are busy and mistakes can happen, allowing users to easily adjust entries and stay consistent without feeling overwhelmed.
+## 🌱Vision Statement
 
-Managing money can feel overwhelming when spending is not clearly visible. Which is why MoneyTalks primary goal is to provide clarity and control over everyday finances without creating stress or complexity. By encouraging quick manual entry and structured organization, the app helps users build awareness of their spending habits over time. Instead of wondering where money disappeared at the end of the month, users can clearly see how small daily expenses accumulate and how different categories such as food, rent, and transportation impact their budget.
+The vision of MoneyTalks is to provide a simple and accessible expense tracking solution that helps users gain clarity and control over their personal finances.
 
-MoneyTalks is designed to work fully offline and store all data locally on the device, ensuring reliability and privacy. Users do not need to create accounts or connect bank services, allowing them to trust that their personal financial information remains private and under their control at all times. This reliability and simplicity help users feel confident, organized, and more in control of their financial decisions.
+View the full vision statement here  
+[https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/VisionStatement.md?ref_type=heads]
 
-The success of MoneyTalks will be measured through clear and objective criteria focused on usability, correctness, and reliability. Users must be able to consistently add, view, edit, and delete expense entries, with all data persisting correctly after the app is restarted. Expense lists, detailed views, and summaries must accurately reflect stored data. Search, filtering, and category based views must return correct results when tested with realistic sample data. In addition, core business logic must pass unit and integration tests in the course environment. When these conditions are met, MoneyTalks will have successfully achieved its goal of making expense tracking simple, meaningful, and accessible for everyday users.
+## 🦾Team Agreement
+This project follows a shared team agreement that defines expectations for collaboration, communication, and individual responsibilities.
+
+View the team agreement here  
+[https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/work-agreement-template.docx?ref_type=heads]
+
+## 🐞Team Members
+We’re Bug Bytes, the team behind MoneyTalks:
+- Ali, Zia 
+- De Guzman, Jerome
+- Ekeh, Chukwuemeka Benedict-Mary 
+- Lo, Yu-Ting  
+
