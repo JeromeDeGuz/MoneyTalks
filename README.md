@@ -11,7 +11,7 @@ View the full [**Vision Statement**](https://code.cs.umanitoba.ca/comp3350-winte
 ## 🦾Team Agreement
 This project follows a shared team agreement that defines expectations for collaboration, communication, and individual responsibilities.
 
-View the team agreement [**Team Agreement**](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/work-agreement-template.docx?ref_type=heads) here.
+View the [**Team Agreement**](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/work-agreement-template.docx?ref_type=heads) here.
 
 ## 🐞Team Members
 We’re Bug Bytes, the team behind MoneyTalks:
