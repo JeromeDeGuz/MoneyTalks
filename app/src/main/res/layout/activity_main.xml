@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="60dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
+
+    <!-- Title -->
+    <EditText
+        android:id="@+id/titleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#666666"
+        android:hint="@string/item_title"
+        android:importantForAutofill="no"
+        android:maxWidth="320dp"
+        android:minHeight="48dp"
+        android:inputType="text"
+        android:textSize="16sp" />
+
+    <!-- Description -->
+    <EditText
+        android:id="@+id/descInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#666666"
+        android:hint="@string/item_description"
+        android:minHeight="48dp"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textSize="16sp" />
+
+    <!-- Add button -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <!-- List -->
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#666666"
+        android:text="@string/button_add_to_do"
+        android:maxWidth="320dp"
+        android:textSize="14sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todoList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="16sp"/>
+
+</LinearLayout>
