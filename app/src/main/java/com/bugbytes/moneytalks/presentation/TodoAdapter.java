@@ -9,20 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.R;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
 
-    private final List<Item> items = new ArrayList<>();
+    private final List<Expense> items = new ArrayList<>();
 
-    public TodoAdapter(List<Item> initialItems) {
+    public TodoAdapter(List<Expense> initialItems) {
         setItems(initialItems);
     }
 
-    public void setItems(List<Item> newItems) {
+    public void setItems(List<Expense> newItems) {
         items.clear();
         if (newItems != null) {
             items.addAll(newItems);
@@ -30,7 +30,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         notifyDataSetChanged();
     }
 
-    public Item getItemAt(int position) {
+    public Expense getItemAt(int position) {
         return items.get(position);
     }
 
@@ -44,7 +44,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-        Item item = items.get(position);
+        Expense item = items.get(position);
 
         holder.title.setText(item.getTitle());
 

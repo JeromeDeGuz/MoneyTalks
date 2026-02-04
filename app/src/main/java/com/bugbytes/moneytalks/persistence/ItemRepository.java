@@ -1,16 +1,16 @@
 package com.bugbytes.moneytalks.persistence;
 
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 import java.util.List;
 
 public interface ItemRepository {
-    List<Item> getAll();
+    List<Expense> getAll();
 
-    Item getById(int id);
+    Expense getById(int id);
 
-    Item add(Item item);
+    Expense add(Expense item);
 
-    boolean update(Item item);
+    boolean update(Expense item);
 
     boolean delete(int id);
 }

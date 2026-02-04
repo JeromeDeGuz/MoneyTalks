@@ -1,11 +1,11 @@
 package com.bugbytes.moneytalks.models;
 
-public class Item {
+public class Expense {
     private int id;
     private String title;
     private String description;
 
-    public Item(int id, String title, String description) {
+    public Expense(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;

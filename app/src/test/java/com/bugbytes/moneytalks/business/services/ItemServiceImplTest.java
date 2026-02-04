@@ -1,7 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ValidationException;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ItemRepository;
 import com.bugbytes.moneytalks.persistence.fake.FakeItemRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,14 +25,14 @@ class ItemServiceImplTest {
 
     @Test
     void getAllItems_initiallyEmpty() {
-        List<Item> items = service.getAllItems();
+        List<Expense> items = service.getAllItems();
         assertNotNull(items);
         assertEquals(0, items.size());
     }
 
     @Test
     void addItem_assignsId_andTrimsFields() {
-        Item created = service.addItem("  Buy milk  ", "  2% please  ");
+        Expense created = service.addItem("  Buy milk  ", "  2% please  ");
 
         assertNotNull(created);
         assertTrue(created.getId() > 0);
@@ -42,11 +42,11 @@ class ItemServiceImplTest {
 
     @Test
     void addItem_nullOrBlankDescription_becomesNull() {
-        Item created1 = service.addItem("Task", "   ");
+        Expense created1 = service.addItem("Task", "   ");
         assertNotNull(created1);
         assertNull(created1.getDescription());
 
-        Item created2 = service.addItem("Task2", null);
+        Expense created2 = service.addItem("Task2", null);
         assertNotNull(created2);
         assertNull(created2.getDescription());
     }
@@ -74,7 +74,7 @@ class ItemServiceImplTest {
 
     @Test
     void addItem_tags_areTrimmed_deduped_caseInsensitive_andBlanksRemoved() {
-        Item created = service.addItem(
+        Expense created = service.addItem(
                 "Task",
                 "Desc"
         );
@@ -84,12 +84,12 @@ class ItemServiceImplTest {
 
     @Test
     void updateItem_updatesExisting_returnsTrue() {
-        Item created = service.addItem("Old", "Old desc");
+        Expense created = service.addItem("Old", "Old desc");
 
         boolean ok = service.updateItem(created.getId(), "New", "New desc");
         assertTrue(ok);
 
-        Item reloaded = repo.getById(created.getId());
+        Expense reloaded = repo.getById(created.getId());
         assertNotNull(reloaded);
         assertEquals("New", reloaded.getTitle());
         assertEquals("New desc", reloaded.getDescription());
@@ -104,12 +104,12 @@ class ItemServiceImplTest {
 
     @Test
     void updateItem_rejectsInvalidTitle_andDoesNotModify() {
-        Item created = service.addItem("Good", "Desc");
+        Expense created = service.addItem("Good", "Desc");
 
         assertThrows(ValidationException.class,
                 () -> service.updateItem(created.getId(), "   ", "New"));
 
-        Item reloaded = repo.getById(created.getId());
+        Expense reloaded = repo.getById(created.getId());
         assertNotNull(reloaded);
         assertEquals("Good", reloaded.getTitle());
         assertEquals("Desc", reloaded.getDescription());
@@ -117,7 +117,7 @@ class ItemServiceImplTest {
 
     @Test
     void deleteItem_existing_returnsTrue_andRemoves() {
-        Item created = service.addItem("Task", "Desc");
+        Expense created = service.addItem("Task", "Desc");
 
         boolean ok = service.deleteItem(created.getId());
         assertTrue(ok);
@@ -134,12 +134,12 @@ class ItemServiceImplTest {
 
     @Test
     void addTwoItems_idsAreDifferent_andGetAllReturnsBoth() {
-        Item a = service.addItem("A", null);
-        Item b = service.addItem("B", null);
+        Expense a = service.addItem("A", null);
+        Expense b = service.addItem("B", null);
 
         assertNotEquals(a.getId(), b.getId());
 
-        List<Item> items = service.getAllItems();
+        List<Expense> items = service.getAllItems();
         assertEquals(2, items.size());
     }
 
