@@ -1,7 +1,7 @@
 package com.bugbytes.moneytalks.persistence.fake;
 
 import com.bugbytes.moneytalks.persistence.ItemRepository;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,24 +9,24 @@ import java.util.List;
 
 public class FakeItemRepository implements ItemRepository {
 
-    private final List<Item> items = new ArrayList<>();
+    private final List<Expense> items = new ArrayList<>();
     private int nextId = 1;
 
     @Override
-    public List<Item> getAll() {
+    public List<Expense> getAll() {
         return Collections.unmodifiableList(items);
     }
 
     @Override
-    public Item getById(int id) {
-        for (Item item : items) {
+    public Expense getById(int id) {
+        for (Expense item : items) {
             if (item.getId() == id) return item;
         }
         return null;
     }
 
     @Override
-    public Item add(Item item) {
+    public Expense add(Expense item) {
         if (item == null) return null;
 
         int id = item.getId();
@@ -37,18 +37,18 @@ public class FakeItemRepository implements ItemRepository {
             return null;
         }
 
-        Item stored = new Item(id, item.getTitle(), item.getDescription());
+        Expense stored = new Expense(id, item.getTitle(), item.getDescription());
         items.add(stored);
         return stored;
     }
 
     @Override
-    public boolean update(Item item) {
+    public boolean update(Expense item) {
         if (item == null) return false;
 
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId() == item.getId()) {
-                Item updated = new Item(item.getId(), item.getTitle(), item.getDescription());
+                Expense updated = new Expense(item.getId(), item.getTitle(), item.getDescription());
                 items.set(i, updated);
                 return true;
             }

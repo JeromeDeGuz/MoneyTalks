@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.bugbytes.moneytalks.business.services.ItemService;
 import com.bugbytes.moneytalks.business.services.ItemServiceImpl;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ItemRepository;
 import com.bugbytes.moneytalks.persistence.real.AppDbHelper;
 import com.bugbytes.moneytalks.persistence.real.SqlItemRepository;
@@ -39,7 +39,7 @@ public class ItemServiceSqlRepoIT {
 
     @Test
     public void addUpdateDelete_flow_worksAcrossLayers() {
-        Item created = service.addItem(
+        Expense created = service.addItem(
                 "  Laundry  ",
                 "  wash + dry  ");
 
@@ -48,7 +48,7 @@ public class ItemServiceSqlRepoIT {
         assertEquals("Laundry", created.getTitle());
         assertEquals("wash + dry", created.getDescription());
 
-        List<Item> afterAdd = service.getAllItems();
+        List<Expense> afterAdd = service.getAllItems();
         assertEquals(1, afterAdd.size());
         assertEquals(created.getId(), afterAdd.get(0).getId());
 
@@ -58,7 +58,7 @@ public class ItemServiceSqlRepoIT {
                 null);
         assertTrue(updated);
 
-        Item reloaded = repo.getById(created.getId());
+        Expense reloaded = repo.getById(created.getId());
         assertNotNull(reloaded);
         assertEquals("Laundry (updated)", reloaded.getTitle());
         assertNull(reloaded.getDescription());

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.persistence.ItemRepository;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class SqlItemRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> getAll() {
+    public List<Expense> getAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(
                 AppDbHelper.TABLE_ITEM,
@@ -28,13 +28,13 @@ public class SqlItemRepository implements ItemRepository {
                 AppDbHelper.COL_ITEM_ID + " DESC"
         );
 
-        List<Item> result = new ArrayList<>();
+        List<Expense> result = new ArrayList<>();
         try {
             while (c.moveToNext()) {
                 int id = c.getInt(c.getColumnIndexOrThrow(AppDbHelper.COL_ITEM_ID));
                 String title = c.getString(c.getColumnIndexOrThrow(AppDbHelper.COL_ITEM_TITLE));
                 String desc = c.getString(c.getColumnIndexOrThrow(AppDbHelper.COL_ITEM_DESC));
-                result.add(new Item(id, title, desc));
+                result.add(new Expense(id, title, desc));
             }
         } finally {
             c.close();
@@ -43,7 +43,7 @@ public class SqlItemRepository implements ItemRepository {
     }
 
     @Override
-    public Item getById(int id) {
+    public Expense getById(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(
                 AppDbHelper.TABLE_ITEM,
@@ -57,14 +57,14 @@ public class SqlItemRepository implements ItemRepository {
             if (!c.moveToFirst()) return null;
             String title = c.getString(c.getColumnIndexOrThrow(AppDbHelper.COL_ITEM_TITLE));
             String desc = c.getString(c.getColumnIndexOrThrow(AppDbHelper.COL_ITEM_DESC));
-            return new Item(id, title, desc);
+            return new Expense(id, title, desc);
         } finally {
             c.close();
         }
     }
 
     @Override
-    public Item add(Item item) {
+    public Expense add(Expense item) {
         if (item == null) return null;
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -87,7 +87,7 @@ public class SqlItemRepository implements ItemRepository {
     }
 
     @Override
-    public boolean update(Item item) {
+    public boolean update(Expense item) {
         if (item == null) return false;
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();

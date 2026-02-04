@@ -1,7 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ItemValidator;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ItemRepository;
 
 import java.util.List;
@@ -21,15 +21,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public List<Expense> getAllItems() {
         return repo.getAll();
     }
 
     @Override
-    public Item addItem(String title, String description) {
+    public Expense addItem(String title, String description) {
         validator.validate(title, description);
 
-        Item toCreate = new Item(0, title.trim(), safeTrim(description));
+        Expense toCreate = new Expense(0, title.trim(), safeTrim(description));
 
         return repo.add(toCreate);
     }
@@ -38,10 +38,10 @@ public class ItemServiceImpl implements ItemService {
     public boolean updateItem(int id, String title, String description) {
         validator.validate(title, description);
 
-        Item existing = repo.getById(id);
+        Expense existing = repo.getById(id);
         if (existing == null) return false;
 
-        Item updated = new Item(id, title.trim(), safeTrim(description));
+        Expense updated = new Expense(id, title.trim(), safeTrim(description));
 
         return repo.update(updated);
     }

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugbytes.moneytalks.R;
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
 import com.bugbytes.moneytalks.business.services.ItemService;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshList() {
-        List<Item> items = itemService.getAllItems();
+        List<Expense> items = itemService.getAllItems();
         adapter.setItems(items);
     }
 

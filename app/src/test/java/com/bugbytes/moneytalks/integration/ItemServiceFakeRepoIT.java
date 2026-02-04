@@ -2,7 +2,7 @@ package com.bugbytes.moneytalks.integration;
 
 import com.bugbytes.moneytalks.business.services.ItemService;
 import com.bugbytes.moneytalks.business.services.ItemServiceImpl;
-import com.bugbytes.moneytalks.models.Item;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ItemRepository;
 import com.bugbytes.moneytalks.persistence.fake.FakeItemRepository;
 
@@ -27,7 +27,7 @@ class ItemServiceFakeRepoIT {
     @Test
     void addUpdateDelete_flow_worksAcrossLayers() {
         // ADD (UI would call service with raw strings)
-        Item created = service.addItem(
+        Expense created = service.addItem(
                 "  Laundry  ",
                 "  wash + dry  ");
 
@@ -37,7 +37,7 @@ class ItemServiceFakeRepoIT {
         assertEquals("wash + dry", created.getDescription());
 
         // READ (service -> repo)
-        List<Item> afterAdd = service.getAllItems();
+        List<Expense> afterAdd = service.getAllItems();
         assertEquals(1, afterAdd.size());
         assertEquals(created.getId(), afterAdd.get(0).getId());
 
@@ -49,7 +49,7 @@ class ItemServiceFakeRepoIT {
         );
         assertTrue(updated);
 
-        Item reloaded = repo.getById(created.getId()); // directly check persistence state
+        Expense reloaded = repo.getById(created.getId()); // directly check persistence state
         assertNotNull(reloaded);
         assertEquals("Laundry (updated)", reloaded.getTitle());
         assertNull(reloaded.getDescription());
