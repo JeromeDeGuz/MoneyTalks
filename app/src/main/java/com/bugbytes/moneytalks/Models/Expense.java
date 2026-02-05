@@ -6,8 +6,8 @@ public class Expense {
     private String name;
     private double amount;
     private String category;
-    private String date;   // simple for Iteration 1 (can change later)
-    private String note;   // optional
+    private String date;   //simple for Iteration 1 (can change later)
+    private String note;   //optional
 
     public Expense(int id, String name, double amount, String category, String date, String note) {
         this.id = id;
@@ -18,7 +18,7 @@ public class Expense {
         this.note = note;
     }
 
-    // Getters
+    //Getters
     public int getId() {
         return id;
     }
@@ -30,8 +30,6 @@ public class Expense {
     public double getAmount() {
         return amount;
     }
-
-
 
     public String getCategory() {
         return category;
@@ -45,7 +43,7 @@ public class Expense {
         return note;
     }
 
-    // Setters
+    //Setters
     public void setAmount(double amount) {
         this.amount = amount;
     }
