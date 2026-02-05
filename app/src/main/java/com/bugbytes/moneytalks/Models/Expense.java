@@ -26,6 +26,8 @@ public class Expense {
         return amount;
     }
 
+
+
     public String getCategory() {
         return category;
     }
