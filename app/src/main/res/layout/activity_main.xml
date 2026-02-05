@@ -24,6 +24,32 @@
         android:inputType="text"
         android:textSize="16sp" />
 
+    <!-- Price -->
+    <EditText
+        android:id="@+id/editTextNumberDecimal4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColorHint="#666666"
+        android:hint="@string/item_price"
+        android:minHeight="48dp"
+        android:importantForAutofill="no"
+        android:textSize="16sp"
+        android:inputType="numberDecimal" />
+
+    <!-- Date -->
+    <EditText
+        android:id="@+id/dateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/date_hint_format"
+        android:importantForAutofill="no"
+        android:focusable="false"
+        android:clickable="true"
+        android:minHeight="48dp"
+        android:textColorHint="#666666"
+        android:textSize="16sp" />
+
     <!-- Description -->
     <EditText
         android:id="@+id/descInput"
@@ -38,19 +64,17 @@
 
     <!-- Add button -->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
     <!-- List -->
+
     <Button
         android:id="@+id/addButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#666666"
-        android:text="@string/button_add_to_do"
-        android:maxWidth="320dp"
-        android:textSize="14sp"/>
+        android:text="@string/button_add_expense"
+        android:textSize="14sp"
+        android:backgroundTint="#D32F2F"
+        android:textColor="#FFFFFF" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoList"
@@ -58,5 +82,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:textSize="16sp"/>
+
+
+
 
 </LinearLayout>
