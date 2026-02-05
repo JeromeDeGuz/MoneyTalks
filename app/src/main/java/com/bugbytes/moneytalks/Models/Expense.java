@@ -3,6 +3,7 @@ package com.bugbytes.moneytalks.Models;
 public class Expense {
 
     private int id;
+    private String name;
     private double amount;
     private String category;
     private String date;   // simple for Iteration 1 (can change later)
