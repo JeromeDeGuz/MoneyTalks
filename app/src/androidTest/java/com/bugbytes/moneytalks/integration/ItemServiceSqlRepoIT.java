@@ -5,12 +5,7 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.bugbytes.moneytalks.business.services.ItemService;
-import com.bugbytes.moneytalks.business.services.ItemServiceImpl;
 import com.bugbytes.moneytalks.models.Expense;
-import com.bugbytes.moneytalks.persistence.ItemRepository;
-import com.bugbytes.moneytalks.persistence.real.AppDbHelper;
-import com.bugbytes.moneytalks.persistence.real.SqlItemRepository;
 
 import org.junit.Before;
 import org.junit.Test;

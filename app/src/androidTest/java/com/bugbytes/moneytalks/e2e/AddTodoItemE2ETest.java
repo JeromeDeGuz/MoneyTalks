@@ -14,8 +14,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.bugbytes.moneytalks.R;
-import com.bugbytes.moneytalks.persistence.real.AppDbHelper;
-import com.bugbytes.moneytalks.presentation.MainActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
