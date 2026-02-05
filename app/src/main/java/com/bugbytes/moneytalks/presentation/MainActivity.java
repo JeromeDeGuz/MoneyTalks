@@ -1,5 +1,6 @@
 package com.bugbytes.moneytalks.presentation;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,8 +14,11 @@ import com.bugbytes.moneytalks.application.MoneyTalksApp;
 import com.bugbytes.moneytalks.business.services.ItemService;
 import com.bugbytes.moneytalks.models.Expense;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText titleInput;
     private EditText descInput;
+    private EditText dateInput;
+    private EditText priceInput;
+
 
     private TodoAdapter adapter;
 
@@ -34,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         titleInput = findViewById(R.id.titleInput);
         descInput = findViewById(R.id.descInput);
+        dateInput = findViewById(R.id.dateInput);
+        priceInput = findViewById(R.id.editTextNumberDecimal4);
+
+        setupDatePicker();
 
         Button addButton = findViewById(R.id.addButton);
 
@@ -41,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new TodoAdapter(new ArrayList<>());
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
+
         addButton.setOnClickListener(v -> {
             try {
                 itemService.addItem(
@@ -56,7 +68,35 @@ public class MainActivity extends AppCompatActivity {
                 titleInput.requestFocus();
             }
         });
+
         refreshList();
+    }
+
+
+    private void setupDatePicker() {
+        dateInput.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dialog = new DatePickerDialog(
+                    this,
+                    (view, y, m, d) -> {
+                        Calendar selected = Calendar.getInstance();
+                        selected.set(y, m, d);
+
+                        SimpleDateFormat sdf =
+                                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+
+                        dateInput.setText(sdf.format(selected.getTime()));
+                    },
+                    year, month, day
+            );
+
+            dialog.show();
+        });
     }
 
     private void refreshList() {
@@ -67,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private void clearInputs() {
         titleInput.setText("");
         descInput.setText("");
+        dateInput.setText("");
+        priceInput.setText("");
     }
 
 }

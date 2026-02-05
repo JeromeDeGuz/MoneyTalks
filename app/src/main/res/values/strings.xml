@@ -11,7 +11,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+5        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
         diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
         ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
         Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
@@ -45,6 +45,11 @@
     </string>
     <string name="item_description">Description</string>
     <string name="item_title">Title</string>
+    <string name="item_price">Price</string>
+    <string name="item_date">Date</string>
+    <string name="item_year">Year</string>
+    <string name="item_month">Month</string>
+    <string name="date_hint_format">DD MM YYYY</string>
     <string name="item_hint_tags_comma_separated">Tags (comma separated)</string>
-    <string name="button_add_to_do">Add To-Do</string>
+    <string name="button_add_expense">Add Expense</string>
 </resources>

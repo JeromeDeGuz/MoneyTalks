@@ -34,6 +34,26 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         return items.get(position);
     }
 
+
+    static class TodoViewHolder extends RecyclerView.ViewHolder {
+        final TextView date;
+        final TextView title;
+        final TextView price;
+
+        TodoViewHolder(@NonNull View itemView) {
+            super(itemView);
+            date = itemView.findViewById(R.id.itemDate);
+            title = itemView.findViewById(R.id.itemTitle);
+            price = itemView.findViewById(R.id.itemPrice);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
+        Expense item = items.get(position);
+        holder.title.setText(item.getTitle());
+    }
+
     @NonNull
     @Override
     public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,29 +63,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-        Expense item = items.get(position);
-
-        holder.title.setText(item.getTitle());
-
-        // Avoid showing "null" in the UI
-        String desc = item.getDescription();
-        holder.desc.setText(desc == null ? "" : desc);
-    }
-
-    @Override
     public int getItemCount() {
         return items.size();
     }
 
-    static class TodoViewHolder extends RecyclerView.ViewHolder {
-        final TextView title;
-        final TextView desc;
-
-        TodoViewHolder(@NonNull View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.itemTitle);
-            desc = itemView.findViewById(R.id.itemDesc);
-        }
-    }
 }
