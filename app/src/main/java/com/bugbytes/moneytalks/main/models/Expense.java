@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.models;
+package com.bugbytes.moneytalks.main.models;
 
 public class Expense
 {
