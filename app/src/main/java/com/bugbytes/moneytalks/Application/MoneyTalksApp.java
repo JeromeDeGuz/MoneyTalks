@@ -2,12 +2,19 @@ package com.bugbytes.moneytalks.Application;
 
 import android.app.Application;
 
-import com.bugbytes.moneytalks.Business.Services.;
-import com.lameault.sample_project.business.services.ItemServiceImpl;
-import com.lameault.sample_project.persistence.ItemRepository;
-import com.lameault.sample_project.persistence.real.AppDbHelper;
-import com.lameault.sample_project.persistence.real.SqlItemRepository;
+import com.bugbytes.moneytalks.Business.Services.ExpenseService;
+import com.bugbytes.moneytalks.Business.Services.ExpenseServiceImpl;
+import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
+
 
 public class MoneyTalksApp extends Application {
 
+    private ExpenseService expenseService;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+
+    }
 }
