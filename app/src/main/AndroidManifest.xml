@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name="com.bugbytes.moneytalks.application.MoneyTalksApp"
+        android:name=".Application.MoneyTalksApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,19 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sample_project">
-
         <activity
-            android:name="com.bugbytes.moneytalks.presentation.MainActivity"
+            android:name=".Presentation.AddExpense"
+            android:exported="false" />
+        <activity
+            android:name=".Presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Sample_project">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>
