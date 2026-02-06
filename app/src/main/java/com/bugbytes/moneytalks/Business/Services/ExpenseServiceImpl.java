@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.Business.Services;
 
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
 import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
 import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
 import com.bugbytes.moneytalks.Models.Expense;
@@ -27,15 +26,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense addItem(String name, double amount, String category, String date, String note ) {
+    public void addItem(String name, double amount, String category, String date, String note ) {
         expenseValidator.validate(name, amount);
 
         Expense toCreate = new Expense(0, name, 0, category, date, note);
 
-        return expenseRepository.add(toCreate);
+        expenseRepository.add(toCreate);
 
 
-    }
+        }
 
     @Override
     public boolean updateItem(int id, String name, double amount, String category, String date, String note) {
