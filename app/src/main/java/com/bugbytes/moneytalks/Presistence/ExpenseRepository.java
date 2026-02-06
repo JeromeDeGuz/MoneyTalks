@@ -13,5 +13,5 @@ public interface ExpenseRepository {
 
     void update(Expense expense);
 
-    void delete(int id);
+    boolean delete(int id);
 }
