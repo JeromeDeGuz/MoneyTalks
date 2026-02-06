@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoneyTalks</string>
+
+    <string name="item_description">Description</string>
+    <string name="item_title">Title</string>
+    <string name="item_price">Price</string>
+    <string name="item_date">Date</string>
+    <string name="item_year">Year</string>
+    <string name="item_month">Month</string>
+    <string name="date_hint_format">DD MM YYYY</string>
+    <string name="item_hint_tags_comma_separated">Tags (comma separated)</string>
+    <string name="button_add_expense">Add Expense</string>
+</resources>
