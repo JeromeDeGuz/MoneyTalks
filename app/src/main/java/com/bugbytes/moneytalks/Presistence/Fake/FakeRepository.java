@@ -51,7 +51,7 @@ public class FakeRepository implements ExpenseRepository {
 
     @Override
     public boolean update(Expense expense){
-
+    return false;
     }
 
     @Override
