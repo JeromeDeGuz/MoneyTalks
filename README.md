@@ -4,12 +4,12 @@ MoneyTalks is an offline-first expense tracking app that keeps money logging sim
 ## 🌱 Vision Statement
 The vision of MoneyTalks is to provide a simple and accessible expense tracking solution that helps users gain clarity and control over their personal finances.
 
-[Read the Vision Statement](Docs/VisionStatement.md)
+[Read the Vision Statement](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/Iteration-0%20material/VisionStatement.md)
 
 ## 🦾 Team Agreement
 This project follows a shared team agreement that defines expectations for collaboration, communication, and individual responsibilities.
 
-[View the Team Agreement](Docs/work-agreement-template.docx)
+[View the Team Agreement](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/Iteration-0%20material/work-agreement-template.docx)
 
 ## 🐞 Team Members
 We’re Bug Bytes, the team behind MoneyTalks:
