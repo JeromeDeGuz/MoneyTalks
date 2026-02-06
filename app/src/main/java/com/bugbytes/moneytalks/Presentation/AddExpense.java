@@ -68,7 +68,7 @@ public class AddExpense extends AppCompatActivity {
         btnSave.setOnClickListener(v -> {
             String name = etExpenseName.getText().toString().trim();
             String amountStr = etAmount.getText().toString().trim();
-            String category = spinnerCategory.getSelectedItem().toString();
+            String category = spinnerCategory.getSelectedItem().toString(); // This gets "Food", "Transport", etc.
             String date = etDate.getText().toString().trim();
             String notes = etNotes.getText().toString().trim();
 
@@ -79,13 +79,15 @@ public class AddExpense extends AppCompatActivity {
 
             try {
                 double amount = Double.parseDouble(amountStr);
-
-                // Matches required constructor: int, String, double, String, String, String
                 Expense newExpense = new Expense(0, name, amount, category, date, notes);
 
-                Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
+                // --- THE FIX STARTS HERE ---
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("new_expense", newExpense); // Wrap the object
+                setResult(RESULT_OK, resultIntent);              // Hand it to the previous screen
+                // --- THE FIX ENDS HERE ---
 
-                // Successfully created the object, now return to the list
+                Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
                 finish();
 
             } catch (NumberFormatException e) {

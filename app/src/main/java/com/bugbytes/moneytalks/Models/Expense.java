@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.Models;
 
-public class Expense {
+public class Expense implements java.io.Serializable {
 
     private int id;
     private String name;
