@@ -1,62 +1,33 @@
 package com.bugbytes.moneytalks.Business.Services;
 
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
-import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
+//Model layer
 import com.bugbytes.moneytalks.Models.Expense;
-
+//Presistent layer
+import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
 import java.util.List;
 
-public class ExpenseServiceImpl implements ExpenseService {
+//core implementation of ExpenseService interface.
+public class ExpenseServiceImpl implements ExpenseService
+{
+    private final ExpenseRepository repository; //repo to store/retrive data
 
-    private final ExpenseRepository expenseRepository;
-    private final ExpenseValidator expenseValidator;
-
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository){
-        this(expenseRepository, new ExpenseValidator());
+    //constructor used to pass repository into service
+    public ExpenseServiceImpl(ExpenseRepository repository)
+    {
+        this.repository = repository;
     }
 
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository, ExpenseValidator validator) {
-        this.expenseRepository = expenseRepository;
-        this.expenseValidator = validator;
-    }
-
+    //adds new expense + all rules related to it
     @Override
-    public List<Expense> getAllItems() {
-        return expenseRepository.getAll();
+    public void addExpense(Expense expense)
+    {
+        repository.addExpense(expense);
     }
 
+    //returns all stored expenses
     @Override
-    public void addItem(String name, double amount, String category, String date, String note ) {
-        expenseValidator.validate(name, amount);
-
-        Expense toCreate = new Expense(0, name, 0, category, date, note);
-
-        expenseRepository.add(toCreate);
-
-
-        }
-
-    @Override
-    public boolean updateItem(int id, String name, double amount, String category, String date, String note) {
-        expenseValidator.validate(name, amount);
-
-        Expense existing = expenseRepository.getById(id);
-        if (existing == null) {
-            return false;
-        }
-
-        Expense updated = new Expense(id, name, amount, category, date, note);
-        return expenseRepository.update(updated);
-
-    }
-    @Override
-    public boolean deleteItem(int id) {
-        return expenseRepository.delete(id);
-    }
-
-    private String safeTrim(String s) {
-        if (s == null) return null;
-        String trimmed = s.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+    public List<Expense> getAllExpenses()
+    {
+        return repository.getAllExpenses();
     }
 }

@@ -15,29 +15,35 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bugbytes.moneytalks.Application.MoneyTalksApp;
 import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;
 
-public class AddExpense extends AppCompatActivity {
+//screen that allows the user to add new expense.
+public class AddExpense extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        //connect to xml layout, built on laurens sample
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-
         View mainView = findViewById(R.id.main);
-        if (mainView != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+        if (mainView != null)
+        {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) ->
+            {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
                 return insets;
             });
         }
 
-        //Initialize views
+        //get references to UI elements
         EditText etExpenseName = findViewById(R.id.etExpenseName);
         EditText etAmount = findViewById(R.id.etAmount);
         EditText etDate = findViewById(R.id.etDate);
@@ -45,13 +51,14 @@ public class AddExpense extends AppCompatActivity {
         Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
         Button btnSave = findViewById(R.id.btnSave);
 
-        //Spinner setup
+        //set up category dropdown (spinner)
+        //do we still want to keep it in i1 or move it to i2 with more details to it that we discussed?
         String[] categories = {"Food", "Transport", "Shopping", "Bills", "Other"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
-        //Date picker
+        //date picker logic
         etDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -64,33 +71,45 @@ public class AddExpense extends AppCompatActivity {
             datePicker.show();
         });
 
-        //Save button logic
-        btnSave.setOnClickListener(v -> {
+        //save button logic
+        btnSave.setOnClickListener(v ->
+        {
+            //take in user input
             String name = etExpenseName.getText().toString().trim();
             String amountStr = etAmount.getText().toString().trim();
             String category = spinnerCategory.getSelectedItem().toString();
             String date = etDate.getText().toString().trim();
             String notes = etNotes.getText().toString().trim();
 
-            if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty()) {
+            //should be in business layer? but this is not logic validation just empty thing. Discuss with Ta.
+            if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty())
+            {
                 Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            try {
+            try
+            {
+                //convert amount to dbl
                 double amount = Double.parseDouble(amountStr);
+
+                //create new exp object (Note: id will be handled by repo)
                 Expense newExpense = new Expense(0, name, amount, category, date, notes);
 
+                //accessing business Layer via application class
+                MoneyTalksApp app = (MoneyTalksApp) getApplication();
+                app.getExpenseService().addExpense(newExpense);
 
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("new_expense", newExpense); //Wrap the object
-                setResult(RESULT_OK, resultIntent);              //Hand it to the previous screen (will show automatically then)
-
-
+                //confirmation msg
                 Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
+
+                //close activity and return to list
                 finish();
 
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
+                //invalid number input like @# lol haha idk
                 Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show();
             }
         });
