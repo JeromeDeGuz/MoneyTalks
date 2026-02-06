@@ -1,11 +1,12 @@
 package com.bugbytes.moneytalks.Models;
 
-public class Expense {
-
+//Serializable usage: allows expense object to be converted into a format that can be passed between activities or stored temporarily (confirm with lauren, see other past projects to see their implementation)
+public class Expense implements java.io.Serializable
+{
     private int id;
     private String name;
     private double amount;
-    private String category;
+    private String category; //more about category in iteration 2.
     private String date;   //simple for Iteration 1 (can change later)
     private String note;   //optional
 
@@ -19,47 +20,60 @@ public class Expense {
     }
 
     //Getters
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public double getAmount() {
+    public double getAmount()
+    {
         return amount;
     }
 
-    public String getCategory() {
+    public String getCategory()
+    {
         return category;
     }
 
-    public String getDate() {
+    public String getDate()
+
+    {
         return date;
     }
 
-    public String getNote() {
+    public String getNote()
+    {
         return note;
     }
 
     //Setters
-    public void setAmount(double amount) {
+    //Note: no setter for id as it should not be changeable by user, used for db.
+    public void setAmount(double amount)
+    {
         this.amount = amount;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
-    public void setCategory(String category) {
+    public void setCategory(String category)
+    {
         this.category = category;
     }
 
-    public void setDate(String date) {
+    public void setDate(String date)
+    {
         this.date = date;
     }
 
-    public void setNote(String note) {
+    public void setNote(String note)
+    {
         this.note = note;
     }
 }
