@@ -50,7 +50,7 @@ public class FakeRepository implements ExpenseRepository {
     }
 
     @Override
-    public void update(Expense expense){
+    public boolean update(Expense expense){
 
     }
 
