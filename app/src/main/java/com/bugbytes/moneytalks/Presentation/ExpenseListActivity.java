@@ -26,7 +26,7 @@ public class ExpenseListActivity extends AppCompatActivity {
     private ExpenseAdapter adapter;
     private List<Expense> data;
 
-    // Launcher to handle the result from AddExpense
+    //Launcher to handle the result from AddExpense
     private final ActivityResultLauncher<Intent> addExpenseLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -54,18 +54,18 @@ public class ExpenseListActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize Floating Action Button
+        //Initialize Floating Action Button
         FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
         btnAddExpense.setOnClickListener(v -> {
             Intent intent = new Intent(ExpenseListActivity.this, AddExpense.class);
             addExpenseLauncher.launch(intent); // Use launcher instead of startActivity
         });
 
-        // Setup RecyclerView
+        //Setup RecyclerView
         RecyclerView rv = findViewById(R.id.rvExpenses);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize data and adapter
+        //Initialize data and adapter
         data = new ArrayList<>();
         data.add(new Expense(1, "Coffee", 5.50, "Food", "2026-02-05", "Morning coffee"));
         data.add(new Expense(2, "Bus Fare", 3.00, "Transport", "2026-02-05", "Daily commute"));

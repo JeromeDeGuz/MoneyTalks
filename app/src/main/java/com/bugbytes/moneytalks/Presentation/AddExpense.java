@@ -3,7 +3,7 @@ package com.bugbytes.moneytalks.Presentation;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View; // ADDED: Required to fix the "cannot find symbol class View" error
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +27,7 @@ public class AddExpense extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-        // Edge-to-edge padding
+
         View mainView = findViewById(R.id.main);
         if (mainView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
@@ -37,7 +37,7 @@ public class AddExpense extends AppCompatActivity {
             });
         }
 
-        // Initialize views
+        //Initialize views
         EditText etExpenseName = findViewById(R.id.etExpenseName);
         EditText etAmount = findViewById(R.id.etAmount);
         EditText etDate = findViewById(R.id.etDate);
@@ -45,13 +45,13 @@ public class AddExpense extends AppCompatActivity {
         Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
         Button btnSave = findViewById(R.id.btnSave);
 
-        // Spinner setup
+        //Spinner setup
         String[] categories = {"Food", "Transport", "Shopping", "Bills", "Other"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
-        // Date picker
+        //Date picker
         etDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -64,11 +64,11 @@ public class AddExpense extends AppCompatActivity {
             datePicker.show();
         });
 
-        // Save button logic
+        //Save button logic
         btnSave.setOnClickListener(v -> {
             String name = etExpenseName.getText().toString().trim();
             String amountStr = etAmount.getText().toString().trim();
-            String category = spinnerCategory.getSelectedItem().toString(); // This gets "Food", "Transport", etc.
+            String category = spinnerCategory.getSelectedItem().toString();
             String date = etDate.getText().toString().trim();
             String notes = etNotes.getText().toString().trim();
 
@@ -81,11 +81,11 @@ public class AddExpense extends AppCompatActivity {
                 double amount = Double.parseDouble(amountStr);
                 Expense newExpense = new Expense(0, name, amount, category, date, notes);
 
-                // --- THE FIX STARTS HERE ---
+
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("new_expense", newExpense); // Wrap the object
-                setResult(RESULT_OK, resultIntent);              // Hand it to the previous screen
-                // --- THE FIX ENDS HERE ---
+                resultIntent.putExtra("new_expense", newExpense); //Wrap the object
+                setResult(RESULT_OK, resultIntent);              //Hand it to the previous screen (will show automatically then)
+
 
                 Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
                 finish();
