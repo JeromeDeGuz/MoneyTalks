@@ -1,7 +1,9 @@
 package com.bugbytes.moneytalks.Presentation;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View; // ADDED: Required to fix the "cannot find symbol class View" error
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;
@@ -25,11 +28,14 @@ public class AddExpense extends AppCompatActivity {
         setContentView(R.layout.activity_add_expense);
 
         // Edge-to-edge padding
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        View mainView = findViewById(R.id.main);
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
 
         // Initialize views
         EditText etExpenseName = findViewById(R.id.etExpenseName);
@@ -55,11 +61,10 @@ public class AddExpense extends AppCompatActivity {
             DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) -> {
                 etDate.setText(String.format("%d/%d/%d", d, m + 1, y));
             }, year, month, day);
-
             datePicker.show();
         });
 
-        // Save button
+        // Save button logic
         btnSave.setOnClickListener(v -> {
             String name = etExpenseName.getText().toString().trim();
             String amountStr = etAmount.getText().toString().trim();
@@ -72,22 +77,20 @@ public class AddExpense extends AppCompatActivity {
                 return;
             }
 
-            double amount;
             try {
-                amount = Double.parseDouble(amountStr);
+                double amount = Double.parseDouble(amountStr);
+
+                // Matches required constructor: int, String, double, String, String, String
+                Expense newExpense = new Expense(0, name, amount, category, date, notes);
+
+                Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
+
+                // Successfully created the object, now return to the list
+                finish();
+
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show();
-                return;
             }
-
-            Toast.makeText(this, String.format("Expense saved: %s - $%.2f", name, amount), Toast.LENGTH_SHORT).show();
-
-            // Clear fields
-            etExpenseName.setText("");
-            etAmount.setText("");
-            etDate.setText("");
-            etNotes.setText("");
-            spinnerCategory.setSelection(0);
         });
     }
 }
