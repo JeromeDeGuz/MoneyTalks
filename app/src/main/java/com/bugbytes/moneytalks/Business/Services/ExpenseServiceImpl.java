@@ -30,8 +30,6 @@ public class ExpenseServiceImpl implements ExpenseService
             throw new IllegalArgumentException("Expense name is required and cannot be empty.");
         }
 
-        if(expense.getAmount()==null)
-
         if (expense.getAmount() <= 0) {
             throw new IllegalArgumentException("Expense amount must be a positive value greater than zero.");
         }
