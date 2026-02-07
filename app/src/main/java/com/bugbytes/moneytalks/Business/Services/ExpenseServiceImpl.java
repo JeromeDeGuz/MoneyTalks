@@ -21,6 +21,23 @@ public class ExpenseServiceImpl implements ExpenseService
     @Override
     public void addExpense(Expense expense)
     {
+        // Business Rules / Validations
+        if (expense == null) {
+            throw new IllegalArgumentException("Expense object cannot be null.");
+        }
+
+        if (expense.getName() == null || expense.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Expense name is required and cannot be empty.");
+        }
+
+        if (expense.getAmount() <= 0) {
+            throw new IllegalArgumentException("Expense amount must be a positive value greater than zero.");
+        }
+
+        if (expense.getDate() == null || expense.getDate().trim().isEmpty()) {
+            throw new IllegalArgumentException("Expense date is required.");
+        }
+
         repository.addExpense(expense);
     }
 
