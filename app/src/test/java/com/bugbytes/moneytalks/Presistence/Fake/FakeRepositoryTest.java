@@ -57,33 +57,34 @@ public class FakeRepositoryTest {
         repo.addExpense(e1);
         repo.addExpense(e2);
 
-        boolean result = repo.deleteExpense(e1);
+        repo.deleteExpense(e1);
 
-        assertTrue(result);
-        assertEquals(1, repo.getAllExpenses().size());
-        assertSame(e2, repo.getAllExpenses().get(0));
+        List<Expense> remaining = repo.getAllExpenses();
+        assertEquals(1, remaining.size());
+        assertSame(e2, remaining.get(0));
+        assertFalse(remaining.contains(e1));
     }
 
     @Test
     void deleteExpense_nonExistingExpense_shouldNotChangeList() {
         Expense e1 = new Expense("Lunch", 10.0, "Food", "2024-01-03", "Sandwich");
-        Expense e2_nonExisting = new Expense( "Snack", 5.0, "Food", "2024-01-04", "Chips");
+        Expense e2_nonExisting = new Expense("Snack", 5.0, "Food", "2024-01-04", "Chips");
         repo.addExpense(e1);
 
-        boolean result = repo.deleteExpense(e2_nonExisting);
+        repo.deleteExpense(e2_nonExisting);
 
-        assertFalse(result);
         assertEquals(1, repo.getAllExpenses().size());
+        assertSame(e1, repo.getAllExpenses().get(0));
     }
 
     @Test
-    void deleteExpense_nullExpense_shouldReturnFalse() {
+    void deleteExpense_nullExpense_shouldNotCrashAndNotChangeList() {
         Expense e1 = new Expense("Gas", 40.0, "Transport", "2024-01-05", "Fill up");
         repo.addExpense(e1);
 
-        boolean result = repo.deleteExpense(null);
+        // This test also ensures the implementation is robust and doesn't crash on null.
+        repo.deleteExpense(null);
 
-        assertFalse(result);
         assertEquals(1, repo.getAllExpenses().size());
     }
 }
