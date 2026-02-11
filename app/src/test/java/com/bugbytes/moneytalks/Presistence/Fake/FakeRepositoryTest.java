@@ -28,7 +28,7 @@ public class FakeRepositoryTest {
 
     @Test
     void addExpense_shouldAddToList() {
-        Expense e = new Expense(1, "Dinner", 20.0, "Food", "2026-02-06", "Pizza");
+        Expense e = new Expense("Dinner", 20.0, "Food", "2026-02-06", "Pizza");
 
         repo.addExpense(e);
 
@@ -39,7 +39,7 @@ public class FakeRepositoryTest {
 
     @Test
     void getAllExpenses_returnsSameBackingList_staticPersists() {
-        Expense e1 = new Expense(1, "Coffee", 3.5, "Food", "2026-02-06", "");
+        Expense e1 = new Expense("Coffee", 3.5, "Food", "2026-02-06", "");
         repo.addExpense(e1);
 
         // New instance should still see the same static list
