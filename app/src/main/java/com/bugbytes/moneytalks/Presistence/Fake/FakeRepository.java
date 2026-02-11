@@ -32,8 +32,8 @@ public class FakeRepository implements ExpenseRepository
     }
 
     @Override
-    public void deleteExpense(Expense expense){
-        expenses.remove(expense);
+    public boolean deleteExpense(Expense expense){
+        return expenses.remove(expense);
     }
 
     @Override

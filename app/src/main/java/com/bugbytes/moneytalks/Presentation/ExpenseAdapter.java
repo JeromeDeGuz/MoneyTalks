@@ -60,6 +60,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             Expense expenseToDelete = expenses.get(currentPosition);
 
             //call business/logic layer to handle deletion
+            //todo! create a message of some sort (toast or smtg...) that will display if item was deleted or not.
             expenseService.deleteExpense(expenseToDelete);
 
             //notify android recyclerview that item deleted

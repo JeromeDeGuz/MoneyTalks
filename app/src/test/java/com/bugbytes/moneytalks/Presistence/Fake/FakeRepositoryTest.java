@@ -49,4 +49,41 @@ public class FakeRepositoryTest {
         assertEquals(1, all2.size());
         assertSame(e1, all2.get(0));
     }
+
+    @Test
+    void deleteExpense_existingExpense_shouldRemoveFromList() {
+        Expense e1 = new Expense("Book", 15.0, "Shopping", "2024-01-01", "Sci-fi book");
+        Expense e2 = new Expense("Movie", 12.0, "Entertainment", "2024-01-02", "Action movie");
+        repo.addExpense(e1);
+        repo.addExpense(e2);
+
+        boolean result = repo.deleteExpense(e1);
+
+        assertTrue(result);
+        assertEquals(1, repo.getAllExpenses().size());
+        assertSame(e2, repo.getAllExpenses().get(0));
+    }
+
+    @Test
+    void deleteExpense_nonExistingExpense_shouldNotChangeList() {
+        Expense e1 = new Expense("Lunch", 10.0, "Food", "2024-01-03", "Sandwich");
+        Expense e2_nonExisting = new Expense( "Snack", 5.0, "Food", "2024-01-04", "Chips");
+        repo.addExpense(e1);
+
+        boolean result = repo.deleteExpense(e2_nonExisting);
+
+        assertFalse(result);
+        assertEquals(1, repo.getAllExpenses().size());
+    }
+
+    @Test
+    void deleteExpense_nullExpense_shouldReturnFalse() {
+        Expense e1 = new Expense("Gas", 40.0, "Transport", "2024-01-05", "Fill up");
+        repo.addExpense(e1);
+
+        boolean result = repo.deleteExpense(null);
+
+        assertFalse(result);
+        assertEquals(1, repo.getAllExpenses().size());
+    }
 }

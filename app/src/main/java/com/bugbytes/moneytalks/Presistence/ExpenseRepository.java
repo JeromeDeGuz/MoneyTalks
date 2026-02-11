@@ -7,6 +7,6 @@ public interface ExpenseRepository
 {
     void addExpense(Expense expense);
 
-    void deleteExpense(Expense expense);
+    boolean deleteExpense(Expense expense);
     List<Expense> getAllExpenses();
 }
