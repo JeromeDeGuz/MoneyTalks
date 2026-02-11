@@ -30,4 +30,10 @@ public class ExpenseServiceImpl implements ExpenseService
     {
         return repository.getAllExpenses();
     }
+
+    @Override
+    public void deleteExpense(Expense expense)
+    {
+        repository.deleteExpense(expense);
+    }
 }

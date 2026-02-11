@@ -3,6 +3,7 @@ package com.bugbytes.moneytalks.Presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +71,8 @@ public class ExpenseListActivity extends AppCompatActivity
     private void loadExpenses()
     {
         List<Expense> data = expenseService.getAllExpenses();
-        adapter = new ExpenseAdapter(data);
+        // The ExpenseService is now passed to the adapter
+        adapter = new ExpenseAdapter(data, expenseService);
         rv.setAdapter(adapter);
     }
 }
