@@ -45,6 +45,7 @@ public class FakeRepositoryTest {
         // New instance should still see the same static list
         FakeRepository repo2 = new FakeRepository();
         List<Expense> all2 = repo2.getAllExpenses();
+        System.out.println("PRINTING: " + all2);
 
         assertEquals(1, all2.size());
         assertSame(e1, all2.get(0));
