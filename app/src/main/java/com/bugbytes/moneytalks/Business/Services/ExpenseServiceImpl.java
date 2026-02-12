@@ -11,11 +11,11 @@ public class ExpenseServiceImpl implements ExpenseService
     private final ExpenseRepository repository;
     private final ExpenseValidator validator;
 
-    //constructor used to pass repository into service
-    public ExpenseServiceImpl(ExpenseRepository repository)
+    // constructor used to inject dependencies
+    public ExpenseServiceImpl(ExpenseRepository repository, ExpenseValidator validator)
     {
         this.repository = repository;
-        this.validator = new ExpenseValidator();
+        this.validator = validator;
     }
 
     //adds new expense after validation
