@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.Persistence;
 
 import android.content.Context;
 import android.view.LayoutInflater;

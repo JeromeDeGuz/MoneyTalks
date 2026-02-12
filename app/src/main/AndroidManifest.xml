@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Sample_project">
 
         <activity
-            android:name=".Presentation.ExpenseListActivity"
+            android:name=".Persistence.ExpenseListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".Presentation.AddExpense"
+            android:name=".Persistence.AddExpense"
             android:exported="false"
             android:label="Add New Expense" />
 
