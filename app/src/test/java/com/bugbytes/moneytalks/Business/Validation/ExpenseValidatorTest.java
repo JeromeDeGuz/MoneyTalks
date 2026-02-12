@@ -4,12 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExpenseValidatorTest {
+public class ExpenseValidatorTest
+{
 
     private final ExpenseValidator validator = new ExpenseValidator();
 
     @Test
-    void validate_nullName_shouldThrow() {
+    void validate_nullName_shouldThrow()
+    {
         assertThrows(ExpenseValidationException.class,
                 () -> validator.validate(null, 10.0));
     }

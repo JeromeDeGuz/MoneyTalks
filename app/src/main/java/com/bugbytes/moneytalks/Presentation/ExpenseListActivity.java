@@ -23,8 +23,6 @@ import java.util.List;
 //main screen that displays all expenses in a list
 public class ExpenseListActivity extends AppCompatActivity
 {
-
-
     private RecyclerView rv;
     private ExpenseService expenseService;
 
@@ -39,12 +37,15 @@ public class ExpenseListActivity extends AppCompatActivity
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
         expenseService = app.getExpenseService();
 
-        View main = findViewById(R.id.main);
-        ViewCompat.setOnApplyWindowInsetsListener(main, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        View mainView = findViewById(R.id.layout_expense_list);
+        if (mainView != null)
+        {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
 
         //setup RecyclerView
         rv = findViewById(R.id.rvExpenses);
@@ -71,7 +72,7 @@ public class ExpenseListActivity extends AppCompatActivity
     {
         ExpenseAdapter adapter;
         List<Expense> data = expenseService.getAllExpenses();
-        // The ExpenseService is now passed to the adapter
+        //The ExpenseService is now passed to the adapter
         adapter = new ExpenseAdapter(data, expenseService);
         rv.setAdapter(adapter);
     }
