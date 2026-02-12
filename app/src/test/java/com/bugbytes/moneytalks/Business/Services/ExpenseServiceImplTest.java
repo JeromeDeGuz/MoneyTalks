@@ -2,6 +2,8 @@ package com.bugbytes.moneytalks.Business.Services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
 import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
 
@@ -32,9 +34,15 @@ public class ExpenseServiceImplTest {
             public List<Expense> getAllExpenses() {
                 return expenses;
             }
-        };
 
-        expenseService = new ExpenseServiceImpl(repository);
+//            @Override
+//            public void deleteExpense(int id) {
+//                expenses.removeIf(e -> e.getId() == id);
+//            }
+       };
+
+        ExpenseValidator validator = new ExpenseValidator();
+        expenseService = new ExpenseServiceImpl(repository, validator);
     }
 
     @Test
@@ -57,12 +65,12 @@ public class ExpenseServiceImplTest {
 
     @Test
     void addNullExpense_throwsException() {
-        IllegalArgumentException expense = assertThrows(
-                IllegalArgumentException.class,
+        ExpenseValidationException exception = assertThrows(
+                ExpenseValidationException.class,
                 () -> expenseService.addExpense(null)
         );
 
-        assertTrue(Objects.requireNonNull(expense.getMessage()).contains("null"));
+        assertTrue(Objects.requireNonNull(exception.getMessage()).contains("null"));
     }
 
     @Test
@@ -76,7 +84,7 @@ public class ExpenseServiceImplTest {
                 ""
         );
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExpenseValidationException.class,
                 () -> expenseService.addExpense(expense));
     }
 
@@ -91,7 +99,7 @@ public class ExpenseServiceImplTest {
                 ""
         );
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExpenseValidationException.class,
                 () -> expenseService.addExpense(expense));
     }
 
@@ -106,7 +114,7 @@ public class ExpenseServiceImplTest {
                 ""
         );
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExpenseValidationException.class,
                 () -> expenseService.addExpense(expense));
     }
 
@@ -121,7 +129,7 @@ public class ExpenseServiceImplTest {
                 ""
         );
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExpenseValidationException.class,
                 () -> expenseService.addExpense(expense));
     }
 }
