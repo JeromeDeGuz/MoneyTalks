@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presistence;
+package com.bugbytes.moneytalks.Persistence;
 
 import com.bugbytes.moneytalks.Models.Expense;
 import java.util.List;
