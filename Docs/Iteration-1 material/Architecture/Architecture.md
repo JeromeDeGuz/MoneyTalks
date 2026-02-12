@@ -47,7 +47,10 @@ Models define the **structure of the data** used across the application.
   - `category` – Type of expense (e.g., Food, Travel, Bills)
   - `date` – Date of the expense
 
+
 ---
+
 For a **clearer view of the 3-tier architecture** and how the components interact, see the diagram below:
 
-![3-Tier Architecture Diagram](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/blob/main/Docs/Iteration-1%20material/Architecture/ArchitectureDiagram.jpg)
+![3-Tier Architecture Diagram](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/raw/0ab2916460865bcb447785bf826a2db2c12f8aad/Docs/Iteration-1%20material/Architecture/ArchitectureDiagram.jpg)
+
