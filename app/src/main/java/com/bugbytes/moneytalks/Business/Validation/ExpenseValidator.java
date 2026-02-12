@@ -1,16 +1,25 @@
 package com.bugbytes.moneytalks.Business.Validation;
 
+import com.bugbytes.moneytalks.Models.Expense;
+
 public class ExpenseValidator
 {
-    public void validate(String name, double amount)
+    public void validate(Expense expense)
     {
-        if(name == null || name.trim().isEmpty())
-        {
-            throw new ExpenseValidationException("Name cannot be empty");
+        if (expense == null) {
+            throw new ExpenseValidationException("Expense object cannot be null.");
         }
-        if(amount <= 0)
-        {
-            throw new ExpenseValidationException("Amount must be greater than zero");
+
+        if (expense.getName() == null || expense.getName().trim().isEmpty()) {
+            throw new ExpenseValidationException("Expense name is required and cannot be empty.");
+        }
+
+        if (expense.getAmount() <= 0) {
+            throw new ExpenseValidationException("Expense amount must be a positive value greater than zero.");
+        }
+
+        if (expense.getDate() == null || expense.getDate().trim().isEmpty()) {
+            throw new ExpenseValidationException("Expense date is required.");
         }
     }
 }
