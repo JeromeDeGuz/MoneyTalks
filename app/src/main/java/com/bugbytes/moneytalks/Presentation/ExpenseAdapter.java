@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,17 +57,18 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.deleteButton.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
 
-            Expense expenseToDelete = expenses.get(currentPosition);
-            Context context = v.getContext();
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                Expense expenseToDelete = expenses.get(currentPosition);
+                Context context = v.getContext();
 
-            // Call the service and check the result
-            if (expenseService.deleteExpense(expenseToDelete)) {
-                expenses.remove(currentPosition);   //remove from view list
-                notifyItemRemoved(currentPosition); //update UI
-                Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
-            } else {
-                // TODO: make a better message?
-                Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                // Call the service and check the result
+                if (expenseService.deleteExpense(expenseToDelete)) {
+                    notifyItemRemoved(currentPosition); //update UI
+                    Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // TODO: make a better message?
+                    Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -79,7 +80,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvAmount, tvDate, tvNote;
-        Button deleteButton;
+        ImageButton deleteButton;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

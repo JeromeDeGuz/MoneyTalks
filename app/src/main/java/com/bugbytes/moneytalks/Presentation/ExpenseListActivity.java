@@ -24,7 +24,7 @@ import java.util.List;
 public class ExpenseListActivity extends AppCompatActivity
 {
 
-    private ExpenseAdapter adapter;
+
     private RecyclerView rv;
     private ExpenseService expenseService;
 
@@ -69,6 +69,7 @@ public class ExpenseListActivity extends AppCompatActivity
     //loads expenses from business layer and updates recyclerView.
     private void loadExpenses()
     {
+        ExpenseAdapter adapter;
         List<Expense> data = expenseService.getAllExpenses();
         // The ExpenseService is now passed to the adapter
         adapter = new ExpenseAdapter(data, expenseService);

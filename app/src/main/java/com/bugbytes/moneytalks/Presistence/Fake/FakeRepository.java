@@ -33,6 +33,7 @@ public class FakeRepository implements ExpenseRepository
 
     @Override
     public boolean deleteExpense(Expense expense){
+        System.out.println("PRINTING: "+expense.getName());
         return expenses.remove(expense);
     }
 
