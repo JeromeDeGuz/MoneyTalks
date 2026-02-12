@@ -78,15 +78,4 @@ public class FakeRepositoryTest {
         assertEquals(1, repo.getAllExpenses().size());
         assertSame(e1, repo.getAllExpenses().get(0));
     }
-
-    @Test
-    void deleteExpense_nullExpense_shouldNotCrashAndNotChangeList() {
-        Expense e1 = new Expense("Gas", 40.0, "Transport", "2024/01/05", "Fill up");
-        repo.addExpense(e1);
-
-        // This test also ensures the implementation is robust and doesn't crash on null.
-//        repo.deleteExpense(null);
-
-        assertEquals(1, repo.getAllExpenses().size());
-    }
 }
