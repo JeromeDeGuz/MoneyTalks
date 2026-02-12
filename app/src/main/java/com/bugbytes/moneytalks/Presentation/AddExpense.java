@@ -31,7 +31,7 @@ public class AddExpense extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-        View mainView = findViewById(R.id.main);
+        View mainView = findViewById(R.id.layout_add_expense);
         if (mainView != null)
         {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) ->
