@@ -27,6 +27,7 @@ We’re Bug Bytes, the team behind MoneyTalks:
 ## 🛠 Dependencies
 The following are the key tools and libraries required to build and run MoneyTalks:
 
+- **Android SDK:** Minimum: 26 (Android 8.0)
 - **Java:** JDK 17  
 - **Gradle:** 8.8  
 - **AndroidX Libraries:**  
