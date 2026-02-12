@@ -5,6 +5,7 @@ import android.app.Application;
 import com.bugbytes.moneytalks.Business.Services.ExpenseService;
 import com.bugbytes.moneytalks.Business.Services.ExpenseServiceImpl;
 //presistence layer
+import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
 import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
 import com.bugbytes.moneytalks.Presistence.Fake.FakeRepository;
 
@@ -21,8 +22,9 @@ public class MoneyTalksApp extends Application
         super.onCreate();
         //create repo using our fake db
         ExpenseRepository expenseRepository = new FakeRepository();
+        ExpenseValidator expenseValidator = new ExpenseValidator();
         //create service and connect it to repo
-        expenseService = new ExpenseServiceImpl(expenseRepository);
+        expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
     }
 
     //allows activities that ziya & jenna created to access expenseService (keeps business logc seperate from our UI)
