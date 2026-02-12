@@ -3,7 +3,7 @@ package com.bugbytes.moneytalks.Business.Services;
 //Model layer
 import com.bugbytes.moneytalks.Models.Expense;
 //Presistent layer
-import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
+import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 import java.util.List;
 
 //core implementation of ExpenseService interface.

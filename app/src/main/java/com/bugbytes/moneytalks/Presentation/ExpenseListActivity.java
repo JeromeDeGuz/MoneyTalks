@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Persistence;
+package com.bugbytes.moneytalks.Presentation;
 
 import android.content.Intent;
 import android.os.Bundle;

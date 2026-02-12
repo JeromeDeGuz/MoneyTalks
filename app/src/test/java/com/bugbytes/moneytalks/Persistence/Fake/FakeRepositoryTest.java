@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presistence.Fake;
+package com.bugbytes.moneytalks.Persistence.Fake;
 
 import com.bugbytes.moneytalks.Models.Expense;
 
