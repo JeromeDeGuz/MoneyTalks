@@ -18,5 +18,39 @@ We’re Bug Bytes, the team behind MoneyTalks:
 - Ekeh, Chukwuemeka Benedict-Mary
 - Lo, Yu-Ting
 
+## 📂 Project Materials
+
+- [Iteration 0 Materials](Docs/Iteration-0 material/)  
+- [Iteration 1 Materials](Docs/Iteration-1 material/)  
+- [Architecture Folder](Docs/Iteration-1 material/Architecture/)
+
+## 🛠 Dependencies
+The following are the key tools and libraries required to build and run MoneyTalks:
+
+- **Android SDK:** Minimum: 26 (Android 8.0)
+- **Java:** JDK 17  
+- **Gradle:** 8.8  
+- **AndroidX Libraries:**  
+  - Core: androidx.core:core-ktx  
+  - AppCompat: androidx.appcompat:appcompat  
+  - Material: com.google.android.material:material  
+  - ConstraintLayout: androidx.constraintlayout:constraintlayout  
+- **Navigation:** androidx.navigation:navigation-fragment-ktx, navigation-ui-ktx  
+- **Activity:** androidx.activity:activity-ktx  
+- **Unit Testing:** JUnit 5 (JUnit Jupiter API)  
+
+## 🚀 How to Run
+
+1. Clone the repository:  
+```bash
+git clone https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks
+```
+2. Open the project in Android Studio.
+3. Sync Gradle:
+    - Android Studio will usually prompt to "Sync Project with Gradle Files."
+    - Wait for all dependencies to download and the build to finish.
+4. Build and run the app on an emulator or device.
+5. Use AddExpenseActivity to add expenses and ExpenseListActivity to view them.
+
 
 

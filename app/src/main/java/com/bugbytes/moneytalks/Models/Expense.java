@@ -10,8 +10,7 @@ public class Expense implements java.io.Serializable
     private String date;   //simple for Iteration 1 (can change later)
     private String note;   //optional
 
-    public Expense(int id, String name, double amount, String category, String date, String note) {
-        this.id = id;
+    public Expense(String name, double amount, String category, String date, String note) {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -52,7 +51,11 @@ public class Expense implements java.io.Serializable
     }
 
     //Setters
-    //Note: no setter for id as it should not be changeable by user, used for db.
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
     public void setAmount(double amount)
     {
         this.amount = amount;

@@ -8,4 +8,5 @@ public interface ExpenseService
 {
     void addExpense(Expense expense); //used by zia's screen. Ekeh will add rules in implementation.
     List<Expense> getAllExpenses(); //used by jenna screen to list all the expenses.
+    boolean deleteExpense(Expense expense);
 }

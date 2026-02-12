@@ -31,7 +31,7 @@ public class AddExpense extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-        View mainView = findViewById(R.id.main);
+        View mainView = findViewById(R.id.layout_add_expense);
         if (mainView != null)
         {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) ->
@@ -96,7 +96,7 @@ public class AddExpense extends AppCompatActivity
                 }
 
                 //create new exp object (Note: id will be handled by repo)
-                Expense newExpense = new Expense(0, name, amount, category, date, notes);
+                Expense newExpense = new Expense(name, amount, category, date, notes);
 
                 //accessing business Layer via application class
                 MoneyTalksApp app = (MoneyTalksApp) getApplication();
