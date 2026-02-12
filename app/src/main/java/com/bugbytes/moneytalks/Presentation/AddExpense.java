@@ -1,7 +1,6 @@
 package com.bugbytes.moneytalks.Presentation;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -94,7 +93,7 @@ public class AddExpense extends AppCompatActivity
                 double amount = Double.parseDouble(amountStr);
 
                 //create new exp object (Note: id will be handled by repo)
-                Expense newExpense = new Expense(0, name, amount, category, date, notes);
+                Expense newExpense = new Expense(name, amount, category, date, notes);
 
                 //accessing business Layer via application class
                 MoneyTalksApp app = (MoneyTalksApp) getApplication();
