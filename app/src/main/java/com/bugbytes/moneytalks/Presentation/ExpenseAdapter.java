@@ -1,10 +1,12 @@
 package com.bugbytes.moneytalks.Presentation;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,19 +54,21 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
 
 
-        // The listener now directly calls the service to handle the deletion
         holder.deleteButton.setOnClickListener(v -> {
-            // Get the position of the item only ONCE
             int currentPosition = holder.getAdapterPosition();
 
             Expense expenseToDelete = expenses.get(currentPosition);
+            Context context = v.getContext();
 
-            //call business/logic layer to handle deletion
-            //todo! create a message of some sort (toast or smtg...) that will display if item was deleted or not.
-            expenseService.deleteExpense(expenseToDelete);
-
-            //notify android recyclerview that item deleted
-            notifyItemRemoved(currentPosition);
+            // Call the service and check the result
+            if (expenseService.deleteExpense(expenseToDelete)) {
+                expenses.remove(currentPosition);   //remove from view list
+                notifyItemRemoved(currentPosition); //update UI
+                Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+            } else {
+                // TODO: make a better message?
+                Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

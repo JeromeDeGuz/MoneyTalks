@@ -32,8 +32,7 @@ public class ExpenseServiceImpl implements ExpenseService
     }
 
     @Override
-    public void deleteExpense(Expense expense)
-    {
-        repository.deleteExpense(expense);
+    public boolean deleteExpense(Expense expense) {
+        return repository.deleteExpense(expense);
     }
 }
