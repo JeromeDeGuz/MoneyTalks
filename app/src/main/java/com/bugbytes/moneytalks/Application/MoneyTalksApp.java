@@ -4,10 +4,10 @@ import android.app.Application;
 //business layer
 import com.bugbytes.moneytalks.Business.Services.ExpenseService;
 import com.bugbytes.moneytalks.Business.Services.ExpenseServiceImpl;
-//presistence layer
+//persistence layer
 import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
-import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
-import com.bugbytes.moneytalks.Presistence.Fake.FakeRepository;
+import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.Persistence.Fake.FakeRepository;
 
 //Note: creates once when app starts, acts as main setup/manager for whole app.
 public class MoneyTalksApp extends Application

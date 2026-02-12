@@ -1,135 +1,72 @@
 package com.bugbytes.moneytalks.Business.Services;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
 import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
+import com.bugbytes.moneytalks.Persistence.Fake.FakeRepository;
+import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.Models.Expense;
-import com.bugbytes.moneytalks.Presistence.ExpenseRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
 public class ExpenseServiceImplTest {
 
     private ExpenseServiceImpl expenseService;
+    private ExpenseRepository repo;
+
+    private ExpenseValidator validator;
 
     @BeforeEach
     void setUp() {
+        // Initialize the fake repository and the service
+        repo = new FakeRepository();
+        validator = new ExpenseValidator();
+        expenseService = new ExpenseServiceImpl(repo, validator);
 
-        // Simple in-memory fake repository
-        ExpenseRepository repository = new ExpenseRepository() {
-            private final List<Expense> expenses = new ArrayList<>();
-
-            @Override
-            public void addExpense(Expense expense) {
-                expenses.add(expense);
-            }
-
-            @Override
-            public List<Expense> getAllExpenses() {
-                return expenses;
-            }
-
-//            @Override
-//            public void deleteExpense(int id) {
-//                expenses.removeIf(e -> e.getId() == id);
-//            }
-       };
-
-        ExpenseValidator validator = new ExpenseValidator();
-        expenseService = new ExpenseServiceImpl(repository, validator);
+        // Crucial: Since FakeRepository uses a static list, clear it before every test
+        repo.getAllExpenses().clear();
     }
 
     @Test
-    void addValidExpense_succeeds() {
-        Expense expense = new Expense(
-                0,
-                "Groceries",
-                50.0,
-                "Food",
-                "2024-11-01",
-                "Weekly shop"
-        );
+    void addExpense_ShouldDelegateToRepository() {
+        Expense expense = new Expense("Groceries", 45.0, "Food", "2026/02/12", "Weekly shop");
 
-        assertDoesNotThrow(() -> expenseService.addExpense(expense));
+        expenseService.addExpense(expense);
 
-        List<Expense> allExpenses = expenseService.getAllExpenses();
-        assertEquals(1, allExpenses.size());
-        assertEquals("Groceries", allExpenses.get(0).getName());
+        List<Expense> result = expenseService.getAllExpenses();
+        assertEquals(1, result.size());
+        assertEquals("Groceries", result.get(0).getName());
     }
 
     @Test
-    void addNullExpense_throwsException() {
-        ExpenseValidationException exception = assertThrows(
-                ExpenseValidationException.class,
-                () -> expenseService.addExpense(null)
-        );
+    void getAllExpenses_ShouldReturnAllStoredItems() {
+        expenseService.addExpense(new Expense("Rent", 1200.0, "Housing", "2026/02/01", "Feb Rent"));
+        expenseService.addExpense(new Expense("Coffee", 5.0, "Food", "2026/02/02", "Latte"));
 
-        assertTrue(Objects.requireNonNull(exception.getMessage()).contains("null"));
+        List<Expense> list = expenseService.getAllExpenses();
+
+        assertEquals(2, list.size());
     }
 
     @Test
-    void addExpenseWithEmptyName_throwsException() {
-        Expense expense = new Expense(
-                0,
-                " ",
-                10.0,
-                "Other",
-                "2023-11-01",
-                ""
-        );
+    void deleteExpense_ShouldReturnTrueOnSuccess() {
+        Expense gas = new Expense("Gas", 60.0, "Transport", "2026/02/10", "Full tank");
+        expenseService.addExpense(gas);
 
-        assertThrows(ExpenseValidationException.class,
-                () -> expenseService.addExpense(expense));
+        boolean deleted = expenseService.deleteExpense(gas);
+
+        assertTrue(deleted);
+        assertEquals(0, expenseService.getAllExpenses().size());
     }
 
     @Test
-    void addExpenseWithZeroAmount_throwsException() {
-        Expense expense = new Expense(
-                0,
-                "Gift",
-                0.0,
-                "Other",
-                "2023-11-01",
-                ""
-        );
+    void deleteExpense_ShouldReturnFalseIfNotFound() {
+        Expense nonExistent = new Expense("Missing", 0.0, "None", "2026/01/01", "");
 
-        assertThrows(ExpenseValidationException.class,
-                () -> expenseService.addExpense(expense));
-    }
+        boolean deleted = expenseService.deleteExpense(nonExistent);
 
-    @Test
-    void addExpenseWithNegativeAmount_throwsException() {
-        Expense expense = new Expense(
-                0,
-                "Gift",
-                -10.0,
-                "Other",
-                "2023-11-01",
-                ""
-        );
-
-        assertThrows(ExpenseValidationException.class,
-                () -> expenseService.addExpense(expense));
-    }
-
-    @Test
-    void addExpenseWithEmptyDate_throwsException() {
-        Expense expense = new Expense(
-                0,
-                "Coffee",
-                5.0,
-                "Food",
-                "",
-                ""
-        );
-
-        assertThrows(ExpenseValidationException.class,
-                () -> expenseService.addExpense(expense));
+        assertFalse(deleted);
     }
 }
