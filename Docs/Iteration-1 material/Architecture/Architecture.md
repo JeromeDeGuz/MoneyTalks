@@ -10,34 +10,40 @@ The app follows a **3-tier architecture** for clean separation of concerns:
 
 ## Architecture
 
-### 1. Presentation Layer (UI)
+### 1. Application Layer 
+This layer handles the initialization of android studio and the linking with the layers.
+
+**Components**
+- **MoneyTalksApp:** Entry point of the app, initializes the connections between business and persistence layers.
+
+### 2. Presentation Layer (UI)
 This layer handles everything the user sees and interacts with. It **displays data** and **collects user input**.  
 
 **Components:**
-- **AddExpenseActivity:** Screen to add new expenses. Collects name, amount, category, and date.
+- **AddExpenseActivity:** Screen to add new expenses. Collects name, amount, category, date, and notes
 - **ExpenseListActivity:** Displays all recorded expenses in a list format.
 - **ExpenseAdapter:** Bridges raw data with the UI, ensuring each expense is displayed correctly.
-- **MoneyTalksApp:** Entry point of the app, initializes the connections between business and persistence layers.
+
 
 ---
-### 2. Business Layer (Logic)
+### 3. Business Layer (Logic)
 This layer contains the **core functionality** and **rules** of the app. It processes data and enforces validation without concern for storage or UI.  
 
 **Components:**
-- **ExpenseService:** Defines operations such as adding expenses, retrieving all expenses, and calculating totals.
+- **ExpenseService:** Defines operations such as adding, deleting, and retrieving all expenses.
 - **ExpenseValidator:** Ensures user input is valid (e.g., non-empty name, positive amount, valid date).
 - **ServicesImpl:** Implements `ExpenseService` operations, including calculations and managing data flow.
 
 ---
-### 3. Persistence Layer (Storage)
+### 4. Persistence Layer (Storage)
 Responsible for **storing and retrieving data**, this layer abstracts the storage mechanism, allowing flexibility to swap databases in the future.  
 
 **Components:**
 - **ExpenseRepository:** Interface that defines rules for saving and accessing expenses.
-- **FakeRepository:** Stub implementation for development/testing. Stores data in memory while the app is running.
+- **FakeRepository:** Fake implementation for development/testing. Stores data in memory while the app is running.
 
 ---
-### 4. Models (Data Objects)
+### 5. Models (Data Objects)
 Models define the **structure of the data** used across the application.  
 
 - **Expense:** Represents a single expense with the following fields:
@@ -46,6 +52,7 @@ Models define the **structure of the data** used across the application.
   - `amount` – Monetary value
   - `category` – Type of expense (e.g., Food, Travel, Bills)
   - `date` – Date of the expense
+  - `notes` - Optional field for fuller description of expense
 
 
 ---
