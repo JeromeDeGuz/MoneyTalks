@@ -1,83 +1,94 @@
 package com.bugbytes.moneytalks.Presentation;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bugbytes.moneytalks.Business.Services.ExpenseService;
 import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.List;
 import java.util.Locale;
 
-//connect expense data to UI rowz
-public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder>
-{
+public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
     private final List<Expense> expenses;
+    private final ExpenseService expenseService;
 
-    //cons recieves expense liat
-    public ExpenseAdapter(List<Expense> expenses)
-    {
+    public ExpenseAdapter(List<Expense> expenses, ExpenseService expenseService) {
         this.expenses = expenses;
+        this.expenseService = expenseService;
     }
 
     @NonNull
     @Override
-    //create new row view when needed
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View row = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.expense_row, parent, false);
         return new ViewHolder(row);
     }
 
-    //binds expense data to row at given pos
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Expense e = expenses.get(position);
 
-        //set title as name of expense
         holder.tvTitle.setText(e.getName());
-
         holder.tvAmount.setText(String.format(Locale.US, "$%.2f", e.getAmount()));
+        holder.tvDate.setText(e.getDate());
 
-        //Date + Note (note is optional)
         String note = e.getNote();
-        if (note != null && !note.trim().isEmpty())
-        {
-            holder.tvDate.setText(e.getDate() + " • " + note);
+        if (note != null && !note.trim().isEmpty()) {
+            holder.tvNote.setText(note);
+            holder.tvNote.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvNote.setVisibility(View.GONE);
         }
-        else
-        {
-            holder.tvDate.setText(e.getDate());
-        }
+
+
+
+        holder.deleteButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                Expense expenseToDelete = expenses.get(currentPosition);
+                Context context = v.getContext();
+
+                // Call the service and check the result
+                if (expenseService.deleteExpense(expenseToDelete)) {
+                    notifyItemRemoved(currentPosition); //update UI
+                    Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // TODO: make a better message?
+                    Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    //total # of items for later use
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return expenses.size();
     }
 
-    //holds reference to ui element for single expense row
-    static class ViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView tvTitle, tvAmount, tvDate;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvTitle, tvAmount, tvDate, tvNote;
+        ImageButton deleteButton;
 
-        ViewHolder(@NonNull View itemView)
-        {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //connectring TextViews from the row layout
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAmount = itemView.findViewById(R.id.tvAmount);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvNote = itemView.findViewById(R.id.tvNote);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
 }

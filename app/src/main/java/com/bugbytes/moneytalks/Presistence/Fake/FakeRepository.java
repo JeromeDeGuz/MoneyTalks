@@ -10,7 +10,7 @@ public class FakeRepository implements ExpenseRepository
 {
     //We use a static list so data persists while the app is running
     private static final List<Expense> expenses = new ArrayList<>();
-    private static int autoIncrementId = 0;
+    private static int autoIncrementId = 100;
 
 
     public FakeRepository(){
@@ -29,6 +29,12 @@ public class FakeRepository implements ExpenseRepository
         expense.setId(autoIncrementId);
         expenses.add(expense);
         autoIncrementId++;
+    }
+
+    @Override
+    public boolean deleteExpense(Expense expense){
+        System.out.println("PRINTING: "+expense.getName());
+        return expenses.remove(expense);
     }
 
     @Override

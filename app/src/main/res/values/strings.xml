@@ -11,4 +11,5 @@
     <string name="date_hint_format">DD MM YYYY</string>
     <string name="item_hint_tags_comma_separated">Tags (comma separated)</string>
     <string name="button_add_expense">Add Expense</string>
+    <string name="contentDescription">Add New Expense</string>
 </resources>
