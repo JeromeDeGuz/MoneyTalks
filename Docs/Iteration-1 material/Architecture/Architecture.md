@@ -59,6 +59,6 @@ Models define the **structure of the data** used across the application.
 
 For a **clearer view of the 3-tier architecture** and how the components interact, see the diagram below:
 
-![3-Tier Architecture Diagram](Docs/Iteration-1%20material/Architecture/ArchitectureDiagram.jpg)
+![3-Tier Architecture Diagram](https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks/-/raw/main/Docs/Iteration-1%20material/Architecture/ArchitectureDiagram.jpg)
 
 
