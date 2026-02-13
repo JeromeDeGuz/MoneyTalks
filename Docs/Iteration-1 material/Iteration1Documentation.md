@@ -42,6 +42,3 @@ This is the first full feature version after we made our vision statement simple
 
 ---
 
-
-- ChatGPT sometimes added more confusion, but TA guidance and revisiting Lauren sample cleared it up.  
-- Everything in Iteration 1 works, code is clean, and tests pass.  
