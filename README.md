@@ -37,7 +37,7 @@ The following are the key tools and libraries required to build and run MoneyTal
   - ConstraintLayout: androidx.constraintlayout:constraintlayout  
 - **Navigation:** androidx.navigation:navigation-fragment-ktx, navigation-ui-ktx  
 - **Activity:** androidx.activity:activity-ktx  
-- **Unit Testing:** JUnit 5 (JUnit Jupiter API)  
+- **Unit Testing:** JUnit  
 
 ## 🚀 How to Run
 
