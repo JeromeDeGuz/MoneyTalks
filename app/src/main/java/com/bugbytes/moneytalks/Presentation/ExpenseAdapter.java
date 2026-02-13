@@ -18,71 +18,88 @@ import com.bugbytes.moneytalks.R;
 import java.util.List;
 import java.util.Locale;
 
-public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
-
+//Adapter for displaying expenses in RecyclerView
+public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder>
+{
     private final List<Expense> expenses;
     private final ExpenseService expenseService;
 
-    public ExpenseAdapter(List<Expense> expenses, ExpenseService expenseService) {
+    //Constructor to initialize adapter (@param: expenses, expenseService)
+    public ExpenseAdapter(List<Expense> expenses, ExpenseService expenseService)
+    {
         this.expenses = expenses;
         this.expenseService = expenseService;
     }
 
+    //Inflates row layout (@param: parent, viewType)
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         View row = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.expense_row, parent, false);
         return new ViewHolder(row);
     }
 
+    //Binds expense data to row (@param: holder, position)
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Expense e = expenses.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
+    {
+        final Expense e = expenses.get(position);
 
         holder.tvTitle.setText(e.getName());
         holder.tvAmount.setText(String.format(Locale.US, "$%.2f", e.getAmount()));
         holder.tvDate.setText(e.getDate());
 
-        String note = e.getNote();
-        if (note != null && !note.trim().isEmpty()) {
+        final String note = e.getNote();
+        if (note != null && !note.trim().isEmpty())
+        {
             holder.tvNote.setText(note);
             holder.tvNote.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else
+        {
             holder.tvNote.setVisibility(View.GONE);
         }
 
-
-
         holder.deleteButton.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
+            final int currentPosition = holder.getAdapterPosition();
 
-            if (currentPosition != RecyclerView.NO_POSITION) {
-                Expense expenseToDelete = expenses.get(currentPosition);
-                Context context = v.getContext();
+            if (currentPosition != RecyclerView.NO_POSITION)
+            {
+                final Expense expenseToDelete = expenses.get(currentPosition);
+                final Context context = v.getContext();
 
-                // Call the service and check the result
-                if (expenseService.deleteExpense(expenseToDelete)) {
-                    notifyItemRemoved(currentPosition); //update UI
+                //Deletes expense and updates UI
+                if (expenseService.deleteExpense(expenseToDelete))
+                {
+                    notifyItemRemoved(currentPosition);
                     Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
-                } else {
-                    // TODO: make a better message?
+                }
+                else
+                {
                     Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    //Returns number of expenses (@return: expenses size)
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return expenses.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvAmount, tvDate, tvNote;
-        ImageButton deleteButton;
+    //ViewHolder for expense row views
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        final TextView tvTitle, tvAmount, tvDate, tvNote;
+        final ImageButton deleteButton;
 
-        ViewHolder(@NonNull View itemView) {
+        //Binds views from layout (@param: itemView)
+        ViewHolder(@NonNull View itemView)
+        {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAmount = itemView.findViewById(R.id.tvAmount);

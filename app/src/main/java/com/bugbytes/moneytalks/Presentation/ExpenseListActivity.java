@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-//main screen that displays all expenses in a list
+//Main screen that displays all expenses in a list
 public class ExpenseListActivity extends AppCompatActivity
 {
     private RecyclerView recyclerView;
@@ -33,11 +33,11 @@ public class ExpenseListActivity extends AppCompatActivity
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_expense_list);
 
-        //get business service from application class first
-        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+        //Get business service from application class first
+        final MoneyTalksApp app = (MoneyTalksApp) getApplication();
         expenseService = app.getExpenseService();
 
-        View mainView = findViewById(R.id.layout_expense_list);
+        final View mainView = findViewById(R.id.layout_expense_list);
         if (mainView != null)
         {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
@@ -47,12 +47,12 @@ public class ExpenseListActivity extends AppCompatActivity
             });
         }
 
-        //setup RecyclerView
+        //Setup RecyclerView
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //floating + button that takes to addExpense screen
-        FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
+        //Floating + button that takes to AddExpense screen
+        final FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
         btnAddExpense.setOnClickListener(v -> {
             Intent intent = new Intent(ExpenseListActivity.this, AddExpense.class);
             startActivity(intent);
@@ -63,17 +63,15 @@ public class ExpenseListActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        //refresh data from persistence layer every time we return to this screen
+        //Refresh data from persistence layer every time we return to this screen
         loadExpenses();
     }
 
-    //loads expenses from business layer and updates recyclerView.
+    //Loads expenses from business layer and updates recyclerView
     private void loadExpenses()
     {
-        ExpenseAdapter adapter;
-        List<Expense> data = expenseService.getAllExpenses();
-        //The ExpenseService is now passed to the adapter
-        adapter = new ExpenseAdapter(data, expenseService);
+        final List<Expense> data = expenseService.getAllExpenses();
+        final ExpenseAdapter adapter = new ExpenseAdapter(data, expenseService);
         recyclerView.setAdapter(adapter);
     }
 }

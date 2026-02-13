@@ -10,9 +10,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bugbytes.moneytalks.Application.MoneyTalksApp;
 import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
@@ -21,109 +18,98 @@ import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;
 
-//screen that allows the user to add new expense.
+//Screen that allows the user to add new expense.
 public class AddExpense extends AppCompatActivity
 {
+    //UI references
+    private EditText etExpenseName;
+    private EditText etAmount;
+    private EditText etDate;
+    private EditText etNotes;
+    private Spinner spinnerCategory;
+    private Button btnSave;
+    private Button btnCancel;
+
+    //Categories for spinner
+    private static final String[] CATEGORIES = {"Food", "Transport", "Shopping", "Bills", "Other"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        //connect to xml layout, built on laurens sample
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense);
+        setContentView(R.layout.activity_add_expense); //Set activity layout
 
-        View mainView = findViewById(R.id.layout_add_expense);
-        if (mainView != null)
-        {
-            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) ->
-            {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
-        }
+        //Initialize UI elements
+        etExpenseName = findViewById(R.id.etExpenseName);
+        etAmount = findViewById(R.id.etAmount);
+        etDate = findViewById(R.id.etDate);
+        etNotes = findViewById(R.id.etNotes);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        btnSave = findViewById(R.id.btnSave);
+        btnCancel = findViewById(R.id.btnCancel);
 
-        //get references to UI elements
-        EditText etExpenseName = findViewById(R.id.etExpenseName);
-        EditText etAmount = findViewById(R.id.etAmount);
-        EditText etDate = findViewById(R.id.etDate);
-        EditText etNotes = findViewById(R.id.etNotes);
-        Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
-        Button btnSave = findViewById(R.id.btnSave);
-        Button btnCancel = findViewById(R.id.btnCancel);
-
-        //set up category dropdown (spinner)
-        //do we still want to keep it in i1 or move it to i2 with more details to it that we discussed?
-        String[] categories = {"Food", "Transport", "Shopping", "Bills", "Other"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        //Setup category spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CATEGORIES);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
-        //date picker logic
-        etDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+        //Date picker
+        etDate.setOnClickListener(v -> showDatePicker());
 
-            DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) -> {
-                etDate.setText(String.format("%d/%d/%d", d, m + 1, y));
-            }, year, month, day);
-            datePicker.show();
-        });
-
-        //cancel button logic
+        //Cancel button
         btnCancel.setOnClickListener(v -> finish());
 
-        //save button logic
-        btnSave.setOnClickListener(v ->
+        //Save button
+        btnSave.setOnClickListener(v -> saveExpense());
+    }
+
+    //Shows a date picker dialog
+    private void showDatePicker()
+    {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) ->
+                etDate.setText(String.format("%d/%d/%d", d, m + 1, y)), year, month, day);
+
+        datePicker.show();
+    }
+
+    //Saves a new expense
+    private void saveExpense()
+    {
+        final String name = etExpenseName.getText().toString().trim();
+        final String amountStr = etAmount.getText().toString().trim();
+        final String category = spinnerCategory.getSelectedItem().toString();
+        final String date = etDate.getText().toString().trim();
+        final String notes = etNotes.getText().toString().trim();
+
+        if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty())
         {
-            //take in user input
-            String name = etExpenseName.getText().toString().trim();
-            String amountStr = etAmount.getText().toString().trim();
-            String category = spinnerCategory.getSelectedItem().toString();
-            String date = etDate.getText().toString().trim();
-            String notes = etNotes.getText().toString().trim();
+            Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            //should be in business layer? but this is not logic validation just empty thing. Discuss with Ta.
-            if (name.isEmpty() && amountStr.isEmpty() && date.isEmpty())
-            {
-                Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        try
+        {
+            final double amount = Double.parseDouble(amountStr);
+            Expense newExpense = new Expense(name, amount, category, date, notes);
 
-            try
-            {
-                // 2. Prepare amount (defaults to 0 if empty so the Business Layer can catch it)
-                double amount = 0;
-                if (!amountStr.isEmpty()) {
-                    amount = Double.parseDouble(amountStr);
-                }
+            MoneyTalksApp app = (MoneyTalksApp) getApplication();
+            app.getExpenseService().addExpense(newExpense);
 
-                //create new exp object (Note: id will be handled by repo)
-                Expense newExpense = new Expense(name, amount, category, date, notes);
-
-                //accessing business Layer via application class
-                MoneyTalksApp app = (MoneyTalksApp) getApplication();
-                app.getExpenseService().addExpense(newExpense);
-
-                //confirmation msg
-                Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
-
-                //close activity and return to list
-                finish();
-
-            }
-            catch (NumberFormatException e)
-            {
-                // Handles invalid number strings (like text in amount field)
-                Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
-            }
-            catch (ExpenseValidationException e)
-            {
-                // Catch the specific validation exception thrown by the validator
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+            Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        catch (NumberFormatException e)
+        {
+            Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
+        }
+        catch (ExpenseValidationException e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

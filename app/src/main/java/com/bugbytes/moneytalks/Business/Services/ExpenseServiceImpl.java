@@ -6,20 +6,20 @@ import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 import java.util.List;
 
-//core implementation of ExpenseService interface.
+//Core implementation of ExpenseService interface.
 public class ExpenseServiceImpl implements ExpenseService
 {
     private final ExpenseRepository repository;
     private final ExpenseValidator validator;
 
-    // Constructor for dependency injection (@param: repository, validator).
+    //Constructor for dependency injection (@param: repository, validator).
     public ExpenseServiceImpl(ExpenseRepository repository, ExpenseValidator validator)
     {
         this.repository = repository;
         this.validator = validator;
     }
 
-    // Adds a new expense (@param: expense to add).
+    //Adds a new expense (@param: expense to add).
     @Override
     public void addExpense(Expense expense)
     {

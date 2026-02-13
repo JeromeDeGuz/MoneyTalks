@@ -1,19 +1,20 @@
 package com.bugbytes.moneytalks.Persistence.Fake;
 
-//Model layer
 import com.bugbytes.moneytalks.Models.Expense;
-//Presistence layer
+
 import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 import java.util.ArrayList;
 import java.util.List;
 public class FakeRepository implements ExpenseRepository
 {
-    //We use a static list so data persists while the app is running
+    //Static list so data persists while the app is running
     private static final List<Expense> expenses = new ArrayList<>();
     private static int autoIncrementId = 100;
 
 
-    public FakeRepository(){
+    //Constructor: creates temporary, non-persistent sample data
+    public FakeRepository()
+    {
         //create temporary non-persistent data
         Expense temp1 = new Expense( "Uber", 15.0, "Transport", "2026/02/01", "Palomino -> Crib");
         Expense temp2 = new Expense( "Date", 45.0, "Food", "2026/02/04", "Tinder date at IGI, he split the bill...");
@@ -23,20 +24,24 @@ public class FakeRepository implements ExpenseRepository
         addExpense(temp3);
     }
 
+    //Adds an expense (@param: expense to add)
     @Override
     public void addExpense(Expense expense)
     {
-        expense.setId(autoIncrementId);
-        expenses.add(expense);
-        autoIncrementId++;
+        expense.setId(autoIncrementId); //Assigns unique id
+        expenses.add(expense); //stores in list
+        autoIncrementId++; //increment id for next expense
     }
 
+    //Deletes an expense (@param: expense to delete, @return: true if removed, false otherwise)
     @Override
-    public boolean deleteExpense(Expense expense){
+    public boolean deleteExpense(Expense expense)
+    {
         System.out.println("PRINTING: "+expense.getName());
         return expenses.remove(expense);
     }
 
+    //Returns all expenses (@return: list of all stored expenses)
     @Override
     public List<Expense> getAllExpenses()
     {
