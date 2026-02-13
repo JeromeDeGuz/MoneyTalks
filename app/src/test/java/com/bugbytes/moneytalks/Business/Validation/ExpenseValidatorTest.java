@@ -7,76 +7,85 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ExpenseValidatorTest
 {
-
     private final ExpenseValidator validator = new ExpenseValidator();
 
-
+    //Null expense should trigger validation exception
     @Test
-    void validate_Null()
+    public void validateNullShouldThrow()
     {
-        Expense expense = null;
-
+        final Expense expense = null;
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
-
-    }
-    @Test
-    void validate_nullName_shouldThrow() {
-        Expense expense = new Expense( null, 10.0, "Food", "2024-05-20", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
     }
 
+    //Expense with null name should be rejected
     @Test
-    void validate_blankName_shouldThrow() {
-        Expense expense = new Expense( "   ", 10.0, "Food", "2024-05-20", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateNullNameShouldThrow()
+    {
+        final Expense expense = new Expense(null, 10.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Blank name (only spaces) should be invalid
     @Test
-    void validate_onlyNumbersName_shouldThrow() {
-        Expense expense = new Expense( "12345", 10.0, "Food", "2024-05-20", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateBlankNameShouldThrow()
+    {
+        final Expense expense = new Expense("   ", 10.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Name containing only digits should not be allowed
     @Test
-    void validate_nameWithNumber_shouldNotThrow() {
-        Expense expense = new Expense( "Lunch 2", 10.0, "Food", "2024-05-20", "");
+    public void validateOnlyNumbersNameShouldThrow()
+    {
+        final Expense expense = new Expense("12345", 10.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+    }
+
+    //Name with letters and numbers should be valid
+    @Test
+    public void validateNameWithNumberShouldNotThrow()
+    {
+        final Expense expense = new Expense("Lunch 2", 10.0, "Food", "2024-05-20", "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 
+    //Zero amount should be rejected
     @Test
-    void validate_amountZero_shouldThrow() {
-        Expense expense = new Expense( "Lunch", 0.0, "Food", "2024-05-20", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateAmountZeroShouldThrow()
+    {
+        final Expense expense = new Expense("Lunch", 0.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Negative amount should not be accepted
     @Test
-    void validate_amountNegative_shouldThrow() {
-        Expense expense = new Expense( "Lunch", -1.0, "Food", "2024-05-20", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateAmountNegativeShouldThrow()
+    {
+        final Expense expense = new Expense("Lunch", -1.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Null date should fail validation
     @Test
-    void validate_nullDate_shouldThrow() {
-        Expense expense = new Expense( "Lunch", 10.0, "Food", null, "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateNullDateShouldThrow()
+    {
+        final Expense expense = new Expense("Lunch", 10.0, "Food", null, "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Blank date should be treated as invalid input
     @Test
-    void validate_blankDate_shouldThrow() {
-        Expense expense = new Expense( "Lunch", 10.0, "Food", "  ", "");
-        assertThrows(ExpenseValidationException.class,
-                () -> validator.validate(expense));
+    public void validateBlankDateShouldThrow()
+    {
+        final Expense expense = new Expense("Lunch", 10.0, "Food", "  ", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Fully valid expense should pass validation
     @Test
-    void validate_validInput_shouldNotThrow() {
-        Expense expense = new Expense( "Lunch", 12.5, "Food", "2024-05-20", "");
+    public void validateValidInputShouldNotThrow()
+    {
+        final Expense expense = new Expense("Lunch", 12.5, "Food", "2024-05-20", "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 }

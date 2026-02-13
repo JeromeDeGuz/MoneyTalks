@@ -9,71 +9,84 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FakeRepositoryTest {
-
+public class FakeRepositoryTest
+{
     private FakeRepository repo;
 
     @BeforeEach
-    void setup() {
+    public void setUp()
+    {
+        //Initialize repository instance for each test
         repo = new FakeRepository();
 
-        // static list: clear between tests
+        //Clear static list to prevent shared state between tests
         repo.getAllExpenses().clear();
     }
 
+    //Repository should start empty after clearing static list
     @Test
-    void getAllExpenses_initiallyEmpty() {
+    public void getAllExpensesInitiallyEmpty()
+    {
         assertTrue(repo.getAllExpenses().isEmpty());
     }
 
+    //Verify that adding an expense stores it in the static list
     @Test
-    void addExpense_shouldAddToList() {
-        Expense e = new Expense("Dinner", 20.0, "Food", "2026/02/06", "Pizza");
+    public void addExpenseShouldAddToList()
+    {
+        final Expense e = new Expense("Dinner", 20.0, "Food", "2026/02/06", "Pizza");
 
         repo.addExpense(e);
 
-        List<Expense> all = repo.getAllExpenses();
+        final List<Expense> all = repo.getAllExpenses();
         assertEquals(1, all.size());
         assertSame(e, all.get(0));
     }
 
+    //Add expense and verify static list persists across instances
     @Test
-    void getAllExpenses_returnsSameBackingList_staticPersists() {
-        Expense e1 = new Expense("Coffee", 3.5, "Food", "2026/02/06", "");
+    public void getAllExpensesReturnsSameBackingListStaticPersists()
+    {
+
+        final Expense e1 = new Expense("Coffee", 3.5, "Food", "2026/02/06", "");
         repo.addExpense(e1);
 
-        // New instance should still see the same static list
-        FakeRepository repo2 = new FakeRepository();
-        List<Expense> all2 = repo2.getAllExpenses();
-        System.out.println("PRINTING: " + all2);
+        //New repository instance should reference same static list
+        final FakeRepository repo2 = new FakeRepository();
+        final List<Expense> all2 = repo2.getAllExpenses();
 
-        //4 since creating new repo2 initalizes 3 hard coded examples
+        //Static list includes hard-coded defaults plus added item
         assertEquals(4, all2.size());
         assertSame(e1, all2.get(0));
     }
 
+    //Verify deleting an existing expense removes it from list
     @Test
-    void deleteExpense_existingExpense_shouldRemoveFromList() {
-        Expense e1 = new Expense("Book", 15.0, "Shopping", "2024/01/01", "Sci/fi book");
-        Expense e2 = new Expense("Movie", 12.0, "Entertainment", "2024/01/02", "Action movie");
+    public void deleteExpenseExistingExpenseShouldRemoveFromList()
+    {
+        final Expense e1 = new Expense("Book", 15.0, "Shopping", "2024/01/01", "Sci/fi book");
+        final Expense e2 = new Expense("Movie", 12.0, "Entertainment", "2024/01/02", "Action movie");
+
         repo.addExpense(e1);
         repo.addExpense(e2);
 
         repo.deleteExpense(e1);
 
-        List<Expense> remaining = repo.getAllExpenses();
+        final List<Expense> remaining = repo.getAllExpenses();
         assertEquals(1, remaining.size());
         assertSame(e2, remaining.get(0));
         assertFalse(remaining.contains(e1));
     }
 
+    //Verify deleting non-existing expense does not modify list
     @Test
-    void deleteExpense_nonExistingExpense_shouldNotChangeList() {
-        Expense e1 = new Expense("Lunch", 10.0, "Food", "2024/01/03", "Sandwich");
-        Expense e2_nonExisting = new Expense("Snack", 5.0, "Food", "2024/01/04", "Chips");
-        repo.addExpense(e1);
+    public void deleteExpenseNonExistingExpenseShouldNotChangeList()
+    {
+        final Expense e1 = new Expense("Lunch", 10.0, "Food", "2024/01/03", "Sandwich");
+        final Expense e2NonExisting = new Expense("Snack", 5.0, "Food", "2024/01/04", "Chips");
 
-        repo.deleteExpense(e2_nonExisting);
+        repo.addExpense(e1);
+        repo.deleteExpense(e2NonExisting);
 
         assertEquals(1, repo.getAllExpenses().size());
         assertSame(e1, repo.getAllExpenses().get(0));
