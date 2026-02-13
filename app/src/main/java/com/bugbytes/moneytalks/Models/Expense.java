@@ -1,7 +1,8 @@
 package com.bugbytes.moneytalks.Models;
 
 //Represents an expense and allows it to be serialized between activities.
-public class Expense implements java.io.Serializable {
+public class Expense implements java.io.Serializable
+{
     private int id;
     private String name;
     private double amount; //Price of the expense
@@ -10,7 +11,8 @@ public class Expense implements java.io.Serializable {
     private String note;     //Optional note
 
     //Constructor (@param: name, amount, category, date, note)
-    public Expense(String name, double amount, String category, String date, String note) {
+    public Expense(String name, double amount, String category, String date, String note)
+    {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -19,32 +21,39 @@ public class Expense implements java.io.Serializable {
     }
 
     // Getters
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public double getAmount() {
+    public double getAmount()
+    {
         return amount;
     }
 
-    public String getCategory() {
+    public String getCategory()
+    {
         return category;
     }
 
-    public String getDate() {
+    public String getDate()
+    {
         return date;
     }
 
-    public String getNote() {
+    public String getNote()
+    {
         return note;
     }
 
     // Setters
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 }
