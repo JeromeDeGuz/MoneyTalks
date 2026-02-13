@@ -34,6 +34,19 @@ public class ExpenseValidatorTest
     }
 
     @Test
+    void validate_onlyNumbersName_shouldThrow() {
+        Expense expense = new Expense( "12345", 10.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class,
+                () -> validator.validate(expense));
+    }
+
+    @Test
+    void validate_nameWithNumber_shouldNotThrow() {
+        Expense expense = new Expense( "Lunch 2", 10.0, "Food", "2024-05-20", "");
+        assertDoesNotThrow(() -> validator.validate(expense));
+    }
+
+    @Test
     void validate_amountZero_shouldThrow() {
         Expense expense = new Expense( "Lunch", 0.0, "Food", "2024-05-20", "");
         assertThrows(ExpenseValidationException.class,
