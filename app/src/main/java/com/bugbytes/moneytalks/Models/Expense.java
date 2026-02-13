@@ -1,16 +1,18 @@
 package com.bugbytes.moneytalks.Models;
 
-//Serializable usage: allows expense object to be converted into a format that can be passed between activities or stored temporarily (confirm with lauren, see other past projects to see their implementation)
+//Represents an expense and allows it to be serialized between activities.
 public class Expense implements java.io.Serializable
 {
     private int id;
     private String name;
-    private double amount;
-    private String category; //more about category in iteration 2.
-    private String date;   //simple for Iteration 1 (can change later)
-    private String note;   //optional
+    private double amount; //Price of the expense
+    private String category; //Expense category
+    private String date;     //Expense date
+    private String note;     //Optional note
 
-    public Expense(String name, double amount, String category, String date, String note) {
+    //Constructor (@param: name, amount, category, date, note)
+    public Expense(String name, double amount, String category, String date, String note)
+    {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -18,7 +20,7 @@ public class Expense implements java.io.Serializable
         this.note = note;
     }
 
-    //Getters
+    // Getters
     public int getId()
     {
         return id;
@@ -40,7 +42,6 @@ public class Expense implements java.io.Serializable
     }
 
     public String getDate()
-
     {
         return date;
     }
@@ -50,7 +51,7 @@ public class Expense implements java.io.Serializable
         return note;
     }
 
-    //Setters
+    // Setters
     public void setId(int id)
     {
         this.id = id;
@@ -65,6 +66,7 @@ public class Expense implements java.io.Serializable
     {
         this.name = name;
     }
+
     public void setCategory(String category)
     {
         this.category = category;

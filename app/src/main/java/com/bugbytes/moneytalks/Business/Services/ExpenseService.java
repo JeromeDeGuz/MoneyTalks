@@ -1,12 +1,14 @@
 package com.bugbytes.moneytalks.Business.Services;
-//Model layer
 import com.bugbytes.moneytalks.Models.Expense;
 import java.util.List;
 
-//This defines business rule for our app, acts as contract that any ExpenseService implementation must follow. (@ekeh stuff here)
+//This defines business rule for our app, acts as contract that any ExpenseService implementation must follow.
 public interface ExpenseService
 {
-    void addExpense(Expense expense); //used by zia's screen. Ekeh will add rules in implementation.
-    List<Expense> getAllExpenses(); //used by jenna screen to list all the expenses.
+    //Adds a new expense (@param: expense to add).
+    void addExpense(Expense expense);
+    //Retrieves all expenses (@return: list of expenses).
+    List<Expense> getAllExpenses();
+    //Deletes an expense (@param: expense to delete, @return: true if successful).
     boolean deleteExpense(Expense expense);
 }

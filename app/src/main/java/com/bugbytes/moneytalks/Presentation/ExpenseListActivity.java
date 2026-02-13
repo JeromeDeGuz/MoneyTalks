@@ -23,7 +23,7 @@ import java.util.List;
 //main screen that displays all expenses in a list
 public class ExpenseListActivity extends AppCompatActivity
 {
-    private RecyclerView rv;
+    private RecyclerView recyclerView;
     private ExpenseService expenseService;
 
     @Override
@@ -48,8 +48,8 @@ public class ExpenseListActivity extends AppCompatActivity
         }
 
         //setup RecyclerView
-        rv = findViewById(R.id.rvExpenses);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = findViewById(R.id.rvExpenses);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //floating + button that takes to addExpense screen
         FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
@@ -74,6 +74,6 @@ public class ExpenseListActivity extends AppCompatActivity
         List<Expense> data = expenseService.getAllExpenses();
         //The ExpenseService is now passed to the adapter
         adapter = new ExpenseAdapter(data, expenseService);
-        rv.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 }
