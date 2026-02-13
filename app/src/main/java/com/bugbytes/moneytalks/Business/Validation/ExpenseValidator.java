@@ -12,6 +12,9 @@ public class ExpenseValidator
         {
             throw new ExpenseValidationException("Expense object cannot be null.");
         }
+        if (expense.getName().trim().matches("^\\d+$")) {
+            throw new ExpenseValidationException("Expense name cannot be only numbers.");
+        }
 
         if (expense.getName() == null || expense.getName().trim().isEmpty())
         {
