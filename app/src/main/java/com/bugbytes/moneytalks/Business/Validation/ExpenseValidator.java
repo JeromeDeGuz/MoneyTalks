@@ -2,6 +2,7 @@ package com.bugbytes.moneytalks.Business.Validation;
 
 import com.bugbytes.moneytalks.Models.Expense;
 
+
 public class ExpenseValidator
 {
     public void validate(Expense expense)
