@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bugbytes.moneytalks.Application.MoneyTalksApp;
+import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
 import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
@@ -118,9 +119,9 @@ public class AddExpense extends AppCompatActivity
                 // Handles invalid number strings (like text in amount field)
                 Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
             }
-            catch (IllegalArgumentException e)
+            catch (ExpenseValidationException e)
             {
-                // THIS prints your specific rules from ExpenseServiceImpl
+                // Catch the specific validation exception thrown by the validator
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
