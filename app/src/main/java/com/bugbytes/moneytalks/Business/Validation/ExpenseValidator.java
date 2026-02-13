@@ -18,6 +18,10 @@ public class ExpenseValidator
             throw new ExpenseValidationException("Expense name is required and cannot be empty.");
         }
 
+        if (expense.getName().trim().matches("^\\d+$")) {
+            throw new ExpenseValidationException("Expense name cannot be only numbers.");
+        }
+
         if (expense.getAmount() <= 0)
         {
             throw new ExpenseValidationException("Expense amount must be greater than zero.");
