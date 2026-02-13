@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Built this based on lauren's sample project. Acts as a rule book for the app. -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -23,7 +23,7 @@
         <activity
             android:name=".Presentation.AddExpense"
             android:exported="false"
-            android:label="Add New Expense" />
+            android:label="@string/addNew" />
 
     </application>
 

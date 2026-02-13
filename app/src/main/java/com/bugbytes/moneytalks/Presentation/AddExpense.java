@@ -50,6 +50,7 @@ public class AddExpense extends AppCompatActivity
         EditText etNotes = findViewById(R.id.etNotes);
         Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
         Button btnSave = findViewById(R.id.btnSave);
+        Button btnCancel = findViewById(R.id.btnCancel);
 
         //set up category dropdown (spinner)
         //do we still want to keep it in i1 or move it to i2 with more details to it that we discussed?
@@ -70,6 +71,9 @@ public class AddExpense extends AppCompatActivity
             }, year, month, day);
             datePicker.show();
         });
+
+        //cancel button logic
+        btnCancel.setOnClickListener(v -> finish());
 
         //save button logic
         btnSave.setOnClickListener(v ->
