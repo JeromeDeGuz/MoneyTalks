@@ -20,7 +20,7 @@ This layer handles the initialization of android studio and the linking with the
 This layer handles everything the user sees and interacts with. It **displays data** and **collects user input**.  
 
 **Components:**
-- **AddExpenseActivity:** Screen to add new expenses. Collects name, amount, category, date, and notes
+- **AddExpense:** Screen to add new expenses. Collects name, amount, category, date, and notes
 - **ExpenseListActivity:** Displays all recorded expenses in a list format.
 - **ExpenseAdapter:** Bridges raw data with the UI, ensuring each expense is displayed correctly.
 
