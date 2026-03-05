@@ -4,9 +4,9 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView; // Updated Import
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,54 +18,52 @@ import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;
 
-//Screen that allows the user to add new expense.
-public class AddExpense extends AppCompatActivity
-{
-    //UI references
+// Screen that allows the user to add new expense.
+public class AddExpense extends AppCompatActivity {
+    // UI references
     private EditText etExpenseName;
     private EditText etAmount;
     private EditText etDate;
     private EditText etNotes;
-    private Spinner spinnerCategory;
+    private AutoCompleteTextView autoCompleteCategory; // Fixed: Changed from Spinner
     private Button btnSave;
     private Button btnCancel;
 
-    //Categories for spinner
+    // Categories for dropdown
     private static final String[] CATEGORIES = {"Food", "Transport", "Shopping", "Bills", "Other"};
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense); //Set activity layout
+        setContentView(R.layout.activity_add_expense);
 
-        //Initialize UI elements
+        // Initialize UI elements
         etExpenseName = findViewById(R.id.etExpenseName);
         etAmount = findViewById(R.id.etAmount);
         etDate = findViewById(R.id.etDate);
         etNotes = findViewById(R.id.etNotes);
-        spinnerCategory = findViewById(R.id.spinnerCategory);
+        autoCompleteCategory = findViewById(R.id.autoCompleteCategory); // Fixed: Matches new XML ID
         btnSave = findViewById(R.id.btnSave);
         btnCancel = findViewById(R.id.btnCancel);
 
-        //Setup category spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CATEGORIES);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(adapter);
+        // Setup category dropdown (Material style)
+        // Fixed: Use simple_dropdown_item_1line for AutoCompleteTextView
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, CATEGORIES);
+        autoCompleteCategory.setAdapter(adapter);
 
-        //Date picker
+        // Date picker
         etDate.setOnClickListener(v -> showDatePicker());
 
-        //Cancel button
+        // Cancel button
         btnCancel.setOnClickListener(v -> finish());
 
-        //Save button
+        // Save button
         btnSave.setOnClickListener(v -> saveExpense());
     }
 
-    //Shows a date picker dialog
-    private void showDatePicker()
-    {
+    // Shows a date picker dialog
+    private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -77,23 +75,23 @@ public class AddExpense extends AppCompatActivity
         datePicker.show();
     }
 
-    //Saves a new expense
-    private void saveExpense()
-    {
+    // Saves a new expense
+    private void saveExpense() {
         final String name = etExpenseName.getText().toString().trim();
         final String amountStr = etAmount.getText().toString().trim();
-        final String category = spinnerCategory.getSelectedItem().toString();
+
+        // Fixed: For AutoCompleteTextView, get text directly instead of getSelectedItem()
+        final String category = autoCompleteCategory.getText().toString().trim();
+
         final String date = etDate.getText().toString().trim();
         final String notes = etNotes.getText().toString().trim();
 
-        if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty())
-        {
+        if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty() || category.isEmpty()) {
             Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        try
-        {
+        try {
             final double amount = Double.parseDouble(amountStr);
             Expense newExpense = new Expense(name, amount, category, date, notes);
 
@@ -102,13 +100,9 @@ public class AddExpense extends AppCompatActivity
 
             Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
             finish();
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
-        }
-        catch (ExpenseValidationException e)
-        {
+        } catch (ExpenseValidationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
