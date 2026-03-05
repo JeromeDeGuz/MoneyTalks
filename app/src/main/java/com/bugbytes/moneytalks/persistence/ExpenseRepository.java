@@ -1,6 +1,6 @@
-package com.bugbytes.moneytalks.Persistence;
+package com.bugbytes.moneytalks.persistence;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 import java.util.List;
 
 public interface ExpenseRepository

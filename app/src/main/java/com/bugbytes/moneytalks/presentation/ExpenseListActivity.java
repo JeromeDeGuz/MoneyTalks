@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bugbytes.moneytalks.Application.MoneyTalksApp;
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.application.MoneyTalksApp;
+import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

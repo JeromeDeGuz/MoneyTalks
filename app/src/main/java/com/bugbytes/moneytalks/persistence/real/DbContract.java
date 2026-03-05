@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Persistence.Real;
+package com.bugbytes.moneytalks.persistence.real;
 
 public final class DbContract {
     private DbContract() {}

@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.content.Intent;
 import android.content.Context;
@@ -12,8 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.List;

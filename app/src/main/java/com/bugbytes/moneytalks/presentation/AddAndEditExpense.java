@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bugbytes.moneytalks.Application.MoneyTalksApp;
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.application.MoneyTalksApp;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;

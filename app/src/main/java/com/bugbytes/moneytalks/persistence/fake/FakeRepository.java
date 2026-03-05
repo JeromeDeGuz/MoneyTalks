@@ -1,8 +1,8 @@
-package com.bugbytes.moneytalks.Persistence.Fake;
+package com.bugbytes.moneytalks.persistence.fake;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import java.util.ArrayList;
 import java.util.List;
 public class FakeRepository implements ExpenseRepository

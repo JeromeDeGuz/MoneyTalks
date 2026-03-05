@@ -1,6 +1,6 @@
-package com.bugbytes.moneytalks.Business.Validation;
+package com.bugbytes.moneytalks.business.validation;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

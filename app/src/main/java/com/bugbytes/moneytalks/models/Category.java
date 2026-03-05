@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Models;
+package com.bugbytes.moneytalks.models;
 
 public class Category {
     private int id;

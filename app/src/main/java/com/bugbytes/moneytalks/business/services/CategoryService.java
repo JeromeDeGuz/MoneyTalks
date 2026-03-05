@@ -1,6 +1,6 @@
-package com.bugbytes.moneytalks.Business.Services;
+package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.Models.Category;
+import com.bugbytes.moneytalks.models.Category;
 
 public interface CategoryService {
 
