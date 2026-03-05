@@ -3,7 +3,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".Application.MoneyTalksApp"
+        android:name=".application.MoneyTalksApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Sample_project">
 
         <activity
-            android:name=".Presentation.ExpenseListActivity"
+            android:name=".presentation.ExpenseListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".Presentation.AddExpense"
+            android:name=".presentation.AddAndEditExpense"
             android:exported="false"
             android:label="@string/addNew" />
 

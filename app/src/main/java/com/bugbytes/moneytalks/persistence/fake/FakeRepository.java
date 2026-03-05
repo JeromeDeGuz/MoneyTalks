@@ -1,8 +1,8 @@
-package com.bugbytes.moneytalks.Persistence.Fake;
+package com.bugbytes.moneytalks.persistence.fake;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import java.util.ArrayList;
 import java.util.List;
 public class FakeRepository implements ExpenseRepository
@@ -40,6 +40,21 @@ public class FakeRepository implements ExpenseRepository
         System.out.println("PRINTING: "+expense.getName());
         return expenses.remove(expense);
     }
+
+    @Override
+    public boolean updateExpense(Expense expense)
+    {
+        for (int i = 0; i < expenses.size(); i++)
+        {
+            if (expenses.get(i).getId() == expense.getId())
+            {
+                expenses.set(i, expense);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     //Returns all expenses (@return: list of all stored expenses)
     @Override

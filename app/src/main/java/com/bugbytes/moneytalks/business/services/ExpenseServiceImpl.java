@@ -1,9 +1,9 @@
-package com.bugbytes.moneytalks.Business.Services;
+package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.models.Expense;
 
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import java.util.List;
 
 //Core implementation of ExpenseService interface.
@@ -42,5 +42,12 @@ public class ExpenseServiceImpl implements ExpenseService
     public boolean deleteExpense(Expense expense)
     {
         return repository.deleteExpense(expense);
+    }
+
+    @Override
+    public boolean updateExpense(Expense expense)
+    {
+        validator.validate(expense);
+        return repository.updateExpense(expense);
     }
 }

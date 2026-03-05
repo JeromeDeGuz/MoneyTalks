@@ -1,6 +1,6 @@
-package com.bugbytes.moneytalks.Business.Validation;
+package com.bugbytes.moneytalks.business.validation;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 
 //Validates expense data before processing.
 public class ExpenseValidator

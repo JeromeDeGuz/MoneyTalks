@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Models;
+package com.bugbytes.moneytalks.models;
 
 //Represents an expense and allows it to be serialized between activities.
 public class Expense implements java.io.Serializable
@@ -45,6 +45,8 @@ public class Expense implements java.io.Serializable
     {
         return note;
     }
+
+    public String getCategory() { return category; }
 
     // Setters
     public void setId(int id)
