@@ -51,6 +51,8 @@ public class Expense implements java.io.Serializable
         return note;
     }
 
+    public String getCategory() { return category; }
+
     // Setters
     public void setId(int id)
     {

@@ -13,4 +13,6 @@ public interface ExpenseRepository
 
     //Returns all stored expenses (@return: list of expenses)
     List<Expense> getAllExpenses();
+
+    boolean updateExpense(Expense expense);
 }
