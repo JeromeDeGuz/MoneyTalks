@@ -11,14 +11,11 @@ The app follows a **3-tier architecture** for clean separation of concerns:
 ## Architecture
 
 ### 1. Application Layer 
-This layer handles initialization of the application and wiring connections between layers. It is not related to Android Studio (the IDE).
+This layer initializes application-wide services and wires the business layer to the persistence layer.
 
-**Components**
-MoneyTalksApp: Entry point of the app.
-- Initializes application-wide services.
-- Wires Business Layer to Persistence Layer.
-- Creates FakeRepository and provides it to ExpenseServiceImpl.
-- Creates ExpenseValidator and provides it to ExpenseServiceImpl.
+**Components:**
+
+- **MoneyTalksApp:** Entry point of the app. It initializes application-wide services and wires Business Layer to Persistence Layer. It also creates FakeRepository and provides it to `ExpenseServiceImpl` and creates `ExpenseValidator` and provides it to `ExpenseServiceImpl`.
 
 
 ### 2. Presentation Layer (UI)
@@ -29,7 +26,7 @@ This layer handles everything the user sees and interacts with. It **displays da
 - **ExpenseListActivity:** Displays all recorded expenses in a list format.
 - **ExpenseAdapter:** Bridges raw data with the UI, ensuring each expense is displayed correctly.
 
-Interactions:
+**Interactions:**
 - `AddExpense` → calls → `ExpenseService`
 - `ExpenseListActivity` → calls → `ExpenseService`
 
@@ -43,11 +40,12 @@ This layer contains the **core functionality** and **rules** of the app. It proc
 - **ExpenseValidator:** Ensures user input is valid (e.g., non-empty name, positive amount, valid date).
 - **ExpenseServicesImpl:** Implements `ExpenseService` operations, including data management and simple calculations (e.g., totals, filtering planned for future iterations).
 
-Interactions:
-`ExpenseServiceImpl` → uses → `ExpenseRepository`
-`ExpenseValidator` → validates → user input
+**Interactions:**
+- `ExpenseServiceImpl` → uses → `ExpenseRepository`
+- `ExpenseValidator` → validates → user input
 
-Notes:
+
+**Notes:**
 Features like filtering by category/date and calculating totals are planned for future iterations.
 
 ---
@@ -62,9 +60,11 @@ Responsible for **storing and retrieving data**, this layer abstracts the storag
   - Implements ExpenseRepository.
 
 
-Interactions:
-`ExpenseServiceImpl` → calls → `ExpenseRepository`
-`FakeRepository` — implements→ `ExpenseRepository`
+**Interactions:**
+- `ExpenseServiceImpl` → calls → `ExpenseRepository`
+- `FakeRepository` — implements→ `ExpenseRepository`
+
+
 ---
 ### 5. Models (Data Objects)
 Models define the **structure of the data** used across the application.  
