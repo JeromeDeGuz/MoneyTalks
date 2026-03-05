@@ -24,6 +24,7 @@ public class AppDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DbContract.ExpenseEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DbContract.CategoryEntry.TABLE_NAME);
 
+        //TODO: What do do with oldVersion/newVersion?
         onCreate(db);
     }
 
@@ -32,6 +33,7 @@ public class AppDbHelper extends SQLiteOpenHelper {
                 DbContract.ExpenseEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DbContract.ExpenseEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 DbContract.ExpenseEntry.COLUMN_AMOUNT + " REAL CHECK(" + DbContract.ExpenseEntry.COLUMN_AMOUNT + " >= 0), " +
+                //TODO: What are our assumptions when it comes to amount for an expense? Are we allowed negative expenses?
                 DbContract.ExpenseEntry.COLUMN_CATEGORY + " TEXT, " +
                 DbContract.ExpenseEntry.COLUMN_DATE + " TEXT, " +
                 DbContract.ExpenseEntry.COLUMN_NOTE + " TEXT)";
