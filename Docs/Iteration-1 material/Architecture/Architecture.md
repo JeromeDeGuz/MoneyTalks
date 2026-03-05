@@ -17,7 +17,7 @@ This layer initializes application-wide services and wires the business layer to
 
 - **MoneyTalksApp:** Entry point of the app. It initializes application-wide services and wires Business Layer to Persistence Layer. It also creates FakeRepository and provides it to `ExpenseServiceImpl` and creates `ExpenseValidator` and provides it to `ExpenseServiceImpl`.
 
-
+---
 ### 2. Presentation Layer (UI)
 This layer handles everything the user sees and interacts with. It **displays data** and **collects user input**.  
 
