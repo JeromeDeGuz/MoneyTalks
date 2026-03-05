@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".Presentation.AddExpense"
+            android:name=".Presentation.AddAndEditExpense"
             android:exported="false"
             android:label="@string/addNew" />
 

@@ -43,4 +43,11 @@ public class ExpenseServiceImpl implements ExpenseService
     {
         return repository.deleteExpense(expense);
     }
+
+    @Override
+    public boolean updateExpense(Expense expense)
+    {
+        validator.validate(expense);
+        return repository.updateExpense(expense);
+    }
 }

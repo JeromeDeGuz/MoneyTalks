@@ -54,7 +54,7 @@ public class ExpenseListActivity extends AppCompatActivity
         //Floating + button that takes to AddExpense screen
         final FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
         btnAddExpense.setOnClickListener(v -> {
-            Intent intent = new Intent(ExpenseListActivity.this, AddExpense.class);
+            Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
             startActivity(intent);
         });
     }
