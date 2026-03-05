@@ -21,7 +21,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateNullNameShouldThrow()
     {
-        final Expense expense = new Expense(null, 10.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense(null, 10.0, "Food", "20/5/2024", "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -29,7 +29,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateBlankNameShouldThrow()
     {
-        final Expense expense = new Expense("   ", 10.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("   ", 10.0, "Food", "20/5/2024", "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -37,7 +37,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateOnlyNumbersNameShouldThrow()
     {
-        final Expense expense = new Expense("12345", 10.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("12345", 10.0, "Food", "20/5/2024", "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -45,7 +45,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateNameWithNumberShouldNotThrow()
     {
-        final Expense expense = new Expense("Lunch 2", 10.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("Lunch 2", 10.0, "Food", "20/5/2024", "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 
@@ -53,7 +53,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateAmountZeroShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", 0.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("Lunch", 0.0, "Food", "20/5/2024", "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -61,7 +61,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateAmountNegativeShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", -1.0, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("Lunch", -1.0, "Food", "20/5/2024", "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -81,11 +81,19 @@ public class ExpenseValidatorTest
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
+    //Invalid date format should fail validation
+    @Test
+    public void validateInvalidDateFormatShouldThrow()
+    {
+        final Expense expense = new Expense("Lunch", 10.0, "Food", "2024-05-20", "");
+        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+    }
+
     //Fully valid expense should pass validation
     @Test
     public void validateValidInputShouldNotThrow()
     {
-        final Expense expense = new Expense("Lunch", 12.5, "Food", "2024-05-20", "");
+        final Expense expense = new Expense("Lunch", 12.5, "Food", "20/5/2024", "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 }
