@@ -11,10 +11,15 @@ The app follows a **3-tier architecture** for clean separation of concerns:
 ## Architecture
 
 ### 1. Application Layer 
-This layer handles the initialization of android studio and the linking with the layers.
+This layer handles initialization of the application and wiring connections between layers. It is not related to Android Studio (the IDE).
 
 **Components**
-- **MoneyTalksApp:** Entry point of the app, initializes the connections between business and persistence layers.
+MoneyTalksApp: Entry point of the app.
+- Initializes application-wide services.
+- Wires Business Layer to Persistence Layer.
+- Creates FakeRepository and provides it to ExpenseServiceImpl.
+- Creates ExpenseValidator and provides it to ExpenseServiceImpl.
+
 
 ### 2. Presentation Layer (UI)
 This layer handles everything the user sees and interacts with. It **displays data** and **collects user input**.  
@@ -24,15 +29,26 @@ This layer handles everything the user sees and interacts with. It **displays da
 - **ExpenseListActivity:** Displays all recorded expenses in a list format.
 - **ExpenseAdapter:** Bridges raw data with the UI, ensuring each expense is displayed correctly.
 
+Interactions:
+- `AddExpense` → calls → `ExpenseService`
+- `ExpenseListActivity` → calls → `ExpenseService`
+
 
 ---
 ### 3. Business Layer (Logic)
 This layer contains the **core functionality** and **rules** of the app. It processes data and enforces validation without concern for storage or UI.  
 
 **Components:**
-- **ExpenseService:** Defines operations such as adding, deleting, and retrieving all expenses.
+- **ExpenseService:** Defines operations such as addExpense, deleteExpense, and getAllExpenses.
 - **ExpenseValidator:** Ensures user input is valid (e.g., non-empty name, positive amount, valid date).
-- **ServicesImpl:** Implements `ExpenseService` operations, including calculations and managing data flow.
+- **ExpenseServicesImpl:** Implements `ExpenseService` operations, including data management and simple calculations (e.g., totals, filtering planned for future iterations).
+
+Interactions:
+`ExpenseServiceImpl` → uses → `ExpenseRepository`
+`ExpenseValidator` → validates → user input
+
+Notes:
+Features like filtering by category/date and calculating totals are planned for future iterations.
 
 ---
 ### 4. Persistence Layer (Storage)
@@ -40,8 +56,15 @@ Responsible for **storing and retrieving data**, this layer abstracts the storag
 
 **Components:**
 - **ExpenseRepository:** Interface that defines rules for saving and accessing expenses.
-- **FakeRepository:** Fake implementation for development/testing. Stores data in memory while the app is running.
+- **FakeRepository:** In-memory implementation for development/testing.
+  - Stores expenses during runtime.
+  - Resets to default data when the app restarts.
+  - Implements ExpenseRepository.
 
+
+Interactions:
+`ExpenseServiceImpl` → calls → `ExpenseRepository`
+`FakeRepository` — implements→ `ExpenseRepository`
 ---
 ### 5. Models (Data Objects)
 Models define the **structure of the data** used across the application.  
