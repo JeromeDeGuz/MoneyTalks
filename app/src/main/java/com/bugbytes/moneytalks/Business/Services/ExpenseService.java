@@ -11,4 +11,6 @@ public interface ExpenseService
     List<Expense> getAllExpenses();
     //Deletes an expense (@param: expense to delete, @return: true if successful).
     boolean deleteExpense(Expense expense);
+
+    boolean updateExpense(Expense expense);
 }
