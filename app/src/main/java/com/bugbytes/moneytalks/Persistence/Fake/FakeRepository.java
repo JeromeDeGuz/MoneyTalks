@@ -51,6 +51,21 @@ public class FakeRepository implements ExpenseRepository
         return false;
     }
 
+    @Override
+    public boolean updateExpense(Expense expense)
+    {
+        for (int i = 0; i < expenses.size(); i++)
+        {
+            if (expenses.get(i).getId() == expense.getId())
+            {
+                expenses.set(i, expense);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //Returns all expenses (@return: list of all stored expenses)
     @Override
     public List<Expense> getAllExpenses()

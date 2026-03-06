@@ -12,7 +12,9 @@ public interface ExpenseService
     //Retrieves all expenses (@return: list of expenses).
     List<Expense> getAllExpenses();
 
-    //Deletes an expense (@param: expense to delete).
-    //Throws ExpenseValidationException if deletion fails (e.g. not found).
-    void deleteExpense(Expense expense);
+    //Deletes an expense (@param: expense to delete, @return: true if successful).
+    boolean deleteExpense(Expense expense);
+
+    boolean updateExpense(Expense expense);
 }
+

@@ -42,7 +42,7 @@ public class ExpenseServiceImpl implements ExpenseService
     //Deletes an expense (@param: expense to delete).
     //Throws ExpenseValidationException if deletion fails (e.g. not found).
     @Override
-    public void deleteExpense(Expense expense)
+    public boolean deleteExpense(Expense expense)
     {
         if (expense == null)
         {
@@ -55,5 +55,13 @@ public class ExpenseServiceImpl implements ExpenseService
         {
             throw new ExpenseValidationException("Expense not found: " + expense.getName());
         }
+        return removed;
+    }
+    @Override
+    public boolean updateExpense(Expense expense)
+    {
+        validator.validate(expense);
+        return repository.updateExpense(expense);
     }
 }
+

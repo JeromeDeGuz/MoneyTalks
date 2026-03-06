@@ -1,5 +1,6 @@
 package com.bugbytes.moneytalks.Presentation;
 
+import android.content.Intent;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,8 +74,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
                 try
                 {
+<<<<<<< HEAD
                     //Deletes expense and updates UI
                     expenseService.deleteExpense(expenseToDelete);
+=======
+>>>>>>> origin/Development
                     expenses.remove(currentPosition);
                     notifyItemRemoved(currentPosition);
                     Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
@@ -83,6 +87,18 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 {
                     Toast.makeText(context, "Failed to delete: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        holder.editButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition != RecyclerView.NO_POSITION)
+            {
+                Expense expenseToEdit = expenses.get(currentPosition);
+
+                Intent i = new Intent(v.getContext(), AddAndEditExpense.class);
+                i.putExtra(AddAndEditExpense.EXTRA_EXPENSE, expenseToEdit);
+                v.getContext().startActivity(i);
             }
         });
     }
@@ -99,8 +115,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     {
         final TextView tvTitle, tvAmount, tvDate, tvNote;
         final ImageButton deleteButton;
+        final ImageButton editButton;
 
-        //Binds views from layout (@param: itemView)
         ViewHolder(@NonNull View itemView)
         {
             super(itemView);
@@ -109,6 +125,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             tvDate = itemView.findViewById(R.id.tvDate);
             tvNote = itemView.findViewById(R.id.tvNote);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            editButton = itemView.findViewById(R.id.editButton);
         }
     }
 }
