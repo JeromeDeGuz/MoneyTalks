@@ -74,11 +74,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
                 try
                 {
-<<<<<<< HEAD
+
                     //Deletes expense and updates UI
                     expenseService.deleteExpense(expenseToDelete);
-=======
->>>>>>> origin/Development
+
                     expenses.remove(currentPosition);
                     notifyItemRemoved(currentPosition);
                     Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();

@@ -1,9 +1,6 @@
 package com.bugbytes.moneytalks.Persistence.Real;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/Development
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,14 +11,7 @@ import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
 
-public class SqlRepository implements ExpenseRepository {
-    private final AppDbHelper dbHelper;
-
-    public SqlRepository(Context context) {
-        dbHelper = new AppDbHelper(context);
-=======
 
 public class SqlRepository implements ExpenseRepository {
 
@@ -29,7 +19,7 @@ public class SqlRepository implements ExpenseRepository {
 
     public SqlRepository(Context context) {
         this.dbHelper = new AppDbHelper(context);
->>>>>>> origin/Development
+
     }
 
     @Override
@@ -50,19 +40,11 @@ public class SqlRepository implements ExpenseRepository {
     @Override
     public boolean deleteExpense(Expense expense) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-<<<<<<< HEAD
-        String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
-        String[] selectionArgs = { String.valueOf(expense.getId()) };
-        int deletedRows = db.delete(DbContract.ExpenseEntry.TABLE_NAME, selection, selectionArgs);
-=======
-
-
         String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(expense.getId())};
 
         int deletedRows = db.delete(DbContract.ExpenseEntry.TABLE_NAME, selection, selectionArgs);
         System.out.println("LOG: " + deletedRows);
->>>>>>> origin/Development
         return deletedRows > 0;
     }
 
@@ -103,10 +85,6 @@ public class SqlRepository implements ExpenseRepository {
             expenses.add(expense);
         }
         cursor.close();
-<<<<<<< HEAD
-        return expenses;
-    }
-=======
 
         return expenses;
 
@@ -135,5 +113,4 @@ public class SqlRepository implements ExpenseRepository {
         return count > 0;
     }
 
->>>>>>> origin/Development
 }
