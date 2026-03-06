@@ -35,15 +35,6 @@ public class Expense implements java.io.Serializable
     {
         return amount;
     }
-<<<<<<< HEAD
-
-    public String getCategory()
-    {
-        return category;
-    }
-
-=======
->>>>>>> origin/Development
     public String getDate()
     {
         return date;
