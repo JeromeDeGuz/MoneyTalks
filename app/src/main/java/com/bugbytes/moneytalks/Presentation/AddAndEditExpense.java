@@ -129,7 +129,7 @@ public class AddAndEditExpense extends AppCompatActivity
         final String date = etDate.getText().toString().trim();
         final String notes = etNotes.getText().toString().trim();
 
-        if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty() || category.isEmpty())
+        if (name.isEmpty() && amountStr.isEmpty() && date.isEmpty() && category.isEmpty())
         {
             Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return;
