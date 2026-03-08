@@ -19,5 +19,5 @@ public interface ExpenseService
     boolean updateExpense(Expense expense);
 
     //Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
-    List<Expense> getExpensesSortedByDate(boolean newestFirst);
+    List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst);
 }

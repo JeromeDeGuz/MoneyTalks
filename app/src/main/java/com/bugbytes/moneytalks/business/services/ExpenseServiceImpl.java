@@ -77,14 +77,23 @@ public class ExpenseServiceImpl implements ExpenseService
 
     //Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
     @Override
-    public List<Expense> getExpensesSortedByDate(boolean newestFirst)
+    public List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst)
     {
         // Create a copy of the list to avoid modifying the persistence layer's original data
-        List<Expense> sortedList = new ArrayList<>(getAllExpenses());
+        List<Expense> newList = new ArrayList<>(getAllExpenses());
+        // 1) Filter
+        if (categoryName != null && !categoryName.equalsIgnoreCase("All"))
+        {
+            newList.removeIf(e ->
+                    e == null
+                            || e.getCategory() == null
+                            || !categoryName.equals(e.getCategory())
+            );
+
+        }
 
 
-
-        sortedList.sort((e1, e2) -> {
+        newList.sort((e1, e2) -> {
             if (newestFirst)
             {
                 // Descending order: Newest dates first
@@ -97,6 +106,6 @@ public class ExpenseServiceImpl implements ExpenseService
             }
         });
 
-        return sortedList;
+        return newList;
     }
 }
