@@ -3,9 +3,8 @@ package com.bugbytes.moneytalks.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,9 +31,9 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private ExpenseService expenseService;
     private ExpenseAdapter adapter; // Instance kept for reuse (Suggestion #14)
 
-    // Dropdown for sorting functionality
-    private Spinner sortSpinner;
-    private static final String[] SORT_OPTIONS = {"Newest to Oldest", "Oldest to Newest"};
+    // Chotu button for sorting functionality to replace the clunky spinner
+    private Button btnSort;
+    private boolean isNewestFirst = true; // Tracks current sort state
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,8 +61,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
         }
 
-        // Setup the sorting spinner to allow immediate list updates
-        setupSortSpinner();
+        // Setup the sorting button to allow immediate list updates via PopupMenu
+        setupSortButton();
 
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,27 +79,25 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    // Configures the dropdown and its listener for "foran" (instant) updates
-    private void setupSortSpinner()
+    // Configures the small button and its popup listener for "foran" (instant) updates
+    private void setupSortButton()
     {
-        sortSpinner = findViewById(R.id.sortSpinner);
-        if (sortSpinner != null)
+        btnSort = findViewById(R.id.btnSort);
+        if (btnSort != null)
         {
-            ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_spinner_dropdown_item, SORT_OPTIONS);
-            sortSpinner.setAdapter(sortAdapter);
+            btnSort.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnSort);
+                popup.getMenu().add("Newest to Oldest");
+                popup.getMenu().add("Oldest to Newest");
 
-            sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-            {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-                {
-                    // Logic: Position 0 is Newest First, Position 1 is Oldest First
+                popup.setOnMenuItemClickListener(item -> {
+                    String title = item.getTitle().toString();
+                    // Toggle the logic state
+                    isNewestFirst = title.equals("Newest to Oldest");
                     loadExpenses();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                    return true;
+                });
+                popup.show();
             });
         }
     }
@@ -130,9 +127,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
     private void loadExpenses()
     {
-        // Fetch data based on the selected sort option from the Spinner
-        boolean newestFirst = (sortSpinner != null && sortSpinner.getSelectedItemPosition() == 0);
-        final List<Expense> data = expenseService.getExpensesSortedByDate(newestFirst);
+        // Fetch data based on the selected sort state (either from initialization or Popup)
+        final List<Expense> data = expenseService.getExpensesSortedByDate(isNewestFirst);
 
         // Update existing adapter instead of creating a new one (Suggestion #14)
         if (adapter != null)

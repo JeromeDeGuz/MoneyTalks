@@ -5,17 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/sortSpinner"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btnSort"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:minHeight="48dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Sort by Date"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        android:minHeight="40dp"
+        app:icon="@android:drawable/ic_menu_sort_by_size"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExpenses"
@@ -26,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sortSpinner" />
+        app:layout_constraintTop_toBottomOf="@id/btnSort" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddExpense"
