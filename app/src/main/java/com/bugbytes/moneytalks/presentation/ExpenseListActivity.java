@@ -109,14 +109,16 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             MenuItem newestItem = menu.add(GROUP_SORT, ID_NEWEST, 0, "Newest to Oldest");
             MenuItem oldestItem = menu.add(GROUP_SORT, ID_OLDEST, 1, "Oldest to Newest");
 
-            // Make items checkable and enforce single selection within the group
-            newestItem.setCheckable(true);
-            oldestItem.setCheckable(true);
-            menu.setGroupCheckable(GROUP_SORT, true, true);
+
 
             // Pre-check the currently active sort option when opening the popup
             newestItem.setChecked(isNewestFirst);
             oldestItem.setChecked(!isNewestFirst);
+
+            // Make items checkable and enforce single selection within the group
+            newestItem.setCheckable(true);
+            oldestItem.setCheckable(true);
+            menu.setGroupCheckable(GROUP_SORT, true, true);
 
             popup.setOnMenuItemClickListener(item -> {
                 // Update state based on selection and mark the chosen item checked
@@ -130,6 +132,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                     isNewestFirst = false;
                     item.setChecked(true);
                 }
+
+
 
                 // Refresh list using the current sort + filter state
                 loadExpenses();
