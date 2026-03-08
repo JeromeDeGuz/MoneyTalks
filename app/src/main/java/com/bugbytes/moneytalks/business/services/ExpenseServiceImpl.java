@@ -1,11 +1,10 @@
-package com.bugbytes.moneytalks.Business.Services;
+package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
-import com.bugbytes.moneytalks.Business.Validation.Validator;
-import com.bugbytes.moneytalks.Models.Expense;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.business.validation.Validator;
+import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,13 +36,12 @@ public class ExpenseServiceImpl implements ExpenseService
     @Override
     public List<Expense> getAllExpenses()
     {
-        List<Expense> expenses = repository.getAllExpenses();
-        if (expenses == null)
+        List<Expense> result = repository.getAllExpenses();
+        if (result == null)
         {
-            // Safeguard: return an empty list instead of null to prevent downstream NPEs
-            return new ArrayList<>();
+            throw new IllegalStateException("Repository returned null instead of a list.");
         }
-        return expenses;
+        return result;
     }
 
     //Deletes an expense (@param: expense to delete).
@@ -65,8 +63,6 @@ public class ExpenseServiceImpl implements ExpenseService
         return removed;
     }
 
-    //Updates an existing expense (@param: expense to update).
-    //Throws ExpenseValidationException if update fails or expense is null.
     @Override
     public boolean updateExpense(Expense expense)
     {
@@ -74,16 +70,7 @@ public class ExpenseServiceImpl implements ExpenseService
         {
             throw new ExpenseValidationException("Cannot update a null expense.");
         }
-
         validator.validate(expense);
-
-        boolean updated = repository.updateExpense(expense);
-
-        if (!updated)
-        {
-            throw new ExpenseValidationException("Expense not found: " + expense.getName());
-        }
-
-        return updated;
+        return repository.updateExpense(expense);
     }
 }

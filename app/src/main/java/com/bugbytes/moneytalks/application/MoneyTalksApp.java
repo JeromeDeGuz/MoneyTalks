@@ -1,12 +1,12 @@
-package com.bugbytes.moneytalks.Application;
+package com.bugbytes.moneytalks.application;
 
 import android.app.Application;
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
-import com.bugbytes.moneytalks.Business.Services.ExpenseServiceImpl;
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.Persistence.Fake.FakeRepository;
-import com.bugbytes.moneytalks.Persistence.Real.SqlRepository;
+
+import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlRepository;
 
 //Creates once when app starts, acts as main setup/manager for whole app.
 public class MoneyTalksApp extends Application
@@ -25,6 +25,7 @@ public class MoneyTalksApp extends Application
         //create service and connect it to repo
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
     }
+
     public ExpenseService getExpenseService()
     {
         return expenseService;

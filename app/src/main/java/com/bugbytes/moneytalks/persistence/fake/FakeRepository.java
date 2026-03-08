@@ -1,7 +1,10 @@
-package com.bugbytes.moneytalks.Persistence.Fake;
+package com.bugbytes.moneytalks.persistence.fake;
 
-import com.bugbytes.moneytalks.Models.Expense;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +20,9 @@ public class FakeRepository implements ExpenseRepository
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
         if (expenses.isEmpty())
         {
-            Expense temp1 = new Expense( "Uber", 15.0, "Transport", "2026-02-01", "Palomino -> Crib");
-            Expense temp2 = new Expense( "Date", 45.0, "Food", "2026-02-04", "Tinder date at IGI, he split the bill...");
-            Expense temp3 = new Expense( "Sportchek", 20.0, "Shopping", "2026-02-06", "Nidecker supermatic bindings, and new Salomon snowboard");
+            Expense temp1 = new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib");
+            Expense temp2 = new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill...");
+            Expense temp3 = new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard");
             addExpense(temp1);
             addExpense(temp2);
             addExpense(temp3);
@@ -30,8 +33,16 @@ public class FakeRepository implements ExpenseRepository
     @Override
     public void addExpense(Expense expense)
     {
-        expense.setId(autoIncrementId); //Assigns unique id
-        expenses.add(expense); //stores in list
+        // Re-creating the object to assign the final id through the constructor
+        Expense expenseWithId = new Expense(
+                autoIncrementId,
+                expense.getName(),
+                expense.getAmount(),
+                expense.getCategory(),
+                expense.getDate(),
+                expense.getNote()
+        );
+        expenses.add(expenseWithId); //stores in list
         autoIncrementId++; //increment id for next expense
     }
 
@@ -64,7 +75,6 @@ public class FakeRepository implements ExpenseRepository
         }
         return false;
     }
-
 
     //Returns all expenses (@return: list of all stored expenses)
     @Override

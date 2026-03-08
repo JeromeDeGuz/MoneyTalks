@@ -1,9 +1,13 @@
-package com.bugbytes.moneytalks.Business.Validation;
+package com.bugbytes.moneytalks.business.validation;
 
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class ExpenseValidatorTest
 {
@@ -21,7 +25,8 @@ public class ExpenseValidatorTest
     @Test
     public void validateNullNameShouldThrow()
     {
-        final Expense expense = new Expense(null, 10.0, "Food", "20/5/2024", "");
+        // Added ID, BigDecimal, and LocalDate
+        final Expense expense = new Expense(0, null, new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -29,7 +34,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateBlankNameShouldThrow()
     {
-        final Expense expense = new Expense("   ", 10.0, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "   ", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -37,7 +42,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateOnlyNumbersNameShouldThrow()
     {
-        final Expense expense = new Expense("12345", 10.0, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "12345", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -45,7 +50,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateNameWithNumberShouldNotThrow()
     {
-        final Expense expense = new Expense("Lunch 2", 10.0, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "Lunch 2", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 
@@ -53,7 +58,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateAmountZeroShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", 0.0, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "Lunch", BigDecimal.ZERO, "Food", LocalDate.of(2024, 5, 20), "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -61,7 +66,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateAmountNegativeShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", -1.0, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("-1.0"), "Food", LocalDate.of(2024, 5, 20), "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -69,7 +74,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateNullDateShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", 10.0, "Food", null, "");
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -77,7 +82,9 @@ public class ExpenseValidatorTest
     @Test
     public void validateBlankDateShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", 10.0, "Food", "  ", "");
+        // Note: Since Expense model now uses LocalDate, a "blank" date is handled at the parsing level (AddAndEditExpense)
+        // This test now checks for null to represent missing date input
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -85,7 +92,9 @@ public class ExpenseValidatorTest
     @Test
     public void validateInvalidDateFormatShouldThrow()
     {
-        final Expense expense = new Expense("Lunch", 10.0, "Food", "2024-05-20", "");
+        // LocalDate prevents invalid formats by design
+        // Testing null to ensure the validator still catches missing dates
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
         assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
     }
 
@@ -93,7 +102,7 @@ public class ExpenseValidatorTest
     @Test
     public void validateValidInputShouldNotThrow()
     {
-        final Expense expense = new Expense("Lunch", 12.5, "Food", "20/5/2024", "");
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("12.5"), "Food", LocalDate.of(2024, 5, 20), "");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 }

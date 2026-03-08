@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Business.Validation;
+package com.bugbytes.moneytalks.business.validation;
 
 //Generic interface for validation logic.
 public interface Validator<T>

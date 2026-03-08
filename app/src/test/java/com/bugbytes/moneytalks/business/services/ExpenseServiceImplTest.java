@@ -1,14 +1,17 @@
-package com.bugbytes.moneytalks.Business.Services;
+package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidator;
-import com.bugbytes.moneytalks.Persistence.Fake.FakeRepository;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.models.Expense;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ExpenseServiceImplTest
@@ -25,14 +28,20 @@ public class ExpenseServiceImplTest
         validator = new ExpenseValidator();
         expenseService = new ExpenseServiceImpl(repo, validator);
 
-        repo.getAllExpenses().clear(); //Since FakeRepository uses a static list, clear it before every test
+        // Clearing the static list by removing items individually since getAllExpenses() returns a copy
+        List<Expense> current = repo.getAllExpenses();
+        for (Expense e : current)
+        {
+            repo.deleteExpense(e);
+        }
     }
 
     //Verify that adding an expense stores it in repository
     @Test
     public void addExpenseShouldDelegateToRepository()
     {
-        final Expense expense = new Expense("Groceries", 45.0, "Food", "2026/02/12", "Weekly shop");
+        // Added 0 as the first parameter for the id
+        final Expense expense = new Expense(0, "Groceries", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "Weekly shop");
 
         expenseService.addExpense(expense);
 
@@ -45,8 +54,9 @@ public class ExpenseServiceImplTest
     @Test
     public void getAllExpensesShouldReturnAllStoredItems()
     {
-        expenseService.addExpense(new Expense("Rent", 1200.0, "Housing", "2026/02/01", "Feb Rent"));
-        expenseService.addExpense(new Expense("Coffee", 5.0, "Food", "2026/02/02", "Latte"));
+        // Added 0 as the first parameter for the id
+        expenseService.addExpense(new Expense(0, "Rent", new BigDecimal("1200.0"), "Housing", LocalDate.of(2026, 2, 1), "Feb Rent"));
+        expenseService.addExpense(new Expense(0, "Coffee", new BigDecimal("5.0"), "Food", LocalDate.of(2026, 2, 2), "Latte"));
 
         final List<Expense> list = expenseService.getAllExpenses();
 
@@ -57,10 +67,14 @@ public class ExpenseServiceImplTest
     @Test
     public void deleteExpenseShouldReturnTrueOnSuccess()
     {
-        final Expense gas = new Expense("Gas", 60.0, "Transport", "2026/02/10", "Full tank");
+        // Added 0 as the first parameter for the id
+        final Expense gas = new Expense(0, "Gas", new BigDecimal("60.0"), "Transport", LocalDate.of(2026, 2, 10), "Full tank");
         expenseService.addExpense(gas);
 
-        final boolean deleted = expenseService.deleteExpense(gas);
+        // Fetching the assigned ID from repo to ensure a clean match
+        Expense storedGas = expenseService.getAllExpenses().get(0);
+
+        final boolean deleted = expenseService.deleteExpense(storedGas);
 
         assertTrue(deleted);
         assertEquals(0, expenseService.getAllExpenses().size());
@@ -70,7 +84,8 @@ public class ExpenseServiceImplTest
     @Test
     public void deleteExpenseShouldReturnFalseIfNotFound()
     {
-        final Expense nonExistent = new Expense("Missing", 0.0, "None", "2026/01/01", "");
+        // Added 0 as the first parameter for the id
+        final Expense nonExistent = new Expense(0, "Missing", BigDecimal.ZERO, "None", LocalDate.of(2026, 1, 1), "");
 
         final boolean deleted = expenseService.deleteExpense(nonExistent);
 

@@ -1,8 +1,9 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,19 +13,21 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bugbytes.moneytalks.Application.MoneyTalksApp;
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.application.MoneyTalksApp;
+import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Main screen that displays all expenses in a list
-public class ExpenseListActivity extends AppCompatActivity
+public class ExpenseListActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseEventListener
 {
     private RecyclerView recyclerView;
     private ExpenseService expenseService;
+    private ExpenseAdapter adapter; // Instance kept for reuse (Suggestion #14)
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,27 +36,35 @@ public class ExpenseListActivity extends AppCompatActivity
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_expense_list);
 
-        //Get business service from application class first
         final MoneyTalksApp app = (MoneyTalksApp) getApplication();
         expenseService = app.getExpenseService();
 
         final View mainView = findViewById(R.id.layout_expense_list);
         if (mainView != null)
         {
-            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) ->
+            {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
                 return insets;
             });
         }
+        else
+        {
+            // Logging if layout guarantees are missed (Suggestion #15)
+            android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
+        }
 
-        //Setup RecyclerView
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Floating + button that takes to AddExpense screen
+        // Initialize adapter with empty list and 'this' as listener (Suggestion #13)
+        adapter = new ExpenseAdapter(new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
+
         final FloatingActionButton btnAddExpense = findViewById(R.id.btnAddExpense);
-        btnAddExpense.setOnClickListener(v -> {
+        btnAddExpense.setOnClickListener(v ->
+        {
             Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
             startActivity(intent);
         });
@@ -63,15 +74,32 @@ public class ExpenseListActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        //Refresh data from persistence layer every time we return to this screen
         loadExpenses();
     }
 
-    //Loads expenses from business layer and updates recyclerView
+    // Implementing the callback from Adapter (Suggestion #13)
+    @Override
+    public void onDeleteClick(Expense expense, int position)
+    {
+        boolean success = expenseService.deleteExpense(expense);
+        if (success)
+        {
+            Toast.makeText(this, "Deleted: " + expense.getName(), Toast.LENGTH_SHORT).show();
+            loadExpenses(); // Refresh list after deletion
+        }
+        else
+        {
+            Toast.makeText(this, "Failed to delete expense", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void loadExpenses()
     {
         final List<Expense> data = expenseService.getAllExpenses();
-        final ExpenseAdapter adapter = new ExpenseAdapter(data, expenseService);
-        recyclerView.setAdapter(adapter);
+        // Update existing adapter instead of creating a new one (Suggestion #14)
+        if (adapter != null)
+        {
+            adapter.setExpenses(data);
+        }
     }
 }
