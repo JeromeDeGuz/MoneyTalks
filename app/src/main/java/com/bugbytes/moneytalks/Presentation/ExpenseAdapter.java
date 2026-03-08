@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.Business.Services.ExpenseService;
+import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
 import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
@@ -71,16 +72,19 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 final Expense expenseToDelete = expenses.get(currentPosition);
                 final Context context = v.getContext();
 
-                //Deletes expense and updates UI
-                if (expenseService.deleteExpense(expenseToDelete))
+                try
                 {
+
+                    //Deletes expense and updates UI
+                    expenseService.deleteExpense(expenseToDelete);
+
                     expenses.remove(currentPosition);
                     notifyItemRemoved(currentPosition);
                     Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
                 }
-                else
+                catch (ExpenseValidationException ex)
                 {
-                    Toast.makeText(context, "Failed to delete: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to delete: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

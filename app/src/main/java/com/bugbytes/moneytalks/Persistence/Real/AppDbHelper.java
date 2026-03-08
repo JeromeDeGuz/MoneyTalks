@@ -49,5 +49,4 @@ public class AppDbHelper extends SQLiteOpenHelper {
 
         db.execSQL(createCategoriesTableQuery);
     }
-
 }

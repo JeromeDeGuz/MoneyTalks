@@ -1,11 +1,15 @@
 package com.bugbytes.moneytalks.Business.Validation;
 
 import com.bugbytes.moneytalks.Models.Expense;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 //Validates expense data before processing.
-public class ExpenseValidator
+public class ExpenseValidator implements Validator<Expense>
 {
     //Validates an expense object (@param: expense to validate).
+    @Override
     public void validate(Expense expense)
     {
         if (expense == null)
@@ -18,7 +22,8 @@ public class ExpenseValidator
             throw new ExpenseValidationException("Expense name is required and cannot be empty.");
         }
 
-        if (expense.getName().trim().matches("^\\d+$")) {
+        if (expense.getName().trim().matches("^\\d+$"))
+        {
             throw new ExpenseValidationException("Expense name cannot be only numbers.");
         }
 
@@ -30,6 +35,23 @@ public class ExpenseValidator
         if (expense.getDate() == null || expense.getDate().trim().isEmpty())
         {
             throw new ExpenseValidationException("Expense date is required.");
+        }
+
+        validateDateFormat(expense.getDate());
+    }
+
+    private void validateDateFormat(String date)
+    {
+        // Validates format dd-MM-yyyy
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        sdf.setLenient(false);
+        try
+        {
+            sdf.parse(date);
+        }
+        catch (ParseException e)
+        {
+            throw new ExpenseValidationException("Invalid date format. Expected dd-MM-yyyy.");
         }
     }
 }

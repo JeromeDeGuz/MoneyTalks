@@ -53,4 +53,3 @@ public class Expense implements java.io.Serializable
         this.id = id;
     }
 }
-

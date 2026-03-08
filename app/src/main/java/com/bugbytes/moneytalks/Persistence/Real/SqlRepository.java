@@ -12,12 +12,14 @@ import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class SqlRepository implements ExpenseRepository {
 
     private final AppDbHelper dbHelper;
 
     public SqlRepository(Context context) {
         this.dbHelper = new AppDbHelper(context);
+
     }
 
     @Override
@@ -38,8 +40,6 @@ public class SqlRepository implements ExpenseRepository {
     @Override
     public boolean deleteExpense(Expense expense) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-
         String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(expense.getId())};
 
