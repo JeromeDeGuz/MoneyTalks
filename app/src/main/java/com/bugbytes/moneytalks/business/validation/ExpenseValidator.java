@@ -31,7 +31,16 @@ public class ExpenseValidator implements Validator<Expense>
             throw new ExpenseValidationException("Expense amount must be greater than zero.");
         }
 
+<<<<<<< HEAD:app/src/main/java/com/bugbytes/moneytalks/business/validation/ExpenseValidator.java
         if (expense.getDate() == null)
+=======
+        if (expense.getCategory() == null || expense.getCategory().trim().isEmpty())
+        {
+            throw new ExpenseValidationException("Expense category is required.");
+        }
+
+        if (expense.getDate() == null || expense.getDate().trim().isEmpty())
+>>>>>>> Development:app/src/main/java/com/bugbytes/moneytalks/Business/Validation/ExpenseValidator.java
         {
             throw new ExpenseValidationException("Expense date is required.");
         }
