@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.Business.Validation;
+package com.bugbytes.moneytalks.business.validation;
 
 //Custom exception thrown when expense validation fails.
 public class ExpenseValidationException extends RuntimeException

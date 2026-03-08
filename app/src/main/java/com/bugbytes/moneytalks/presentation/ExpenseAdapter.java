@@ -1,39 +1,49 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.content.Intent;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bugbytes.moneytalks.Business.Services.ExpenseService;
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
 //Adapter for displaying expenses in RecyclerView
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder>
 {
-    private final List<Expense> expenses;
-    private final ExpenseService expenseService;
+    private List<Expense> expenses;
+    private final OnExpenseEventListener listener;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    //Constructor to initialize adapter (@param: expenses, expenseService)
-    public ExpenseAdapter(List<Expense> expenses, ExpenseService expenseService)
+    // Interface to delegate events back to the Activity (Suggestion #13)
+    public interface OnExpenseEventListener
     {
-        this.expenses = expenses;
-        this.expenseService = expenseService;
+        void onDeleteClick(Expense expense, int position);
     }
 
-    //Inflates row layout (@param: parent, viewType)
+    //Constructor to initialize adapter (@param: expenses, listener)
+    public ExpenseAdapter(List<Expense> expenses, OnExpenseEventListener listener)
+    {
+        this.expenses = expenses;
+        this.listener = listener;
+    }
+
+    // Allows updating the dataset without recreating the adapter (Suggestion #14)
+    public void setExpenses(List<Expense> newExpenses)
+    {
+        this.expenses = newExpenses;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -43,15 +53,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         return new ViewHolder(row);
     }
 
-    //Binds expense data to row (@param: holder, position)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
         final Expense e = expenses.get(position);
 
         holder.tvTitle.setText(e.getName());
-        holder.tvAmount.setText(String.format(Locale.US, "$%.2f", e.getAmount()));
-        holder.tvDate.setText(e.getDate());
+        holder.tvAmount.setText(String.format(Locale.US, "$%s", e.getAmount().toPlainString()));
+        holder.tvDate.setText(e.getDate().format(DATE_FORMATTER));
 
         final String note = e.getNote();
         if (note != null && !note.trim().isEmpty())
@@ -64,37 +73,21 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             holder.tvNote.setVisibility(View.GONE);
         }
 
-        holder.deleteButton.setOnClickListener(v -> {
-            final int currentPosition = holder.getAdapterPosition();
-
-            if (currentPosition != RecyclerView.NO_POSITION)
+        holder.deleteButton.setOnClickListener(v ->
+        {
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition != RecyclerView.NO_POSITION && listener != null)
             {
-                final Expense expenseToDelete = expenses.get(currentPosition);
-                final Context context = v.getContext();
-
-                try
-                {
-
-                    //Deletes expense and updates UI
-                    expenseService.deleteExpense(expenseToDelete);
-
-                    expenses.remove(currentPosition);
-                    notifyItemRemoved(currentPosition);
-                    Toast.makeText(context, "Deleted: " + expenseToDelete.getName(), Toast.LENGTH_SHORT).show();
-                }
-                catch (ExpenseValidationException ex)
-                {
-                    Toast.makeText(context, "Failed to delete: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                listener.onDeleteClick(expenses.get(currentPosition), currentPosition);
             }
         });
 
-        holder.editButton.setOnClickListener(v -> {
+        holder.editButton.setOnClickListener(v ->
+        {
             int currentPosition = holder.getAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION)
             {
                 Expense expenseToEdit = expenses.get(currentPosition);
-
                 Intent i = new Intent(v.getContext(), AddAndEditExpense.class);
                 i.putExtra(AddAndEditExpense.EXTRA_EXPENSE, expenseToEdit);
                 v.getContext().startActivity(i);
@@ -102,14 +95,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         });
     }
 
-    //Returns number of expenses (@return: expenses size)
     @Override
     public int getItemCount()
     {
         return expenses.size();
     }
 
-    //ViewHolder for expense row views
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         final TextView tvTitle, tvAmount, tvDate, tvNote;

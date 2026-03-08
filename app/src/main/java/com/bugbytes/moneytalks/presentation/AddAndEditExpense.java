@@ -1,43 +1,41 @@
-package com.bugbytes.moneytalks.Presentation;
+package com.bugbytes.moneytalks.presentation;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView; // Updated Import
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bugbytes.moneytalks.Application.MoneyTalksApp;
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
-import com.bugbytes.moneytalks.Models.Expense;
+import com.bugbytes.moneytalks.application.MoneyTalksApp;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Locale;
 
-// One screen for BOTH adding and editing an expense.
 public class AddAndEditExpense extends AppCompatActivity
 {
-    // Key used to pass an Expense for editing via Intent.
     public static final String EXTRA_EXPENSE = "extra_expense";
 
-    // UI references
     private EditText etExpenseName;
     private EditText etAmount;
     private EditText etDate;
     private EditText etNotes;
-    private AutoCompleteTextView autoCompleteCategory; // Fixed: Uses your AutoCompleteTextView
+    private AutoCompleteTextView autoCompleteCategory;
     private Button btnSave;
     private Button btnCancel;
 
-    // Categories for dropdown
     private static final String[] CATEGORIES = {"Food", "Transport", "Shopping", "Bills", "Other"};
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    // Edit mode state
     private boolean isEditMode = false;
     private Expense expenseToEdit = null;
 
@@ -45,41 +43,37 @@ public class AddAndEditExpense extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense); // Reuse the same layout
+        setContentView(R.layout.activity_add_expense);
 
-        // Initialize UI elements
         etExpenseName = findViewById(R.id.etExpenseName);
         etAmount = findViewById(R.id.etAmount);
         etDate = findViewById(R.id.etDate);
         etNotes = findViewById(R.id.etNotes);
-        autoCompleteCategory = findViewById(R.id.autoCompleteCategory); // Matches your XML ID
+        autoCompleteCategory = findViewById(R.id.autoCompleteCategory);
         btnSave = findViewById(R.id.btnSave);
         btnCancel = findViewById(R.id.btnCancel);
 
-        // Setup category dropdown (Material style)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, CATEGORIES);
         autoCompleteCategory.setAdapter(adapter);
 
-        // Date picker
         etDate.setOnClickListener(v -> showDatePicker());
-
-        // Cancel button
         btnCancel.setOnClickListener(v -> finish());
 
-        // Detect edit mode
         Intent intent = getIntent();
-        Object obj = intent.getSerializableExtra(EXTRA_EXPENSE);
-        if (obj instanceof Expense)
+        if (intent != null && intent.hasExtra(EXTRA_EXPENSE))
         {
-            isEditMode = true;
-            expenseToEdit = (Expense) obj;
+            Object obj = intent.getSerializableExtra(EXTRA_EXPENSE);
+            if (obj instanceof Expense)
+            {
+                isEditMode = true;
+                expenseToEdit = (Expense) obj;
 
-            setTitle("Edit Expense");
-            btnSave.setText("Update");
+                setTitle("Edit Expense");
+                btnSave.setText("Update");
 
-            // Fill fields with existing data
-            fillFields(expenseToEdit);
+                fillFields(expenseToEdit);
+            }
         }
         else
         {
@@ -87,23 +81,19 @@ public class AddAndEditExpense extends AppCompatActivity
             btnSave.setText("Save");
         }
 
-        // Save/Update button
         btnSave.setOnClickListener(v -> saveOrUpdateExpense());
     }
 
-    // Populate UI with an existing expense (Edit mode)
     private void fillFields(Expense e)
     {
         etExpenseName.setText(e.getName());
-        etAmount.setText(String.valueOf(e.getAmount()));
-        etDate.setText(e.getDate());
+        etAmount.setText(e.getAmount().toPlainString());
+        etDate.setText(e.getDate().format(DATE_FORMATTER));
         etNotes.setText(e.getNote());
 
-        // Set the text for the AutoCompleteTextView directly
         autoCompleteCategory.setText(e.getCategory(), false);
     }
 
-    // Shows a date picker dialog
     private void showDatePicker()
     {
         Calendar calendar = Calendar.getInstance();
@@ -112,38 +102,36 @@ public class AddAndEditExpense extends AppCompatActivity
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) ->
-                etDate.setText(String.format(Locale.US, "%02d-%02d-%04d", d, m + 1, y)), year, month, day);
+        {
+            LocalDate selectedDate = LocalDate.of(y, m + 1, d);
+            etDate.setText(selectedDate.format(DATE_FORMATTER));
+        }, year, month, day);
 
         datePicker.show();
     }
 
-    // Save in Add mode, Update in Edit mode
     private void saveOrUpdateExpense()
     {
         final String name = etExpenseName.getText().toString().trim();
         final String amountStr = etAmount.getText().toString().trim();
-
-        // Get category text directly from AutoCompleteTextView
         final String category = autoCompleteCategory.getText().toString().trim();
-
-        final String date = etDate.getText().toString().trim();
+        final String dateStr = etDate.getText().toString().trim();
         final String notes = etNotes.getText().toString().trim();
-
-        if (name.isEmpty() && amountStr.isEmpty() && date.isEmpty() && category.isEmpty())
-        {
-            Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         try
         {
-            final double amount = Double.parseDouble(amountStr);
+            if (amountStr.isEmpty() || dateStr.isEmpty())
+            {
+                throw new ExpenseValidationException("Amount and Date are required.");
+            }
+
+            final BigDecimal amount = new BigDecimal(amountStr);
+            final LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
             MoneyTalksApp app = (MoneyTalksApp) getApplication();
 
             if (!isEditMode)
             {
-                // ADD mode
-                Expense newExpense = new Expense(name, amount, category, date, notes);
+                Expense newExpense = new Expense(0, name, amount, category, date, notes);
                 app.getExpenseService().addExpense(newExpense);
 
                 Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
@@ -151,10 +139,7 @@ public class AddAndEditExpense extends AppCompatActivity
             }
             else
             {
-                // EDIT mode
-                Expense updated = new Expense(name, amount, category, date, notes);
-                updated.setId(expenseToEdit.getId());
-
+                Expense updated = new Expense(expenseToEdit.getId(), name, amount, category, date, notes);
                 boolean ok = app.getExpenseService().updateExpense(updated);
 
                 if (ok)
@@ -167,14 +152,15 @@ public class AddAndEditExpense extends AppCompatActivity
                     Toast.makeText(this, "Update failed (expense not found)", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        catch (NumberFormatException e)
+        } catch (NumberFormatException e)
         {
             Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
-        }
-        catch (ExpenseValidationException e)
+        } catch (ExpenseValidationException e)
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e)
+        {
+            Toast.makeText(this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
         }
     }
 }

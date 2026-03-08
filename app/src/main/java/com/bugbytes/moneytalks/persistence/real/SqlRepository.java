@@ -1,55 +1,57 @@
-package com.bugbytes.moneytalks.Persistence.Real;
-
+package com.bugbytes.moneytalks.persistence.real;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bugbytes.moneytalks.Models.Expense;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class SqlRepository implements ExpenseRepository {
-
+public class SqlRepository implements ExpenseRepository
+{
     private final AppDbHelper dbHelper;
 
-    public SqlRepository(Context context) {
+    public SqlRepository(Context context)
+    {
         this.dbHelper = new AppDbHelper(context);
-
     }
 
     @Override
-    public void addExpense(Expense expense) {
+    public void addExpense(Expense expense)
+    {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(DbContract.ExpenseEntry.COLUMN_NAME, expense.getName());
-        values.put(DbContract.ExpenseEntry.COLUMN_AMOUNT, expense.getAmount());
+        // Store BigDecimal as String to prevent precision loss
+        values.put(DbContract.ExpenseEntry.COLUMN_AMOUNT, expense.getAmount().toPlainString());
         values.put(DbContract.ExpenseEntry.COLUMN_CATEGORY, expense.getCategory());
-        values.put(DbContract.ExpenseEntry.COLUMN_DATE, expense.getDate());
+        values.put(DbContract.ExpenseEntry.COLUMN_DATE, expense.getDate().toString());
         values.put(DbContract.ExpenseEntry.COLUMN_NOTE, expense.getNote());
 
-        long newRowId = db.insert(DbContract.ExpenseEntry.TABLE_NAME, null, values);
-        expense.setId((int) newRowId);
+        db.insert(DbContract.ExpenseEntry.TABLE_NAME, null, values);
     }
 
     @Override
-    public boolean deleteExpense(Expense expense) {
+    public boolean deleteExpense(Expense expense)
+    {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(expense.getId())};
 
         int deletedRows = db.delete(DbContract.ExpenseEntry.TABLE_NAME, selection, selectionArgs);
-        System.out.println("LOG: " + deletedRows);
         return deletedRows > 0;
     }
 
     @Override
-    public List<Expense> getAllExpenses() {
+    public List<Expense> getAllExpenses()
+    {
         List<Expense> expenses = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -72,33 +74,34 @@ public class SqlRepository implements ExpenseRepository {
                 null
         );
 
-        while (cursor.moveToNext()) {
+        while (cursor.moveToNext())
+        {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_ID));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NAME));
-            double amount = cursor.getDouble(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT));
+            // Read as String and convert back to BigDecimal for full precision
+            String amountStr = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT));
+            BigDecimal amount = new BigDecimal(amountStr);
             String category = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_CATEGORY));
-            String date = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_DATE));
+            LocalDate date = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_DATE)));
             String note = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NOTE));
 
-            Expense expense = new Expense(name, amount, category, date, note);
-            expense.setId(id);
-            expenses.add(expense);
+            expenses.add(new Expense(id, name, amount, category, date, note));
         }
         cursor.close();
 
         return expenses;
-
     }
 
     @Override
-    public boolean updateExpense(Expense expense) {
+    public boolean updateExpense(Expense expense)
+    {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(DbContract.ExpenseEntry.COLUMN_NAME, expense.getName());
-        values.put(DbContract.ExpenseEntry.COLUMN_AMOUNT, expense.getAmount());
+        values.put(DbContract.ExpenseEntry.COLUMN_AMOUNT, expense.getAmount().toPlainString());
         values.put(DbContract.ExpenseEntry.COLUMN_CATEGORY, expense.getCategory());
-        values.put(DbContract.ExpenseEntry.COLUMN_DATE, expense.getDate());
+        values.put(DbContract.ExpenseEntry.COLUMN_DATE, expense.getDate().toString());
         values.put(DbContract.ExpenseEntry.COLUMN_NOTE, expense.getNote());
 
         String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
@@ -112,5 +115,4 @@ public class SqlRepository implements ExpenseRepository {
 
         return count > 0;
     }
-
 }

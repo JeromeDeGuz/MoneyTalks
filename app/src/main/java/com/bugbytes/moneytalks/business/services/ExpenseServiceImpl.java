@@ -1,9 +1,9 @@
-package com.bugbytes.moneytalks.Business.Services;
+package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.Business.Validation.ExpenseValidationException;
-import com.bugbytes.moneytalks.Business.Validation.Validator;
-import com.bugbytes.moneytalks.Models.Expense;
-import com.bugbytes.moneytalks.Persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.business.validation.Validator;
+import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +36,12 @@ public class ExpenseServiceImpl implements ExpenseService
     @Override
     public List<Expense> getAllExpenses()
     {
-        return repository.getAllExpenses();
+        List<Expense> result = repository.getAllExpenses();
+        if (result == null)
+        {
+            throw new IllegalStateException("Repository returned null instead of a list.");
+        }
+        return result;
     }
 
     //Deletes an expense (@param: expense to delete).
@@ -57,11 +62,15 @@ public class ExpenseServiceImpl implements ExpenseService
         }
         return removed;
     }
+
     @Override
     public boolean updateExpense(Expense expense)
     {
+        if (expense == null)
+        {
+            throw new ExpenseValidationException("Cannot update a null expense.");
+        }
         validator.validate(expense);
         return repository.updateExpense(expense);
     }
 }
-

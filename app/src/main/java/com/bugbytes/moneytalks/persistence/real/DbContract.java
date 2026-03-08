@@ -1,9 +1,13 @@
-package com.bugbytes.moneytalks.Persistence.Real;
+package com.bugbytes.moneytalks.persistence.real;
 
-public final class DbContract {
-    private DbContract() {}
+public final class DbContract
+{
+    private DbContract()
+    {
+    }
 
-    public static class ExpenseEntry {
+    public static class ExpenseEntry
+    {
         public static final String TABLE_NAME = "expenses";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
@@ -13,7 +17,8 @@ public final class DbContract {
         public static final String COLUMN_NOTE = "note";
     }
 
-    public static class CategoryEntry{
+    public static class CategoryEntry
+    {
         public static final String TABLE_NAME = "categories";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
