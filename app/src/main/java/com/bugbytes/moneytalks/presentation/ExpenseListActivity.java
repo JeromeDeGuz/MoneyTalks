@@ -3,6 +3,9 @@ package com.bugbytes.moneytalks.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +31,10 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private RecyclerView recyclerView;
     private ExpenseService expenseService;
     private ExpenseAdapter adapter; // Instance kept for reuse (Suggestion #14)
+
+    // Dropdown for sorting functionality
+    private Spinner sortSpinner;
+    private static final String[] SORT_OPTIONS = {"Newest to Oldest", "Oldest to Newest"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,6 +62,9 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
         }
 
+        // Setup the sorting spinner to allow immediate list updates
+        setupSortSpinner();
+
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -68,6 +78,31 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
             startActivity(intent);
         });
+    }
+
+    // Configures the dropdown and its listener for "foran" (instant) updates
+    private void setupSortSpinner()
+    {
+        sortSpinner = findViewById(R.id.sortSpinner);
+        if (sortSpinner != null)
+        {
+            ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_spinner_dropdown_item, SORT_OPTIONS);
+            sortSpinner.setAdapter(sortAdapter);
+
+            sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    // Logic: Position 0 is Newest First, Position 1 is Oldest First
+                    loadExpenses();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
     }
 
     @Override
@@ -95,7 +130,10 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
     private void loadExpenses()
     {
-        final List<Expense> data = expenseService.getAllExpenses();
+        // Fetch data based on the selected sort option from the Spinner
+        boolean newestFirst = (sortSpinner != null && sortSpinner.getSelectedItemPosition() == 0);
+        final List<Expense> data = expenseService.getExpensesSortedByDate(newestFirst);
+
         // Update existing adapter instead of creating a new one (Suggestion #14)
         if (adapter != null)
         {

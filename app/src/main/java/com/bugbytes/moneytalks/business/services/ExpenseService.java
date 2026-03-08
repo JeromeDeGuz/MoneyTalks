@@ -17,4 +17,7 @@ public interface ExpenseService
     boolean deleteExpense(Expense expense);
 
     boolean updateExpense(Expense expense);
+
+    //Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
+    List<Expense> getExpensesSortedByDate(boolean newestFirst);
 }
