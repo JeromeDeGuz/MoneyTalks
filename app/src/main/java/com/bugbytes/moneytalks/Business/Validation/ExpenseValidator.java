@@ -42,8 +42,8 @@ public class ExpenseValidator implements Validator<Expense>
 
     private void validateDateFormat(String date)
     {
-        // Validates standard ISO format YYYY-MM-DD
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        // Validates format dd-MM-yyyy
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         sdf.setLenient(false);
         try
         {
@@ -51,7 +51,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
         catch (ParseException e)
         {
-            throw new ExpenseValidationException("Invalid date format. Expected YYYY-MM-DD.");
+            throw new ExpenseValidationException("Invalid date format. Expected dd-MM-yyyy.");
         }
     }
 }

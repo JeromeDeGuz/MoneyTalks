@@ -17,6 +17,7 @@ import com.bugbytes.moneytalks.Models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 // One screen for BOTH adding and editing an expense.
 public class AddAndEditExpense extends AppCompatActivity
@@ -111,7 +112,7 @@ public class AddAndEditExpense extends AppCompatActivity
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) ->
-                etDate.setText(String.format("%d/%d/%d", d, m + 1, y)), year, month, day);
+                etDate.setText(String.format(Locale.US, "%02d-%02d-%04d", d, m + 1, y)), year, month, day);
 
         datePicker.show();
     }
