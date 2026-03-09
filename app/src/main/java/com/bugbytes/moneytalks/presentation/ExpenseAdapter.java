@@ -82,17 +82,29 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             }
         });
 
+        // Edit button logic (Keep as is)
         holder.editButton.setOnClickListener(v ->
         {
-            int currentPosition = holder.getAdapterPosition();
-            if (currentPosition != RecyclerView.NO_POSITION)
-            {
-                Expense expenseToEdit = expenses.get(currentPosition);
-                Intent i = new Intent(v.getContext(), AddAndEditExpense.class);
-                i.putExtra(AddAndEditExpense.EXTRA_EXPENSE, expenseToEdit);
-                v.getContext().startActivity(i);
-            }
+            openEditScreen(v, holder.getAdapterPosition());
         });
+
+        // Improvement: Optional row click to edit
+        holder.itemView.setOnClickListener(v ->
+        {
+            openEditScreen(v, holder.getAdapterPosition());
+        });
+    }
+
+    // Helper method to keep code clean
+    private void openEditScreen(View v, int position)
+    {
+        if (position != RecyclerView.NO_POSITION)
+        {
+            Expense expenseToEdit = expenses.get(position);
+            Intent i = new Intent(v.getContext(), AddAndEditExpense.class);
+            i.putExtra(AddAndEditExpense.EXTRA_EXPENSE, expenseToEdit);
+            v.getContext().startActivity(i);
+        }
     }
 
     @Override

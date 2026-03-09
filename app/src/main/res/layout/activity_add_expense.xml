@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_expense_name"
         android:inputType="textCapWords"
-        android:autofillHints="name"
-        android:importantForAutofill="yes"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -24,8 +22,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_amount"
         android:inputType="numberDecimal"
-        android:autofillHints="none"
-        android:importantForAutofill="no"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/etExpenseName"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,16 +36,31 @@
         android:hint="@string/hint_category"
         app:layout_constraintTop_toBottomOf="@id/etAmount"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/btnAddCategory">
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:autofillHints="none" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/btnAddCategory"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:src="@android:drawable/ic_input_add"
+
+        app:tint="?attr/colorPrimary"
+
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Add New Category"
+        app:layout_constraintBottom_toBottomOf="@id/layoutCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/layoutCategory"
+        app:layout_constraintTop_toTopOf="@id/layoutCategory" />
 
     <EditText
         android:id="@+id/etDate"
@@ -58,10 +69,6 @@
         android:hint="@string/hint_select_date"
         android:focusable="false"
         android:clickable="true"
-        android:cursorVisible="false"
-        android:inputType="none"
-        android:autofillHints="none"
-        android:importantForAutofill="no"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/layoutCategory"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,8 +80,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_notes"
         android:inputType="textMultiLine"
-        android:autofillHints="none"
-        android:importantForAutofill="no"
         android:gravity="top"
         android:minLines="3"
         android:layout_marginTop="16dp"

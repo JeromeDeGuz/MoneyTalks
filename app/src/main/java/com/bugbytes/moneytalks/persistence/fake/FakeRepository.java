@@ -12,7 +12,7 @@ public class FakeRepository implements ExpenseRepository
 {
     //Static list so data persists while the app is running
     private static final List<Expense> expenses = new ArrayList<>();
-    private static int autoIncrementId = 100;
+    private static long autoIncrementId = 100; // Updated to long to match Expense model
 
     //Constructor: creates temporary, non-persistent sample data
     public FakeRepository()
@@ -82,5 +82,19 @@ public class FakeRepository implements ExpenseRepository
     {
         // Return a copy to avoid external modification of the internal list
         return new ArrayList<>(expenses);
+    }
+
+    // NEW: Implementation for getExpenseById to fix interface mismatch error
+    @Override
+    public Expense getExpenseById(long id)
+    {
+        for (Expense e : expenses)
+        {
+            if (e.getId() == id)
+            {
+                return e;
+            }
+        }
+        return null;
     }
 }

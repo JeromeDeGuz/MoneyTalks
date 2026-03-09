@@ -1,25 +1,31 @@
 package com.bugbytes.moneytalks.presentation;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
-import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
+import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class AddAndEditExpense extends AppCompatActivity
 {
@@ -32,8 +38,10 @@ public class AddAndEditExpense extends AppCompatActivity
     private AutoCompleteTextView autoCompleteCategory;
     private Button btnSave;
     private Button btnCancel;
+    private ImageButton btnAddCategory;
 
-    private static final String[] CATEGORIES = {"Food", "Transport", "Shopping", "Bills", "Other"};
+    private List<String> categoryNames;
+    private ArrayAdapter<String> categoryAdapter;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private boolean isEditMode = false;
@@ -52,13 +60,14 @@ public class AddAndEditExpense extends AppCompatActivity
         autoCompleteCategory = findViewById(R.id.autoCompleteCategory);
         btnSave = findViewById(R.id.btnSave);
         btnCancel = findViewById(R.id.btnCancel);
+        btnAddCategory = findViewById(R.id.btnAddCategory);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, CATEGORIES);
-        autoCompleteCategory.setAdapter(adapter);
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+        loadCategories(app);
 
         etDate.setOnClickListener(v -> showDatePicker());
         btnCancel.setOnClickListener(v -> finish());
+        btnAddCategory.setOnClickListener(v -> showAddCategoryDialog(app));
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_EXPENSE))
@@ -82,6 +91,40 @@ public class AddAndEditExpense extends AppCompatActivity
         }
 
         btnSave.setOnClickListener(v -> saveOrUpdateExpense());
+    }
+
+    private void loadCategories(MoneyTalksApp app)
+    {
+        List<Category> categories = app.getCategoryService().getAllCategories();
+        categoryNames = new ArrayList<>();
+        for (Category c : categories) {
+            categoryNames.add(c.getName());
+        }
+
+        categoryAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, categoryNames);
+        autoCompleteCategory.setAdapter(categoryAdapter);
+    }
+
+    private void showAddCategoryDialog(MoneyTalksApp app)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add New Category");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String name = input.getText().toString().trim();
+            if (!name.isEmpty()) {
+                app.getCategoryService().addCategory(new Category(name));
+                loadCategories(app);
+                autoCompleteCategory.setText(name, false);
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
     }
 
     private void fillFields(Expense e)
@@ -122,7 +165,7 @@ public class AddAndEditExpense extends AppCompatActivity
         {
             if (amountStr.isEmpty() || dateStr.isEmpty())
             {
-                throw new ExpenseValidationException("Amount and Date are required.");
+                throw new ValidationException("Amount and Date are required.");
             }
 
             final BigDecimal amount = new BigDecimal(amountStr);
@@ -155,7 +198,7 @@ public class AddAndEditExpense extends AppCompatActivity
         } catch (NumberFormatException e)
         {
             Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
-        } catch (ExpenseValidationException e)
+        } catch (ValidationException e)
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (Exception e)

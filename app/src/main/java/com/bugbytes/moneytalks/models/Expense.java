@@ -6,7 +6,7 @@ import java.time.LocalDate;
 //Represents an expense and allows it to be serialized between activities.
 public class Expense implements java.io.Serializable
 {
-    private final int id;
+    private final long id; // Updated to long for Database and Intent compatibility
     private String name;
     private BigDecimal amount; //Price of the expense
     private String category; //Expense category
@@ -14,7 +14,7 @@ public class Expense implements java.io.Serializable
     private String note;     //Optional note
 
     //Constructor (@param: name, amount, category, date, note)
-    public Expense(int id, String name, BigDecimal amount, String category, LocalDate date, String note)
+    public Expense(long id, String name, BigDecimal amount, String category, LocalDate date, String note)
     {
         this.id = id;
         this.name = name;
@@ -25,7 +25,7 @@ public class Expense implements java.io.Serializable
     }
 
     // Getters
-    public int getId()
+    public long getId()
     {
         return id;
     }

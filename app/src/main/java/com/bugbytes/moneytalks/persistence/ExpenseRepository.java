@@ -17,4 +17,6 @@ public interface ExpenseRepository
 
     //Plan for an update path early to support future editing
     boolean updateExpense(Expense expense);
+
+    Expense getExpenseById(long id);
 }

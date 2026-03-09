@@ -7,12 +7,18 @@ import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlRepository;
+// Adding category-specific imports for the new feature
+import com.bugbytes.moneytalks.business.services.CategoryService;
+import com.bugbytes.moneytalks.business.services.CategoryServiceImpl;
+import com.bugbytes.moneytalks.persistence.CategoryRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlCategoryRepository;
 
 //Creates once when app starts, acts as main setup/manager for whole app.
 public class MoneyTalksApp extends Application
 {
     //shared services used across entire app
     private ExpenseService expenseService;
+    private CategoryService categoryService;
 
     @Override
     public void onCreate()
@@ -21,6 +27,11 @@ public class MoneyTalksApp extends Application
         //create repo using our fake db
 //        ExpenseRepository expenseRepository = new FakeRepository();
         ExpenseRepository expenseRepository = new SqlRepository(this);
+
+        // Setup for the dynamic category feature
+        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
+        categoryService = new CategoryServiceImpl(categoryRepository);
+
         ExpenseValidator expenseValidator = new ExpenseValidator();
         //create service and connect it to repo
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
@@ -29,5 +40,11 @@ public class MoneyTalksApp extends Application
     public ExpenseService getExpenseService()
     {
         return expenseService;
+    }
+
+    // New getter to allow Activities to access category management
+    public CategoryService getCategoryService()
+    {
+        return categoryService;
     }
 }

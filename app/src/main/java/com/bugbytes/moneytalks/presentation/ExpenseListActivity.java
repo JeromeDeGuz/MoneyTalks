@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -109,8 +110,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             MenuItem newestItem = menu.add(GROUP_SORT, ID_NEWEST, 0, "Newest to Oldest");
             MenuItem oldestItem = menu.add(GROUP_SORT, ID_OLDEST, 1, "Oldest to Newest");
 
-
-
             // Pre-check the currently active sort option when opening the popup
             newestItem.setChecked(isNewestFirst);
             oldestItem.setChecked(!isNewestFirst);
@@ -132,8 +131,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                     isNewestFirst = false;
                     item.setChecked(true);
                 }
-
-
 
                 // Refresh list using the current sort + filter state
                 loadExpenses();
@@ -163,13 +160,22 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             // Use a menu group so items become mutually exclusive (single choice)
             final int GROUP_FILTER = 2;
 
-            // Category options shown in the dropdown
-            final String[] categories = {"All", "Food", "Transport", "Shopping", "Bills", "Other"};
+            // Fetch dynamic categories from the service
+            final MoneyTalksApp app = (MoneyTalksApp) getApplication();
+            List<Category> dbCategories = app.getCategoryService().getAllCategories();
+
+            // Build the filter list starting with "All"
+            List<String> categories = new ArrayList<>();
+            categories.add("All");
+            for (Category c : dbCategories)
+            {
+                categories.add(c.getName());
+            }
 
             // Build checkable menu items and pre-check the current category
-            for (int i = 0; i < categories.length; i++)
+            for (int i = 0; i < categories.size(); i++)
             {
-                String c = categories[i];
+                String c = categories.get(i);
                 int itemId = 200 + i;
 
                 MenuItem mi = menu.add(GROUP_FILTER, itemId, i, c);

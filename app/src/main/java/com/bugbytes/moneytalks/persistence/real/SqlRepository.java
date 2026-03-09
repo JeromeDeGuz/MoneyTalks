@@ -76,7 +76,8 @@ public class SqlRepository implements ExpenseRepository
 
         while (cursor.moveToNext())
         {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_ID));
+            // CHANGE: Read ID as long to match Expense model constructor
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_ID));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NAME));
             // Read as String and convert back to BigDecimal for full precision
             String amountStr = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT));
@@ -114,5 +115,36 @@ public class SqlRepository implements ExpenseRepository
                 selectionArgs);
 
         return count > 0;
+    }
+
+    // NEW: Implementation to support the Edit feature and fix ServiceImpl error
+    public Expense getExpenseById(long id)
+    {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Expense expense = null;
+
+        String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        Cursor cursor = db.query(
+                DbContract.ExpenseEntry.TABLE_NAME,
+                null, // All columns
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+
+        if (cursor.moveToFirst())
+        {
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NAME));
+            BigDecimal amount = new BigDecimal(cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT)));
+            String category = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_CATEGORY));
+            LocalDate date = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_DATE)));
+            String note = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NOTE));
+
+            expense = new Expense(id, name, amount, category, date, note);
+        }
+        cursor.close();
+        return expense;
     }
 }
