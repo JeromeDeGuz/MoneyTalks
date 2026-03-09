@@ -5,6 +5,7 @@ import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,5 +73,39 @@ public class ExpenseServiceImpl implements ExpenseService
         }
         validator.validate(expense);
         return repository.updateExpense(expense);
+    }
+
+    //Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
+    @Override
+    public List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst)
+    {
+        // Create a copy of the list to avoid modifying the persistence layer's original data
+        List<Expense> newList = new ArrayList<>(getAllExpenses());
+        // 1) Filter
+        if (categoryName != null && !categoryName.equalsIgnoreCase("All"))
+        {
+            newList.removeIf(e ->
+                    e == null
+                            || e.getCategory() == null
+                            || !categoryName.equals(e.getCategory())
+            );
+
+        }
+
+
+        newList.sort((e1, e2) -> {
+            if (newestFirst)
+            {
+                // Descending order: Newest dates first
+                return e2.getDate().compareTo(e1.getDate());
+            }
+            else
+            {
+                // Ascending order: Oldest dates first
+                return e1.getDate().compareTo(e2.getDate());
+            }
+        });
+
+        return newList;
     }
 }

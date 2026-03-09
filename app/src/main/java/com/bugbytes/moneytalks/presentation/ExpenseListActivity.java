@@ -3,6 +3,10 @@ package com.bugbytes.moneytalks.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +32,13 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private RecyclerView recyclerView;
     private ExpenseService expenseService;
     private ExpenseAdapter adapter; // Instance kept for reuse (Suggestion #14)
+
+    // Chotu button for sorting functionality to replace the clunky spinner
+    private Button btnSort;
+
+    private Button btnFilter;
+    private String selectedCategory = "All"; // default
+    private boolean isNewestFirst = true; // Tracks current sort state
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,6 +66,12 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
         }
 
+        // Setup the sorting button to allow immediate list updates via PopupMenu
+        setupSortButton();
+
+        // Setup the filtering button to allow immediate list updates via PopupMenu
+        setupFilterButton();
+
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -67,6 +84,121 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         {
             Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
             startActivity(intent);
+        });
+    }
+
+    // Configures the small button and its popup listener for "foran" (instant) updates
+    // Configures the Sort button popup menu (shows a checkmark on the current selection)
+    private void setupSortButton()
+    {
+        btnSort = findViewById(R.id.btnSort);
+        if (btnSort == null)
+        {
+            return;
+        }
+
+        btnSort.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnSort);
+            Menu menu = popup.getMenu();
+
+            // Use a menu group so items become mutually exclusive (single choice)
+            final int GROUP_SORT = 1;
+            final int ID_NEWEST = 101;
+            final int ID_OLDEST = 102;
+
+            MenuItem newestItem = menu.add(GROUP_SORT, ID_NEWEST, 0, "Newest to Oldest");
+            MenuItem oldestItem = menu.add(GROUP_SORT, ID_OLDEST, 1, "Oldest to Newest");
+
+
+
+            // Pre-check the currently active sort option when opening the popup
+            newestItem.setChecked(isNewestFirst);
+            oldestItem.setChecked(!isNewestFirst);
+
+            // Make items checkable and enforce single selection within the group
+            newestItem.setCheckable(true);
+            oldestItem.setCheckable(true);
+            menu.setGroupCheckable(GROUP_SORT, true, true);
+
+            popup.setOnMenuItemClickListener(item -> {
+                // Update state based on selection and mark the chosen item checked
+                if (item.getItemId() == ID_NEWEST)
+                {
+                    isNewestFirst = true;
+                    item.setChecked(true);
+                }
+                else if (item.getItemId() == ID_OLDEST)
+                {
+                    isNewestFirst = false;
+                    item.setChecked(true);
+                }
+
+
+
+                // Refresh list using the current sort + filter state
+                loadExpenses();
+                return true;
+            });
+
+            popup.show();
+        });
+    }
+
+    // Configures the Filter button popup menu (shows a checkmark on the current selection)
+    private void setupFilterButton()
+    {
+        btnFilter = findViewById(R.id.btnFilter);
+        if (btnFilter == null)
+        {
+            return;
+        }
+
+        // Default label
+        btnFilter.setText("Filtering by Category (All)");
+
+        btnFilter.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnFilter);
+            Menu menu = popup.getMenu();
+
+            // Use a menu group so items become mutually exclusive (single choice)
+            final int GROUP_FILTER = 2;
+
+            // Category options shown in the dropdown
+            final String[] categories = {"All", "Food", "Transport", "Shopping", "Bills", "Other"};
+
+            // Build checkable menu items and pre-check the current category
+            for (int i = 0; i < categories.length; i++)
+            {
+                String c = categories[i];
+                int itemId = 200 + i;
+
+                MenuItem mi = menu.add(GROUP_FILTER, itemId, i, c);
+                mi.setCheckable(true);
+
+                // Pre-check the currently active category when opening the popup
+                if (c.equals(selectedCategory))
+                {
+                    mi.setChecked(true);
+                }
+            }
+
+            // Enforce single selection within the group
+            menu.setGroupCheckable(GROUP_FILTER, true, true);
+
+            popup.setOnMenuItemClickListener(item -> {
+                // Update state and mark selected item checked
+                selectedCategory = item.getTitle().toString();
+                item.setChecked(true);
+
+                // Update the button label to reflect the chosen category
+                btnFilter.setText("Filtering by Category (" + selectedCategory + ")");
+
+                // Refresh list using the current sort + filter state
+                loadExpenses();
+                return true;
+            });
+
+            popup.show();
         });
     }
 
@@ -95,7 +227,9 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
     private void loadExpenses()
     {
-        final List<Expense> data = expenseService.getAllExpenses();
+        // Fetch data based on the selected sort and filter state (either from initialization or Popup)
+        final List<Expense> data = expenseService.getExpensesByCategorySortedByDate(selectedCategory, isNewestFirst);
+
         // Update existing adapter instead of creating a new one (Suggestion #14)
         if (adapter != null)
         {
