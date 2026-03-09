@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.defaultContent;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +22,9 @@ public class SqlRepository implements ExpenseRepository
     public SqlRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
+        defaultContent defaultContent = new defaultContent();
+        defaultContent.setDefaultExpenses(this);
+
     }
 
     @Override
