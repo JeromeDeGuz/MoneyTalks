@@ -3,8 +3,10 @@ package com.bugbytes.moneytalks.persistence.real;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
@@ -20,6 +22,13 @@ public class SqlRepository implements ExpenseRepository
     public SqlRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
+        // Only add sample data if the database is empty to prevent duplicates on every instance creation
+        if (isEmpty())
+        {
+            addExpense(new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib"));
+            addExpense(new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill..."));
+            addExpense(new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard"));
+        }
     }
 
     @Override
@@ -76,7 +85,8 @@ public class SqlRepository implements ExpenseRepository
 
         while (cursor.moveToNext())
         {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_ID));
+            // CHANGE: Read ID as long to match Expense model constructor
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_ID));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NAME));
             // Read as String and convert back to BigDecimal for full precision
             String amountStr = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT));
@@ -114,5 +124,58 @@ public class SqlRepository implements ExpenseRepository
                 selectionArgs);
 
         return count > 0;
+    }
+
+    // NEW: Implementation to support the Edit feature and fix ServiceImpl error
+    public Expense getExpenseById(long id)
+    {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Expense expense = null;
+
+        String selection = DbContract.ExpenseEntry.COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        Cursor cursor = db.query(
+                DbContract.ExpenseEntry.TABLE_NAME,
+                null, // All columns
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+
+        if (cursor.moveToFirst())
+        {
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NAME));
+            BigDecimal amount = new BigDecimal(cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_AMOUNT)));
+            String category = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_CATEGORY));
+            LocalDate date = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_DATE)));
+            String note = cursor.getString(cursor.getColumnIndexOrThrow(DbContract.ExpenseEntry.COLUMN_NOTE));
+
+            expense = new Expense(id, name, amount, category, date, note);
+        }
+        cursor.close();
+        return expense;
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DbContract.ExpenseEntry.TABLE_NAME, null, null, null, null, null, null);
+        boolean isEmpty = cursor.getCount() == 0;
+        cursor.close();
+        return isEmpty;
+
+    }
+
+    @Override
+    public boolean categoryExists(Category category) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selection = DbContract.CategoryEntry.COLUMN_NAME + " = ?";
+        String[] selectionArgs = {category.getName()};
+        Cursor cursor = db.query(DbContract.CategoryEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
     }
 }

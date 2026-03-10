@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.business.validation.ExpenseValidationException;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
@@ -46,20 +46,20 @@ public class ExpenseServiceImpl implements ExpenseService
     }
 
     //Deletes an expense (@param: expense to delete).
-    //Throws ExpenseValidationException if deletion fails (e.g. not found).
+    //Throws ValidationException if deletion fails (e.g. not found).
     @Override
     public boolean deleteExpense(Expense expense)
     {
         if (expense == null)
         {
-            throw new ExpenseValidationException("Cannot delete a null expense.");
+            throw new ValidationException("Cannot delete a null expense.");
         }
 
         boolean removed = repository.deleteExpense(expense);
 
         if (!removed)
         {
-            throw new ExpenseValidationException("Expense not found: " + expense.getName());
+            throw new ValidationException("Expense not found: " + expense.getName());
         }
         return removed;
     }
@@ -69,18 +69,26 @@ public class ExpenseServiceImpl implements ExpenseService
     {
         if (expense == null)
         {
-            throw new ExpenseValidationException("Cannot update a null expense.");
+            throw new ValidationException("Cannot update a null expense.");
         }
         validator.validate(expense);
         return repository.updateExpense(expense);
     }
 
-    //Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
+    // Implementing the missing sorting method for the main list
+    @Override
+    public List<Expense> getExpensesSortedByDate(boolean newestFirst)
+    {
+        List<Expense> newList = new ArrayList<>(getAllExpenses());
+        sortListByDate(newList, newestFirst);
+        return newList;
+    }
+
     @Override
     public List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst)
     {
-        // Create a copy of the list to avoid modifying the persistence layer's original data
         List<Expense> newList = new ArrayList<>(getAllExpenses());
+
         // 1) Filter
         if (categoryName != null && !categoryName.equalsIgnoreCase("All"))
         {
@@ -89,23 +97,33 @@ public class ExpenseServiceImpl implements ExpenseService
                             || e.getCategory() == null
                             || !categoryName.equals(e.getCategory())
             );
-
         }
 
+        // 2) Sort
+        sortListByDate(newList, newestFirst);
 
-        newList.sort((e1, e2) -> {
+        return newList;
+    }
+
+    // New method to fetch a single expense by ID for the Edit feature
+    @Override
+    public Expense getExpenseById(long id)
+    {
+        return repository.getExpenseById(id);
+    }
+
+    // Helper method to keep the code DRY (Don't Repeat Yourself)
+    private void sortListByDate(List<Expense> list, boolean newestFirst)
+    {
+        list.sort((e1, e2) -> {
             if (newestFirst)
             {
-                // Descending order: Newest dates first
                 return e2.getDate().compareTo(e1.getDate());
             }
             else
             {
-                // Ascending order: Oldest dates first
                 return e1.getDate().compareTo(e2.getDate());
             }
         });
-
-        return newList;
     }
 }

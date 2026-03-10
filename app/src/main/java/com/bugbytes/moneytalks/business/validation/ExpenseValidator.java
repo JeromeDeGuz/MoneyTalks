@@ -18,35 +18,35 @@ public class ExpenseValidator implements Validator<Expense>
     {
         if (expense == null)
         {
-            throw new ExpenseValidationException("Expense object cannot be null.");
+            throw new ValidationException("Expense object cannot be null.");
         }
 
         if (expense.getName() == null || expense.getName().trim().isEmpty())
         {
-            throw new ExpenseValidationException("Expense name is required and cannot be empty.");
+            throw new ValidationException("Expense name is required and cannot be empty.");
         }
 
         // Logic check: Expense names should not be purely numeric
         if (expense.getName().trim().matches("^\\d+$"))
         {
-            throw new ExpenseValidationException("Expense name cannot be only numbers.");
+            throw new ValidationException("Expense name cannot be only numbers.");
         }
 
         if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0)
         {
-            throw new ExpenseValidationException("Expense amount must be greater than zero.");
+            throw new ValidationException("Expense amount must be greater than zero.");
         }
 
         // Integrated Category check from Development branch
         if (expense.getCategory() == null || expense.getCategory().trim().isEmpty())
         {
-            throw new ExpenseValidationException("Expense category is required.");
+            throw new ValidationException("Expense category is required.");
         }
 
         // Strict Date check to ensure data integrity
         if (expense.getDate() == null)
         {
-            throw new ExpenseValidationException("Expense date is required.");
+            throw new ValidationException("Expense date is required.");
         }
     }
 }

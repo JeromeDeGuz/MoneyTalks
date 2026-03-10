@@ -1,5 +1,6 @@
 package com.bugbytes.moneytalks.persistence.real;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,6 +20,8 @@ public class AppDbHelper extends SQLiteOpenHelper
     {
         createExpenseTable(db);
         createCategoriesTable(db);
+        // CHANGE: Call the helper method to insert default data
+        insertDefaultCategories(db);
     }
 
     @Override
@@ -31,7 +34,6 @@ public class AppDbHelper extends SQLiteOpenHelper
 
     private void createExpenseTable(SQLiteDatabase db)
     {
-        // Using TEXT for amount to maintain BigDecimal precision in SQLite
         String createExpenseTableQuery = "CREATE TABLE IF NOT EXISTS " + DbContract.ExpenseEntry.TABLE_NAME + " (" +
                 DbContract.ExpenseEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DbContract.ExpenseEntry.COLUMN_NAME + " TEXT NOT NULL, " +
@@ -45,12 +47,25 @@ public class AppDbHelper extends SQLiteOpenHelper
 
     public void createCategoriesTable(SQLiteDatabase db)
     {
-        // Using TEXT for budget to ensure financial precision
         String createCategoriesTableQuery = "CREATE TABLE IF NOT EXISTS " + DbContract.CategoryEntry.TABLE_NAME + " (" +
                 DbContract.CategoryEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DbContract.CategoryEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 DbContract.CategoryEntry.COLUMN_BUDGET + " TEXT NOT NULL)";
 
         db.execSQL(createCategoriesTableQuery);
+    }
+
+    private void insertDefaultCategories(SQLiteDatabase db)
+    {
+        String[] categories = {"Food", "Transport", "Shopping", "Entertainment", "Health", "Bills"};
+
+        for (String name : categories)
+        {
+            ContentValues values = new ContentValues();
+            values.put(DbContract.CategoryEntry.COLUMN_NAME, name);
+            values.put(DbContract.CategoryEntry.COLUMN_BUDGET, "0");
+
+            db.insert(DbContract.CategoryEntry.TABLE_NAME, null, values);
+        }
     }
 }

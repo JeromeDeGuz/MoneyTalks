@@ -8,13 +8,23 @@
     <string name="label_amount">Amount</string>
     <string name="label_date">Date</string>
     <string name="label_note">Note</string>
+    <string name="label_category">Category</string>
 
     <string name="hint_expense_name">Expense Name</string>
     <string name="hint_select_date">Select Date</string>
     <string name="hint_amount">0.00</string>
     <string name="hint_notes">Notes (Optional)</string>
-    <string name="btn_save">Save Expense</string>
-
     <string name="hint_category">Category</string>
+
+    <string name="btn_save">Save Expense</string>
+    <string name="btn_update">Update Expense</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="add_category_content_description">Add new category</string>
+
+    <string name="dialog_add_category_title">Add New Category</string>
+    <string name="dialog_add">Add</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="title_add_expense">Add Expense</string>
+    <string name="title_edit_expense">Edit Expense</string>
 </resources>

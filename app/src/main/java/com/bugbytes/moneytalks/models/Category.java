@@ -1,37 +1,56 @@
 package com.bugbytes.moneytalks.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Category
+// Serializable is important if you want to pass Category between Activities via Intent
+public class Category implements Serializable
 {
     private int id;
-    private String categoryName;
-    private BigDecimal categoryBudget;
+    private String name; // Consistent naming with getter/setter
+    private BigDecimal budget;
 
-    public Category(String categoryName)
+    // Standard constructor for new categories (ID will be assigned by DB)
+    public Category(String name)
     {
-        this.categoryName = categoryName;
-        this.categoryBudget = BigDecimal.ZERO;
+        this.name = name;
+        this.budget = BigDecimal.ZERO;
     }
 
-    public String getCategoryName()
+    // Overloaded constructor for database retrieval (includes ID)
+    public Category(int id, String name, BigDecimal budget)
     {
-        return this.categoryName;
+        this.id = id;
+        this.name = name;
+        this.budget = budget;
     }
 
-    //allows for editing of categories
-    public void setCategoryName(String categoryName)
+    public int getId() { return id; }
+
+    // We use getName to keep it simple and clean
+    public String getName()
     {
-        this.categoryName = categoryName;
+        return this.name;
     }
 
-    public BigDecimal getCategoryBudget()
+    public void setName(String name)
     {
-        return this.categoryBudget;
+        this.name = name;
     }
 
-    public void setCategoryBudget(BigDecimal categoryBudget)
+    public BigDecimal getBudget()
     {
-        this.categoryBudget = categoryBudget;
+        return this.budget;
+    }
+
+    public void setBudget(BigDecimal budget)
+    {
+        this.budget = budget;
+    }
+
+    // Helpful for debugging
+    @Override
+    public String toString() {
+        return name;
     }
 }
