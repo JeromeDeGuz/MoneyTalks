@@ -13,64 +13,90 @@ public class ExpenseValidatorTest
 {
     private final ExpenseValidator validator = new ExpenseValidator();
 
-    //Null expense should trigger validation exception
     @Test
-    public void validateNullShouldThrow()
+    public void validateNullExpenseShouldThrow()
     {
-        final Expense expense = null;
-        assertThrows(ValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(null));
     }
 
-    //Expense with null name should be rejected
     @Test
     public void validateNullNameShouldThrow()
     {
-        // Added ID, BigDecimal, and LocalDate
-        final Expense expense = new Expense(0, null, new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, null, new BigDecimal("10.0"), "Food", LocalDate.now(), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Blank name (only spaces) should be invalid
     @Test
-    public void validateBlankNameShouldThrow()
+    public void validateEmptyNameShouldThrow()
     {
-        final Expense expense = new Expense(0, "   ", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, "", new BigDecimal("10.0"), "Food", LocalDate.now(), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Name containing only digits should not be allowed
+    @Test
+    public void validateWhitespaceNameShouldThrow()
+    {
+        final Expense expense = new Expense(0, "   ", new BigDecimal("10.0"), "Food", LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
+    @Test
+    public void validateNameTooShortShouldThrow()
+    {
+        final Expense expense = new Expense(0, "A", new BigDecimal("10.0"), "Food", LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
+    @Test
+    public void validateNameTooLongShouldThrow()
+    {
+        String longName = "A".repeat(51);
+        final Expense expense = new Expense(0, longName, new BigDecimal("10.0"), "Food", LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
     @Test
     public void validateOnlyNumbersNameShouldThrow()
     {
-        final Expense expense = new Expense(0, "12345", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, "12345", new BigDecimal("10.0"), "Food", LocalDate.now(), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Name with letters and numbers should be valid
     @Test
-    public void validateNameWithNumberShouldNotThrow()
+    public void validateNullAmountShouldThrow()
     {
-        final Expense expense = new Expense(0, "Lunch 2", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
-        assertDoesNotThrow(() -> validator.validate(expense));
-    }
-
-    //Zero amount should be rejected
-    @Test
-    public void validateAmountZeroShouldThrow()
-    {
-        final Expense expense = new Expense(0, "Lunch", BigDecimal.ZERO, "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, "Lunch", null, "Food", LocalDate.now(), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Negative amount should not be accepted
     @Test
-    public void validateAmountNegativeShouldThrow()
+    public void validateZeroAmountShouldThrow()
     {
-        final Expense expense = new Expense(0, "Lunch", new BigDecimal("-1.0"), "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, "Lunch", BigDecimal.ZERO, "Food", LocalDate.now(), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Null date should fail validation
+    @Test
+    public void validateNegativeAmountShouldThrow()
+    {
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("-5.0"), "Food", LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
+    @Test
+    public void validateNullCategoryShouldThrow()
+    {
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), null, LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
+    @Test
+    public void validateEmptyCategoryShouldThrow()
+    {
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "", LocalDate.now(), "");
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
+    }
+
     @Test
     public void validateNullDateShouldThrow()
     {
@@ -78,31 +104,25 @@ public class ExpenseValidatorTest
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Blank date should be treated as invalid input
     @Test
-    public void validateBlankDateShouldThrow()
+    public void validateFutureDateShouldThrow()
     {
-        // Note: Since Expense model now uses LocalDate, a "blank" date is handled at the parsing level (AddAndEditExpense)
-        // This test now checks for null to represent missing date input
-        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", LocalDate.now().plusDays(1), "");
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Invalid date format should fail validation
     @Test
-    public void validateInvalidDateFormatShouldThrow()
+    public void validateLongNoteShouldThrow()
     {
-        // LocalDate prevents invalid formats by design
-        // Testing null to ensure the validator still catches missing dates
-        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
+        String longNote = "N".repeat(501);
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", LocalDate.now(), longNote);
         assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
-    //Fully valid expense should pass validation
     @Test
     public void validateValidInputShouldNotThrow()
     {
-        final Expense expense = new Expense(0, "Lunch", new BigDecimal("12.5"), "Food", LocalDate.of(2024, 5, 20), "");
+        final Expense expense = new Expense(0, "Lunch", new BigDecimal("12.5"), "Food", LocalDate.now(), "Optional note");
         assertDoesNotThrow(() -> validator.validate(expense));
     }
 }

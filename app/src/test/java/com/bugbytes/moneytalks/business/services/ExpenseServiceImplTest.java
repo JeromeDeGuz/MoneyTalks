@@ -2,144 +2,198 @@ package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
-import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
 import com.bugbytes.moneytalks.models.Expense;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ExpenseServiceImplTest
-{
-    private ExpenseServiceImpl expenseService;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ExpenseServiceImplTest {
+
+    private ExpenseServiceImpl service;
     private ExpenseRepository repo;
     private ExpenseValidator validator;
 
     @BeforeEach
-    public void setUp()
-    {
-        //Initialize the fake repository and the service
+    public void setUp() {
         repo = new FakeRepository();
         validator = new ExpenseValidator();
-        expenseService = new ExpenseServiceImpl(repo, validator);
+        service = new ExpenseServiceImpl(repo, validator);
 
-        // Clearing the static list by removing items individually since getAllExpenses() returns a copy
-        List<Expense> current = repo.getAllExpenses();
-        for (Expense e : current)
-        {
+        // Clear repo for test isolation
+        for (Expense e : repo.getAllExpenses()) {
             repo.deleteExpense(e);
         }
     }
 
-    //Verify that adding an expense stores it in repository
+    // ---------------- Constructor ----------------
+
     @Test
-    public void addExpenseShouldDelegateToRepository()
-    {
-        final Expense expense = new Expense(0, "Groceries", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "Weekly shop");
+    public void constructor_nullArgs_throwsException() {
+        assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(null, validator));
+        assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(repo, null));
+    }
 
-        expenseService.addExpense(expense);
+    // ---------------- getAllExpenses ----------------
 
-        final List<Expense> result = expenseService.getAllExpenses();
+    @Test
+    public void getAllExpenses_repoReturnsNull_returnsEmptyList() {
+        ExpenseRepository nullRepo = new FakeRepository() {
+            @Override
+            public List<Expense> getAllExpenses() { return null; }
+        };
+        ExpenseServiceImpl serviceWithNullRepo = new ExpenseServiceImpl(nullRepo, validator);
+        
+        List<Expense> result = serviceWithNullRepo.getAllExpenses();
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getAllExpenses_success() {
+        service.addExpense(new Expense(0, "Item", BigDecimal.TEN, "Food", LocalDate.now(), ""));
+        assertEquals(1, service.getAllExpenses().size());
+    }
+
+    // ---------------- Add Expense & Validator Branches ----------------
+
+    @Test
+    public void addExpense_valid_passes() {
+        Expense e = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", LocalDate.now(), "Test note");
+        service.addExpense(e);
+        assertEquals(1, service.getAllExpenses().size());
+    }
+
+    @Test
+    public void addExpense_validationBranches() {
+        // Null name
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, null, BigDecimal.TEN, "Food", LocalDate.now(), "")));
+        
+        // Blank name
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "  ", BigDecimal.TEN, "Food", LocalDate.now(), "")));
+
+        // Name too short
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "")));
+
+        // Name too long
+        String longName = "A".repeat(51);
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, longName, BigDecimal.TEN, "Food", LocalDate.now(), "")));
+
+        // Numeric name
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "12345", BigDecimal.TEN, "Food", LocalDate.now(), "")));
+
+        // Amount <= 0
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "Valid", BigDecimal.ZERO, "Food", LocalDate.now(), "")));
+
+        // Category null
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "Valid", BigDecimal.TEN, null, LocalDate.now(), "")));
+
+        // Date null
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "Valid", BigDecimal.TEN, "Food", null, "")));
+
+        // Future Date
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "Valid", BigDecimal.TEN, "Food", LocalDate.now().plusDays(1), "")));
+
+        // Long Note
+        String longNote = "N".repeat(501);
+        assertThrows(ValidationException.class, () -> 
+            service.addExpense(new Expense(0, "Valid", BigDecimal.TEN, "Food", LocalDate.now(), longNote)));
+    }
+
+    // ---------------- Update Expense ----------------
+
+    @Test
+    public void updateExpense_branches() {
+        assertFalse(service.updateExpense(null));
+
+        Expense e = new Expense(0, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        service.addExpense(e);
+        Expense saved = service.getAllExpenses().get(0);
+        saved.setName("Updated");
+        assertTrue(service.updateExpense(saved));
+
+        Expense missing = new Expense(9999, "Missing", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        assertFalse(service.updateExpense(missing));
+    }
+
+    // ---------------- Delete Expense ----------------
+
+    @Test
+    public void deleteExpense_branches() {
+        assertFalse(service.deleteExpense(null));
+
+        Expense e = new Expense(0, "Coffee", BigDecimal.ONE, "Food", LocalDate.now(), "");
+        service.addExpense(e);
+        Expense saved = service.getAllExpenses().get(0);
+        assertTrue(service.deleteExpense(saved));
+
+        assertFalse(service.deleteExpense(saved));
+    }
+
+    // ---------------- Sorting & Filtering ----------------
+
+    @Test
+    public void sortingAndFiltering_branches() {
+        service.addExpense(new Expense(0, "A_Old", BigDecimal.TEN, "Food", LocalDate.now().minusDays(2), ""));
+        service.addExpense(new Expense(0, "B_New", BigDecimal.TEN, "Food", LocalDate.now(), ""));
+        service.addExpense(new Expense(0, "C_Other", BigDecimal.TEN, "Other", LocalDate.now().minusDays(1), ""));
+
+        assertEquals("B_New", service.getExpensesSortedByDate(true).get(0).getName());
+        assertEquals("A_Old", service.getExpensesSortedByDate(false).get(0).getName());
+
+        assertEquals(3, service.getExpensesByCategorySortedByDate("All", true).size());
+        assertEquals(3, service.getExpensesByCategorySortedByDate(null, true).size());
+
+        List<Expense> food = service.getExpensesByCategorySortedByDate("Food", true);
+        assertEquals(2, food.size());
+    }
+
+    @Test
+    public void filtering_removeIf_innerBranches() {
+        ExpenseRepository dirtyRepo = new FakeRepository() {
+            @Override
+            public List<Expense> getAllExpenses() {
+                List<Expense> list = new ArrayList<>();
+                list.add(null); 
+                list.add(new Expense(1, "NoCat", BigDecimal.TEN, null, LocalDate.now(), "")); 
+                list.add(new Expense(2, "WrongCat", BigDecimal.TEN, "Other", LocalDate.now(), "")); 
+                list.add(new Expense(3, "RightCat", BigDecimal.TEN, "Food", LocalDate.now(), ""));
+                return list;
+            }
+        };
+        ExpenseServiceImpl dirtyService = new ExpenseServiceImpl(dirtyRepo, validator);
+
+        List<Expense> result = dirtyService.getExpensesByCategorySortedByDate("Food", true);
         assertEquals(1, result.size());
-        assertEquals("Groceries", result.get(0).getName());
+        assertEquals("RightCat", result.get(0).getName());
     }
 
-    @Test
-    public void addExpenseShouldThrowExceptionIfInvalid()
-    {
-        // Name is purely numeric, which should fail validation
-        final Expense invalid = new Expense(0, "123", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "");
-
-        assertThrows(ValidationException.class, () -> {
-            expenseService.addExpense(invalid);
-        });
-    }
-
-    //Add multiple expenses and verify retrieval returns all items
-    @Test
-    public void getAllExpensesShouldReturnAllStoredItems()
-    {
-        expenseService.addExpense(new Expense(0, "Rent", new BigDecimal("1200.0"), "Housing", LocalDate.of(2026, 2, 1), "Feb Rent"));
-        expenseService.addExpense(new Expense(0, "Coffee", new BigDecimal("5.0"), "Food", LocalDate.of(2026, 2, 2), "Latte"));
-
-        final List<Expense> list = expenseService.getAllExpenses();
-
-        assertEquals(2, list.size());
-    }
-
-    //Ensure delete returns true when expense exists
-    @Test
-    public void deleteExpenseShouldReturnTrueOnSuccess()
-    {
-        final Expense gas = new Expense(0, "Gas", new BigDecimal("60.0"), "Transport", LocalDate.of(2026, 2, 10), "Full tank");
-        expenseService.addExpense(gas);
-
-        // Fetching the assigned ID from repo to ensure a clean match
-        Expense storedGas = expenseService.getAllExpenses().get(0);
-
-        final boolean deleted = expenseService.deleteExpense(storedGas);
-
-        assertTrue(deleted);
-        assertEquals(0, expenseService.getAllExpenses().size());
-    }
-
-    //Ensure delete returns false when expense is not in repository
-    @Test
-    public void deleteExpenseShouldReturnFalseIfNotFound()
-    {
-        final Expense nonExistent = new Expense(0, "Missing", BigDecimal.ZERO, "None", LocalDate.of(2026, 1, 1), "");
-
-        final boolean deleted = expenseService.deleteExpense(nonExistent);
-
-        assertFalse(deleted);
-    }
+    // ---------------- getExpenseById ----------------
 
     @Test
-    public void getExpensesSortedByDateShouldReturnCorrectOrder()
-    {
-        expenseService.addExpense(new Expense(0, "Old", new BigDecimal("10"), "Food", LocalDate.of(2020, 1, 1), ""));
-        expenseService.addExpense(new Expense(0, "New", new BigDecimal("10"), "Food", LocalDate.of(2025, 1, 1), ""));
+    public void getExpenseById_branches() {
+        Expense e = new Expense(0, "Target", BigDecimal.TEN, "Shopping", LocalDate.now(), "");
+        service.addExpense(e);
+        long id = service.getAllExpenses().get(0).getId();
 
-        // Newest first
-        List<Expense> result = expenseService.getExpensesSortedByDate(true);
-        assertEquals("New", result.get(0).getName());
-
-        // Oldest first
-        result = expenseService.getExpensesSortedByDate(false);
-        assertEquals("Old", result.get(0).getName());
-    }
-
-    @Test
-    public void getExpensesByCategoryShouldFilterCorrectly()
-    {
-        expenseService.addExpense(new Expense(0, "Burger", new BigDecimal("10"), "Food", LocalDate.now(), ""));
-        expenseService.addExpense(new Expense(0, "Bus", new BigDecimal("2"), "Transport", LocalDate.now(), ""));
-
-        List<Expense> foodOnly = expenseService.getExpensesByCategorySortedByDate("Food", true);
-        assertEquals(1, foodOnly.size());
-        assertEquals("Burger", foodOnly.get(0).getName());
-
-        // Category "All" should return everything
-        List<Expense> all = expenseService.getExpensesByCategorySortedByDate("All", true);
-        assertEquals(2, all.size());
-    }
-
-    @Test
-    public void updateExpenseShouldReturnFalseIfNotFound()
-    {
-        final Expense nonExistent = new Expense(999, "Missing", new BigDecimal("10"), "Food", LocalDate.now(), "");
-        assertFalse(expenseService.updateExpense(nonExistent));
-    }
-
-    @Test
-    public void getExpenseByIdShouldReturnNullIfNotFound()
-    {
-        assertNull(expenseService.getExpenseById(9999));
+        assertNotNull(service.getExpenseById(id));
+        assertNull(service.getExpenseById(-99));
     }
 }
