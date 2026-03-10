@@ -128,7 +128,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, "Failed to update category", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to update category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)

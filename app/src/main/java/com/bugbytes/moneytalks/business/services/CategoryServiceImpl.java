@@ -39,10 +39,7 @@ public class CategoryServiceImpl implements CategoryService
     public void updateCategory(Category oldCategory, Category newCategory)
     {
         categoryRepo.updateCategory(oldCategory, newCategory);
-        if(expenseRepo.categoryExists(oldCategory)){
-            //only update all expense category, if it an expense with that category exists
-            expenseRepo.updateExpenseCategory(oldCategory, newCategory);
-        }
+        expenseRepo.updateExpenseCategory(oldCategory, newCategory);
     }
 
     @Override
