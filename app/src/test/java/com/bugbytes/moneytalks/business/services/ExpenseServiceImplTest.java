@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.models.Expense;
@@ -40,7 +41,6 @@ public class ExpenseServiceImplTest
     @Test
     public void addExpenseShouldDelegateToRepository()
     {
-        // Added 0 as the first parameter for the id
         final Expense expense = new Expense(0, "Groceries", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "Weekly shop");
 
         expenseService.addExpense(expense);
@@ -50,11 +50,21 @@ public class ExpenseServiceImplTest
         assertEquals("Groceries", result.get(0).getName());
     }
 
+    @Test
+    public void addExpenseShouldThrowExceptionIfInvalid()
+    {
+        // Name is purely numeric, which should fail validation
+        final Expense invalid = new Expense(0, "123", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "");
+
+        assertThrows(ValidationException.class, () -> {
+            expenseService.addExpense(invalid);
+        });
+    }
+
     //Add multiple expenses and verify retrieval returns all items
     @Test
     public void getAllExpensesShouldReturnAllStoredItems()
     {
-        // Added 0 as the first parameter for the id
         expenseService.addExpense(new Expense(0, "Rent", new BigDecimal("1200.0"), "Housing", LocalDate.of(2026, 2, 1), "Feb Rent"));
         expenseService.addExpense(new Expense(0, "Coffee", new BigDecimal("5.0"), "Food", LocalDate.of(2026, 2, 2), "Latte"));
 
@@ -67,7 +77,6 @@ public class ExpenseServiceImplTest
     @Test
     public void deleteExpenseShouldReturnTrueOnSuccess()
     {
-        // Added 0 as the first parameter for the id
         final Expense gas = new Expense(0, "Gas", new BigDecimal("60.0"), "Transport", LocalDate.of(2026, 2, 10), "Full tank");
         expenseService.addExpense(gas);
 
@@ -84,11 +93,53 @@ public class ExpenseServiceImplTest
     @Test
     public void deleteExpenseShouldReturnFalseIfNotFound()
     {
-        // Added 0 as the first parameter for the id
         final Expense nonExistent = new Expense(0, "Missing", BigDecimal.ZERO, "None", LocalDate.of(2026, 1, 1), "");
 
         final boolean deleted = expenseService.deleteExpense(nonExistent);
 
         assertFalse(deleted);
+    }
+
+    @Test
+    public void getExpensesSortedByDateShouldReturnCorrectOrder()
+    {
+        expenseService.addExpense(new Expense(0, "Old", new BigDecimal("10"), "Food", LocalDate.of(2020, 1, 1), ""));
+        expenseService.addExpense(new Expense(0, "New", new BigDecimal("10"), "Food", LocalDate.of(2025, 1, 1), ""));
+
+        // Newest first
+        List<Expense> result = expenseService.getExpensesSortedByDate(true);
+        assertEquals("New", result.get(0).getName());
+
+        // Oldest first
+        result = expenseService.getExpensesSortedByDate(false);
+        assertEquals("Old", result.get(0).getName());
+    }
+
+    @Test
+    public void getExpensesByCategoryShouldFilterCorrectly()
+    {
+        expenseService.addExpense(new Expense(0, "Burger", new BigDecimal("10"), "Food", LocalDate.now(), ""));
+        expenseService.addExpense(new Expense(0, "Bus", new BigDecimal("2"), "Transport", LocalDate.now(), ""));
+
+        List<Expense> foodOnly = expenseService.getExpensesByCategorySortedByDate("Food", true);
+        assertEquals(1, foodOnly.size());
+        assertEquals("Burger", foodOnly.get(0).getName());
+
+        // Category "All" should return everything
+        List<Expense> all = expenseService.getExpensesByCategorySortedByDate("All", true);
+        assertEquals(2, all.size());
+    }
+
+    @Test
+    public void updateExpenseShouldReturnFalseIfNotFound()
+    {
+        final Expense nonExistent = new Expense(999, "Missing", new BigDecimal("10"), "Food", LocalDate.now(), "");
+        assertFalse(expenseService.updateExpense(nonExistent));
+    }
+
+    @Test
+    public void getExpenseByIdShouldReturnNullIfNotFound()
+    {
+        assertNull(expenseService.getExpenseById(9999));
     }
 }
