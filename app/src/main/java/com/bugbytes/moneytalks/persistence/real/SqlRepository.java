@@ -172,7 +172,6 @@ public class SqlRepository implements ExpenseRepository
     @Override
     public boolean categoryExists(Category category) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        // Compare case-insensitively using SQL UPPER() or COLLATE NOCASE
         String selection = "UPPER(" + DbContract.ExpenseEntry.COLUMN_CATEGORY + ") = UPPER(?)";
         String[] selectionArgs = {category.getName()};
         Cursor cursor = db.query(DbContract.ExpenseEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
