@@ -1,58 +1,56 @@
 package com.bugbytes.moneytalks.business.services;
 
+import com.bugbytes.moneytalks.business.validation.CategoryValidator;
+import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+
 import java.util.List;
 import java.util.Objects;
 
 public class CategoryServiceImpl implements CategoryService
 {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepo;
+    private final ExpenseRepository expenseRepo;
+    private final Validator<Category> validator;
 
-    public CategoryServiceImpl(CategoryRepository repository)
+
+    public CategoryServiceImpl(CategoryRepository categoryRepo, Validator<Category> validator, ExpenseRepository expenseRepo)
     {
-        this.repository = Objects.requireNonNull(repository, "Repository cannot be null");
+        this.categoryRepo = Objects.requireNonNull(categoryRepo, "Repository cannot be null");
+        this.validator = Objects.requireNonNull(validator, "Validator cannot be null");
+        this.expenseRepo = Objects.requireNonNull(expenseRepo, "Expense Repository cannot be null");
     }
     @Override
     public void addCategory(Category category)
     {
-        // Business Rule 1: Check if null or empty
-        if (category == null || category.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be empty");
-        }
-
-        // Business Rule 2: Case-insensitive duplicate check
-        List<Category> existing = repository.getAllCategories();
-        for (Category c : existing) {
-            if (c.getName().equalsIgnoreCase(category.getName())) {
-                //agar pehle se maujood hai toh add nahi karenge
-                return;
-            }
-        }
-
-        repository.addCategory(category);
+        validator.validate(category);
+        categoryRepo.addCategory(category);
     }
     @Override
     public List<Category> getAllCategories()
     {
-        return repository.getAllCategories();
+        return categoryRepo.getAllCategories();
     }
 
     @Override
     public void updateCategory(Category category)
     {
-        repository.updateCategory(category);
+        categoryRepo.updateCategory(category);
     }
 
     @Override
     public void deleteCategory(Category category)
     {
-        repository.deleteCategory(category);
+        CategoryValidator validator = (CategoryValidator) this.validator;
+        validator.validateDelete(category, expenseRepo);
+        categoryRepo.deleteCategory(category);
     }
 
     @Override
     public Category getCategory(String categoryName)
     {
-        return repository.getCategoryByName(categoryName);
+        return categoryRepo.getCategoryByName(categoryName);
     }
 }

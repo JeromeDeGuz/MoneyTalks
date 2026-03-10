@@ -1,5 +1,6 @@
 package com.bugbytes.moneytalks.persistence.fake;
 
+import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
@@ -103,5 +104,16 @@ public class FakeRepository implements ExpenseRepository
     @Override
     public boolean isEmpty(){
         return expenses.isEmpty();
+    }
+
+    @Override
+    public boolean categoryExists(Category category) {
+        for (Expense e : expenses) {
+            if (e.getCategory().equals(category.getName())) {
+                return true;
+            }
+        }
+        return false;
+
     }
 }

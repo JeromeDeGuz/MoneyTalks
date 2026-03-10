@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
@@ -162,5 +163,16 @@ public class SqlRepository implements ExpenseRepository
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, DbContract.ExpenseEntry.TABLE_NAME);
         return count == 0;
+    }
+
+    @Override
+    public boolean categoryExists(Category category) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selection = DbContract.CategoryEntry.COLUMN_NAME + " = ?";
+        String[] selectionArgs = {category.getName()};
+        Cursor cursor = db.query(DbContract.CategoryEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
     }
 }

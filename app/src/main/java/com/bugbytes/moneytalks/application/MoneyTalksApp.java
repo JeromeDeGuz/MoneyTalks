@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
+import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlRepository;
@@ -30,7 +31,9 @@ public class MoneyTalksApp extends Application
 
         // Setup for the dynamic category feature
         CategoryRepository categoryRepository = new SqlCategoryRepository(this);
-        categoryService = new CategoryServiceImpl(categoryRepository);
+        CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
+
+        categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
 
         ExpenseValidator expenseValidator = new ExpenseValidator();
         //create service and connect it to repo
