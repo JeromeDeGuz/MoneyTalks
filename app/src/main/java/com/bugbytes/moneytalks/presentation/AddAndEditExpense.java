@@ -115,16 +115,26 @@ public class AddAndEditExpense extends AppCompatActivity
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-        builder.setPositiveButton("Add", (dialog, which) -> {
+        builder.setPositiveButton("Add", null); // Set to null first to override listener later
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Override the "Add" button click to prevent automatic dismissal on validation error
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String name = input.getText().toString().trim();
-            if (!name.isEmpty()) {
+            try {
                 app.getCategoryService().addCategory(new Category(name));
                 loadCategories(app);
                 autoCompleteCategory.setText(name, false);
+                dialog.dismiss();
+            } catch (ValidationException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
     }
 
     private void fillFields(Expense e)
@@ -163,9 +173,13 @@ public class AddAndEditExpense extends AppCompatActivity
 
         try
         {
-            if (amountStr.isEmpty() || dateStr.isEmpty())
+            if (dateStr.isEmpty())
             {
-                throw new ValidationException("Amount and Date are required.");
+                throw new ValidationException("Expense date is required.");
+            }
+            if (amountStr.isEmpty())
+            {
+                throw new ValidationException("Expense amount is required.");
             }
 
             final BigDecimal amount = new BigDecimal(amountStr);
@@ -201,7 +215,8 @@ public class AddAndEditExpense extends AppCompatActivity
         } catch (ValidationException e)
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Toast.makeText(this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
         }
