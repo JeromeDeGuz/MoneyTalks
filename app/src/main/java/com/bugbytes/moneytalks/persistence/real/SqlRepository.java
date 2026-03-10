@@ -178,4 +178,12 @@ public class SqlRepository implements ExpenseRepository
         cursor.close();
         return exists;
     }
+
+//    @Override
+//    public boolean updateExpenseCategory(Category category) {
+//        List<Expense> expenses = getAllExpenses();
+//        for (Expense expense : expenses) {
+//            if (expense.getCategory().equals(category.getName())) {
+//
+//    }
 }

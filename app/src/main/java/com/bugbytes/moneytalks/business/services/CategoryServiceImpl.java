@@ -35,9 +35,10 @@ public class CategoryServiceImpl implements CategoryService
     }
 
     @Override
-    public void updateCategory(Category category)
+    public void updateCategory(Category oldCategory, Category newCategory)
     {
-        categoryRepo.updateCategory(category);
+        categoryRepo.updateCategory(oldCategory, newCategory);
+//        expenseRepo.updateExpenseCategory(oldCategory, newCategory);
     }
 
     @Override
