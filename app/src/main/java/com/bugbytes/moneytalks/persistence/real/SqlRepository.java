@@ -171,9 +171,10 @@ public class SqlRepository implements ExpenseRepository
     @Override
     public boolean categoryExists(Category category) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selection = DbContract.CategoryEntry.COLUMN_NAME + " = ?";
+        // Compare case-insensitively using SQL UPPER() or COLLATE NOCASE
+        String selection = "UPPER(" + DbContract.ExpenseEntry.COLUMN_CATEGORY + ") = UPPER(?)";
         String[] selectionArgs = {category.getName()};
-        Cursor cursor = db.query(DbContract.CategoryEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
+        Cursor cursor = db.query(DbContract.ExpenseEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
