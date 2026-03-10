@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
@@ -35,9 +36,10 @@ public class CategoryServiceImpl implements CategoryService
     }
 
     @Override
-    public void updateCategory(Category category)
+    public void updateCategory(Category oldCategory, Category newCategory)
     {
-        categoryRepo.updateCategory(category);
+        categoryRepo.updateCategory(oldCategory, newCategory);
+        expenseRepo.updateExpenseCategory(oldCategory, newCategory);
     }
 
     @Override

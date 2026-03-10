@@ -3,25 +3,23 @@ package com.bugbytes.moneytalks.persistence.fake;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.PersistenceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeRepository implements ExpenseRepository
-{
+public class FakeRepository implements ExpenseRepository {
     //Static list so data persists while the app is running
     private static final List<Expense> expenses = new ArrayList<>();
     private static long autoIncrementId = 100; // Updated to long to match Expense model
 
     //Constructor: creates temporary, non-persistent sample data
-    public FakeRepository()
-    {
+    public FakeRepository() {
 
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
-        if (isEmpty())
-        {
+        if (isEmpty()) {
             Expense temp1 = new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib");
             Expense temp2 = new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill...");
             Expense temp3 = new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard");
@@ -33,8 +31,7 @@ public class FakeRepository implements ExpenseRepository
 
     //Adds an expense (@param: expense to add)
     @Override
-    public void addExpense(Expense expense)
-    {
+    public void addExpense(Expense expense) {
         // Re-creating the object to assign the final id through the constructor
         Expense expenseWithId = new Expense(
                 autoIncrementId,
@@ -50,13 +47,10 @@ public class FakeRepository implements ExpenseRepository
 
     //Deletes an expense (@param: expense to delete, @return: true if removed, false otherwise)
     @Override
-    public boolean deleteExpense(Expense expense)
-    {
+    public boolean deleteExpense(Expense expense) {
         // Find by ID because the object instance might be different (e.g. recreated from DB/List)
-        for (int i = 0; i < expenses.size(); i++)
-        {
-            if (expenses.get(i).getId() == expense.getId())
-            {
+        for (int i = 0; i < expenses.size(); i++) {
+            if (expenses.get(i).getId() == expense.getId()) {
                 expenses.remove(i);
                 return true;
             }
@@ -65,12 +59,9 @@ public class FakeRepository implements ExpenseRepository
     }
 
     @Override
-    public boolean updateExpense(Expense expense)
-    {
-        for (int i = 0; i < expenses.size(); i++)
-        {
-            if (expenses.get(i).getId() == expense.getId())
-            {
+    public boolean updateExpense(Expense expense) {
+        for (int i = 0; i < expenses.size(); i++) {
+            if (expenses.get(i).getId() == expense.getId()) {
                 expenses.set(i, expense);
                 return true;
             }
@@ -80,8 +71,7 @@ public class FakeRepository implements ExpenseRepository
 
     //Returns all expenses (@return: list of all stored expenses)
     @Override
-    public List<Expense> getAllExpenses()
-    {
+    public List<Expense> getAllExpenses() {
         // Return a copy to avoid external modification of the internal list
         return new ArrayList<>(expenses);
     }
@@ -89,12 +79,9 @@ public class FakeRepository implements ExpenseRepository
 
     // NEW: Implementation for getExpenseById to fix interface mismatch error
     @Override
-    public Expense getExpenseById(long id)
-    {
-        for (Expense e : expenses)
-        {
-            if (e.getId() == id)
-            {
+    public Expense getExpenseById(long id) {
+        for (Expense e : expenses) {
+            if (e.getId() == id) {
                 return e;
             }
         }
@@ -102,7 +89,7 @@ public class FakeRepository implements ExpenseRepository
     }
 
     @Override
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return expenses.isEmpty();
     }
 
@@ -114,6 +101,16 @@ public class FakeRepository implements ExpenseRepository
             }
         }
         return false;
+    }
 
+    @Override
+    public void updateExpenseCategory(Category oldCategory, Category newCategory) {
+        for (Expense e : expenses) {
+            if (e.getCategory().equals(oldCategory.getName())) {
+                e.setCategory(newCategory.getName());
+                updateExpense(e);
+            }
+        }
+        throw new PersistenceException("Failed to update category");
     }
 }
