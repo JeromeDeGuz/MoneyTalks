@@ -17,6 +17,7 @@ public class CategoryValidator implements Validator<Category>{
     public void validate(Category category){
        isNullorEmpty(category);
        isCaseDuplicate(category);
+       isNotNumbers(category);
     }
 
     //Check for null or empty
@@ -34,6 +35,14 @@ public class CategoryValidator implements Validator<Category>{
                 throw new ValidationException("Category name already exists");
             }
         }
+    }
+
+    //Check that Category name isn't all numbers e.g. "123124125"
+    private void isNotNumbers(Category category){
+            if (category.getName().trim().matches("^\\d+$"))
+            {
+                throw new ValidationException("Category name cannot be only numbers.");
+            }
     }
 
     //do not delete a category that exists within any expense
