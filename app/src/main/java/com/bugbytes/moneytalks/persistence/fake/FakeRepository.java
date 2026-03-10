@@ -17,8 +17,9 @@ public class FakeRepository implements ExpenseRepository
     //Constructor: creates temporary, non-persistent sample data
     public FakeRepository()
     {
+
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
-        if (expenses.isEmpty())
+        if (isEmpty())
         {
             Expense temp1 = new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib");
             Expense temp2 = new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill...");
@@ -84,6 +85,7 @@ public class FakeRepository implements ExpenseRepository
         return new ArrayList<>(expenses);
     }
 
+
     // NEW: Implementation for getExpenseById to fix interface mismatch error
     @Override
     public Expense getExpenseById(long id)
@@ -96,5 +98,10 @@ public class FakeRepository implements ExpenseRepository
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean isEmpty(){
+        return expenses.isEmpty();
     }
 }

@@ -19,4 +19,5 @@ public interface ExpenseRepository
     boolean updateExpense(Expense expense);
 
     Expense getExpenseById(long id);
+    boolean isEmpty();
 }
