@@ -161,8 +161,11 @@ public class SqlRepository implements ExpenseRepository
     public boolean isEmpty()
     {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        long count = DatabaseUtils.queryNumEntries(db, DbContract.ExpenseEntry.TABLE_NAME);
-        return count == 0;
+        Cursor cursor = db.query(DbContract.ExpenseEntry.TABLE_NAME, null, null, null, null, null, null);
+        boolean isEmpty = cursor.getCount() == 0;
+        cursor.close();
+        return isEmpty;
+
     }
 
     @Override

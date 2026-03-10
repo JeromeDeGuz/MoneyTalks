@@ -10,4 +10,6 @@ public interface CategoryRepository
     void updateCategory(Category category);
     void deleteCategory(Category category);
     Category getCategoryByName(String name);
+
+    boolean isEmpty();
 }

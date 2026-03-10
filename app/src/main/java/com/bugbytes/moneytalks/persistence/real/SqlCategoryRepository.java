@@ -3,6 +3,7 @@ package com.bugbytes.moneytalks.persistence.real;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
@@ -19,6 +20,12 @@ public class SqlCategoryRepository implements CategoryRepository
     public SqlCategoryRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
+        if(isEmpty()){
+            addCategory(new Category(0, "Transport", new BigDecimal("100.0")));
+            addCategory(new Category(0, "Food", new BigDecimal("200.0")));
+            addCategory(new Category(0, "Shopping", new BigDecimal("300.0")));
+        }
+
     }
 
     @Override
@@ -94,5 +101,14 @@ public class SqlCategoryRepository implements CategoryRepository
         }
         cursor.close();
         return category;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DbContract.CategoryEntry.TABLE_NAME, null, null, null, null, null, null);
+        boolean isEmpty = cursor.getCount() == 0;
+        cursor.close();
+        return isEmpty;
     }
 }
