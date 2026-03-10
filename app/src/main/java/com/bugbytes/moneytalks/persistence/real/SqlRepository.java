@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.PersistenceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -180,11 +181,16 @@ public class SqlRepository implements ExpenseRepository
         return exists;
     }
 
-//    @Override
-//    public boolean updateExpenseCategory(Category category) {
-//        List<Expense> expenses = getAllExpenses();
-//        for (Expense expense : expenses) {
-//            if (expense.getCategory().equals(category.getName())) {
-//
-//    }
+    @Override
+    public void updateExpenseCategory(Category oldCategory, Category newCategory) {
+        List<Expense> expenses = getAllExpenses();
+        for (Expense expense : expenses) {
+            if (expense.getCategory().equalsIgnoreCase(oldCategory.getName())) {
+                expense.setCategory(newCategory.getName());
+                updateExpense(expense);
+            }
+        }
+        throw new PersistenceException("Failed to update expense category");
+
+    }
 }
