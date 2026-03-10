@@ -47,7 +47,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Settings"
                     android:padding="8dp"
-                    android:src="@android:drawable/ic_menu_manage"
+                    android:src="@android:drawable/ic_menu_preferences"
                     android:tint="@color/fab_icon_purple" />
             </LinearLayout>
 
