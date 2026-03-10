@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +23,12 @@ import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 //Main screen that displays all expenses in a list
 public class ExpenseListActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseEventListener
@@ -84,6 +87,13 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         btnAddExpense.setOnClickListener(v ->
         {
             Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
+            startActivity(intent);
+        });
+
+        final ImageButton btnSettings = findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(ExpenseListActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
     }
