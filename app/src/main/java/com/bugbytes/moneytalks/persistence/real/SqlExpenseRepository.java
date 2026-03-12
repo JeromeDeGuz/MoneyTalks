@@ -3,24 +3,22 @@ package com.bugbytes.moneytalks.persistence.real;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.persistence.PersistenceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlRepository implements ExpenseRepository
+public class SqlExpenseRepository implements ExpenseRepository
 {
     private final AppDbHelper dbHelper;
 
-    public SqlRepository(Context context)
+    public SqlExpenseRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
         // Only add sample data if the database is empty to prevent duplicates on every instance creation
