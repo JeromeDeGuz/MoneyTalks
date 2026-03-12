@@ -181,10 +181,6 @@ public class SqlRepository implements ExpenseRepository
 
     @Override
     public void updateExpenseCategory(Category oldCategory, Category newCategory) {
-       if(!categoryExists(oldCategory)){
-           throw new PersistenceException("Category does not exist");
-       }
-
         List<Expense> expenses = getAllExpenses();
         for (Expense expense : expenses) {
             if (expense.getCategory().equalsIgnoreCase(oldCategory.getName())) {
