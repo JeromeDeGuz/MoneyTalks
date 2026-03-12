@@ -91,7 +91,7 @@ public class FakeRepository implements ExpenseRepository {
     @Override
     public boolean categoryExists(Category category) {
         for (Expense e : expenses) {
-            if (e.getCategory().equals(category.getName())) {
+            if (e.getCategory().equalsIgnoreCase(category.getName())) {
                 return true;
             }
         }
@@ -100,12 +100,14 @@ public class FakeRepository implements ExpenseRepository {
 
     @Override
     public void updateExpenseCategory(Category oldCategory, Category newCategory) {
+        if(!categoryExists(oldCategory)){
+            throw new PersistenceException("Category does not exist");
+        }
         for (Expense e : expenses) {
-            if (e.getCategory().equals(oldCategory.getName())) {
+            if (e.getCategory().equalsIgnoreCase(oldCategory.getName())) {
                 e.setCategory(newCategory.getName());
-                updateExpense(e);
+                System.out.println("LOGGER: Update " + e.getCategory()) ;
             }
         }
-        throw new PersistenceException("Failed to update category");
     }
 }

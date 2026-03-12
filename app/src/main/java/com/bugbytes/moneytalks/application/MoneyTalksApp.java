@@ -34,6 +34,8 @@ public class MoneyTalksApp extends Application
         // Setup for the dynamic category feature
         CategoryRepository categoryRepository = new FakeCategoryRepository();
 //        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
+
+
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
 
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
