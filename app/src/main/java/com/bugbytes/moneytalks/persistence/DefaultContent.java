@@ -18,6 +18,11 @@ public class DefaultContent {
             expenseRepo.addExpense(new Expense(0, "Rent", new BigDecimal("1200.0"), "Housing", LocalDate.of(2026, 3, 4), "Feb Rent"));
             expenseRepo.addExpense(new Expense(0, "Gas", new BigDecimal("60.0"), "Transport", LocalDate.of(2026, 3, 7), "$1.79 per litre"));
             expenseRepo.addExpense(new Expense(0, "Monthly Car Payment", new BigDecimal("1000.0"), "Car", LocalDate.of(2026, 3, 12), "2026 Audi A5 Sportback"));
+            expenseRepo.addExpense(new Expense(0, "Spotify", new BigDecimal("9.99"), "Subscriptions", LocalDate.of(2026, 2, 15), ""));
+            expenseRepo.addExpense(new Expense(0, "Netflix", new BigDecimal("15.0"), "Subscriptions", LocalDate.of(2026, 2, 20), ""));
+            expenseRepo.addExpense(new Expense(0, "Textbook", new BigDecimal("100.0"), "School", LocalDate.of(2026, 2, 23), "Clean Code"));
+            expenseRepo.addExpense(new Expense(0, "Winter Tuition", new BigDecimal("8750.0"), "School", LocalDate.of(2026, 2, 5), "Comp 3350, Comp 4620, Comp 3190, Comp 3430"));
+
         }
     }
 
@@ -28,6 +33,8 @@ public class DefaultContent {
             categoryRepo.addCategory(new Category("Shopping"));
             categoryRepo.addCategory(new Category("Housing"));
             categoryRepo.addCategory(new Category("Car"));
+            categoryRepo.addCategory(new Category("Subscriptions"));
+            categoryRepo.addCategory(new Category("School"));
 
         }
     }
