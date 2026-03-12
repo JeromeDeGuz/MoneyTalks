@@ -4,6 +4,7 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.PersistenceException;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,14 +20,8 @@ public class FakeRepository implements ExpenseRepository {
     public FakeRepository() {
 
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
-        if (isEmpty()) {
-            Expense temp1 = new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib");
-            Expense temp2 = new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill...");
-            Expense temp3 = new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard");
-            addExpense(temp1);
-            addExpense(temp2);
-            addExpense(temp3);
-        }
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateExpenses(this);
     }
 
     //Adds an expense (@param: expense to add)

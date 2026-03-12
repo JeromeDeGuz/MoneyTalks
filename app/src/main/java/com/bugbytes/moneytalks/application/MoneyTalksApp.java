@@ -7,6 +7,8 @@ import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeCategoryRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlRepository;
 // Adding category-specific imports for the new feature
 import com.bugbytes.moneytalks.business.services.CategoryService;
@@ -26,11 +28,12 @@ public class MoneyTalksApp extends Application
     {
         super.onCreate();
         //create repo using our fake db
-//        ExpenseRepository expenseRepository = new FakeRepository();
-        ExpenseRepository expenseRepository = new SqlRepository(this);
+        ExpenseRepository expenseRepository = new FakeRepository();
+//        ExpenseRepository expenseRepository = new SqlRepository(this);
 
         // Setup for the dynamic category feature
-        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
+        CategoryRepository categoryRepository = new FakeCategoryRepository();
+//        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
 
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
