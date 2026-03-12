@@ -181,10 +181,6 @@ public class SqlRepository implements ExpenseRepository
 
     @Override
     public void updateExpenseCategory(Category oldCategory, Category newCategory) {
-       if(!categoryExists(oldCategory)){
-           return;
-       }
-
         List<Expense> expenses = getAllExpenses();
         for (Expense expense : expenses) {
             if (expense.getCategory().equalsIgnoreCase(oldCategory.getName())) {
