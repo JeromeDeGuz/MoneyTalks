@@ -18,7 +18,7 @@ public class ExpenseValidatorTest
     public void validateNullShouldThrow()
     {
         final Expense expense = null;
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Expense with null name should be rejected
@@ -27,7 +27,7 @@ public class ExpenseValidatorTest
     {
         // Added ID, BigDecimal, and LocalDate
         final Expense expense = new Expense(0, null, new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Blank name (only spaces) should be invalid
@@ -35,7 +35,7 @@ public class ExpenseValidatorTest
     public void validateBlankNameShouldThrow()
     {
         final Expense expense = new Expense(0, "   ", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Name containing only digits should not be allowed
@@ -43,7 +43,7 @@ public class ExpenseValidatorTest
     public void validateOnlyNumbersNameShouldThrow()
     {
         final Expense expense = new Expense(0, "12345", new BigDecimal("10.0"), "Food", LocalDate.of(2024, 5, 20), "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Name with letters and numbers should be valid
@@ -59,7 +59,7 @@ public class ExpenseValidatorTest
     public void validateAmountZeroShouldThrow()
     {
         final Expense expense = new Expense(0, "Lunch", BigDecimal.ZERO, "Food", LocalDate.of(2024, 5, 20), "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Negative amount should not be accepted
@@ -67,7 +67,7 @@ public class ExpenseValidatorTest
     public void validateAmountNegativeShouldThrow()
     {
         final Expense expense = new Expense(0, "Lunch", new BigDecimal("-1.0"), "Food", LocalDate.of(2024, 5, 20), "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Null date should fail validation
@@ -75,7 +75,7 @@ public class ExpenseValidatorTest
     public void validateNullDateShouldThrow()
     {
         final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Blank date should be treated as invalid input
@@ -85,7 +85,7 @@ public class ExpenseValidatorTest
         // Note: Since Expense model now uses LocalDate, a "blank" date is handled at the parsing level (AddAndEditExpense)
         // This test now checks for null to represent missing date input
         final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Invalid date format should fail validation
@@ -95,7 +95,7 @@ public class ExpenseValidatorTest
         // LocalDate prevents invalid formats by design
         // Testing null to ensure the validator still catches missing dates
         final Expense expense = new Expense(0, "Lunch", new BigDecimal("10.0"), "Food", null, "");
-        assertThrows(ExpenseValidationException.class, () -> validator.validate(expense));
+        assertThrows(ValidationException.class, () -> validator.validate(expense));
     }
 
     //Fully valid expense should pass validation
