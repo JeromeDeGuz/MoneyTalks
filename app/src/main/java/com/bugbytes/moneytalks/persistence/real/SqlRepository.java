@@ -3,13 +3,15 @@ package com.bugbytes.moneytalks.persistence.real;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.PersistenceException;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,16 +22,13 @@ public class SqlRepository implements ExpenseRepository
 {
     private final AppDbHelper dbHelper;
 
+
     public SqlRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-        // Only add sample data if the database is empty to prevent duplicates on every instance creation
-        if (isEmpty())
-        {
-            addExpense(new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib"));
-            addExpense(new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill..."));
-            addExpense(new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard"));
-        }
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateExpenses(this);
+
     }
 
     @Override
