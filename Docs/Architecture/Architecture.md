@@ -11,7 +11,7 @@ The app follows a **3-tier architecture** for clean separation of concerns:
 ## Architecture
 
 ### 1. Application Layer 
-This layer initializes application-wide services and wires the business layer to the persistence layer.
+This layer initializes application-wide services and wires the business layer to the persistence layer. Wiring the SqlExpense
 
 **Components**
 - **MoneyTalksApp:** Entry point of the app. It initializes application-wide services and wires Business Layer to Persistence Layer.
