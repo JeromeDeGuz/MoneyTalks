@@ -41,8 +41,10 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private Button btnSort;
 
     private Button btnFilter;
-    private String selectedCategory = "All"; // default
-    private boolean isNewestFirst = true; // Tracks current sort state
+    // default
+    private String selectedCategory = "All";
+    // Tracks current sort state
+    private boolean isNewestFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -97,9 +99,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             startActivity(intent);
         });
     }
-
-    // Configures the small button and its popup listener for "foran" (instant) updates
-    // Configures the Sort button popup menu (shows a checkmark on the current selection)
     private void setupSortButton()
     {
         btnSort = findViewById(R.id.btnSort);
@@ -233,7 +232,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         if (success)
         {
             Toast.makeText(this, "Deleted: " + expense.getName(), Toast.LENGTH_SHORT).show();
-            loadExpenses(); // Refresh list after deletion
+            loadExpenses();
         }
         else
         {
