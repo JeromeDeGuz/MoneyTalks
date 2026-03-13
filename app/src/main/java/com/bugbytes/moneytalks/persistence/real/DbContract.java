@@ -2,10 +2,6 @@ package com.bugbytes.moneytalks.persistence.real;
 
 public final class DbContract
 {
-    private DbContract()
-    {
-    }
-
     public static class ExpenseEntry
     {
         public static final String TABLE_NAME = "expenses";

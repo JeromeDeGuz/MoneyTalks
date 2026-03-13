@@ -104,7 +104,8 @@ public class SqlCategoryRepository implements CategoryRepository
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DbContract.CategoryEntry.TABLE_NAME, null, null, null, null, null, null);
         boolean isEmpty = cursor.getCount() == 0;

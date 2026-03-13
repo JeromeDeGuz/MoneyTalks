@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
@@ -116,7 +115,7 @@ public class ExpenseServiceImpl implements ExpenseService
             }
             else
             {
-                return e1.getDate().compareTo(e2.getDate());
+               return e1.getDate().compareTo(e2.getDate());
             }
         });
     }
