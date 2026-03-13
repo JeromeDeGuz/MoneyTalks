@@ -2,6 +2,7 @@ package com.bugbytes.moneytalks.business.validation;
 
 import com.bugbytes.moneytalks.models.Expense;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * Validates expense data before processing.
@@ -32,6 +33,12 @@ public class ExpenseValidator implements Validator<Expense>
             throw new ValidationException("Expense name cannot be only numbers.");
         }
 
+        // Name Length Check
+        if (expense.getName().trim().length() < 2 || expense.getName().length() > 50)
+        {
+            throw new ValidationException("Expense name must be between 2 and 50 characters.");
+        }
+
         if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0)
         {
             throw new ValidationException("Expense amount must be greater than zero.");
@@ -47,6 +54,18 @@ public class ExpenseValidator implements Validator<Expense>
         if (expense.getDate() == null)
         {
             throw new ValidationException("Expense date is required.");
+        }
+
+        // Future Date Check
+        if (expense.getDate().isAfter(LocalDate.now()))
+        {
+            throw new ValidationException("Expense date cannot be in the future.");
+        }
+
+        // Note Length Check
+        if (expense.getNote() != null && expense.getNote().length() > 500)
+        {
+            throw new ValidationException("Notes cannot exceed 500 characters.");
         }
     }
 }

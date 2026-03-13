@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AppDbHelper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.bugbytes.moneytalks.persistence.real</a>
+</div>
+
+<h1>Coverage Summary for Class: AppDbHelper (com.bugbytes.moneytalks.persistence.real)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppDbHelper</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.bugbytes.moneytalks.persistence.real;
+&nbsp;
+&nbsp;import android.content.ContentValues;
+&nbsp;import android.content.Context;
+&nbsp;import android.database.sqlite.SQLiteDatabase;
+&nbsp;import android.database.sqlite.SQLiteOpenHelper;
+&nbsp;
+&nbsp;public class AppDbHelper extends SQLiteOpenHelper
+&nbsp;{
+&nbsp;    private static final String DATABASE_NAME = &quot;moneytalks.db&quot;;
+&nbsp;    private static final int DATABASE_VERSION = 1;
+&nbsp;
+&nbsp;    public AppDbHelper(Context context)
+&nbsp;    {
+<b class="nc">&nbsp;        super(context, DATABASE_NAME, null, DATABASE_VERSION);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onCreate(SQLiteDatabase db)
+&nbsp;    {
+<b class="nc">&nbsp;        createExpenseTable(db);</b>
+<b class="nc">&nbsp;        createCategoriesTable(db);</b>
+&nbsp;        // CHANGE: Call the helper method to insert default data
+<b class="nc">&nbsp;        insertDefaultCategories(db);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+&nbsp;    {
+<b class="nc">&nbsp;        db.execSQL(&quot;DROP TABLE IF EXISTS &quot; + DbContract.ExpenseEntry.TABLE_NAME);</b>
+<b class="nc">&nbsp;        db.execSQL(&quot;DROP TABLE IF EXISTS &quot; + DbContract.CategoryEntry.TABLE_NAME);</b>
+<b class="nc">&nbsp;        onCreate(db);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void createExpenseTable(SQLiteDatabase db)
+&nbsp;    {
+<b class="nc">&nbsp;        String createExpenseTableQuery = &quot;CREATE TABLE IF NOT EXISTS &quot; + DbContract.ExpenseEntry.TABLE_NAME + &quot; (&quot; +</b>
+&nbsp;                DbContract.ExpenseEntry.COLUMN_ID + &quot; INTEGER PRIMARY KEY AUTOINCREMENT, &quot; +
+&nbsp;                DbContract.ExpenseEntry.COLUMN_NAME + &quot; TEXT NOT NULL, &quot; +
+&nbsp;                DbContract.ExpenseEntry.COLUMN_AMOUNT + &quot; TEXT NOT NULL, &quot; +
+&nbsp;                DbContract.ExpenseEntry.COLUMN_CATEGORY + &quot; TEXT, &quot; +
+&nbsp;                DbContract.ExpenseEntry.COLUMN_DATE + &quot; TEXT, &quot; +
+&nbsp;                DbContract.ExpenseEntry.COLUMN_NOTE + &quot; TEXT)&quot;;
+&nbsp;
+<b class="nc">&nbsp;        db.execSQL(createExpenseTableQuery);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void createCategoriesTable(SQLiteDatabase db)
+&nbsp;    {
+<b class="nc">&nbsp;        String createCategoriesTableQuery = &quot;CREATE TABLE IF NOT EXISTS &quot; + DbContract.CategoryEntry.TABLE_NAME + &quot; (&quot; +</b>
+&nbsp;                DbContract.CategoryEntry.COLUMN_ID + &quot; INTEGER PRIMARY KEY AUTOINCREMENT, &quot; +
+&nbsp;                DbContract.CategoryEntry.COLUMN_NAME + &quot; TEXT NOT NULL, &quot; +
+&nbsp;                DbContract.CategoryEntry.COLUMN_BUDGET + &quot; TEXT NOT NULL)&quot;;
+&nbsp;
+<b class="nc">&nbsp;        db.execSQL(createCategoriesTableQuery);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void insertDefaultCategories(SQLiteDatabase db)
+&nbsp;    {
+<b class="nc">&nbsp;        String[] categories = {&quot;Food&quot;, &quot;Transport&quot;, &quot;Shopping&quot;, &quot;Entertainment&quot;, &quot;Health&quot;, &quot;Bills&quot;};</b>
+&nbsp;
+<b class="nc">&nbsp;        for (String name : categories)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            ContentValues values = new ContentValues();</b>
+<b class="nc">&nbsp;            values.put(DbContract.CategoryEntry.COLUMN_NAME, name);</b>
+<b class="nc">&nbsp;            values.put(DbContract.CategoryEntry.COLUMN_BUDGET, &quot;0&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            db.insert(DbContract.CategoryEntry.TABLE_NAME, null, values);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-10 15:08</div>
+</div>
+</body>
+</html>
