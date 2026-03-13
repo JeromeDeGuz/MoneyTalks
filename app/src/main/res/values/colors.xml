@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="fab_light_purple">#E6D9F7</color>
+    <color name="fab_icon_purple">#8E6CCF</color>
+</resources>

@@ -25,6 +25,9 @@
             android:exported="false"
             android:label="@string/addNew" />
 
+        <activity android:name=".presentation.SettingsActivity" />
+        <activity android:name=".presentation.ManageCategoriesActivity" />
+
     </application>
 
 </manifest>

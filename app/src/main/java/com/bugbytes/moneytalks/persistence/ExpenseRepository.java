@@ -1,7 +1,10 @@
 package com.bugbytes.moneytalks.persistence;
 
 import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.models.Category;
+
 import java.util.List;
+
 
 public interface ExpenseRepository
 {
@@ -14,5 +17,16 @@ public interface ExpenseRepository
     //Returns all stored expenses (@return: list of expenses)
     List<Expense> getAllExpenses();
 
+    //Plan for an update path early to support future editing
     boolean updateExpense(Expense expense);
+
+    Expense getExpenseById(long id);
+
+    boolean isEmpty();
+
+    boolean categoryExists(Category category);
+
+    void updateExpenseCategory(Category oldCategory, Category newCategory);
 }
+
+

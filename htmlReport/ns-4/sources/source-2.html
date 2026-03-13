@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Expense</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.bugbytes.moneytalks.models</a>
+</div>
+
+<h1>Coverage Summary for Class: Expense (com.bugbytes.moneytalks.models)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Expense</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.bugbytes.moneytalks.models;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+&nbsp;//Represents an expense and allows it to be serialized between activities.
+&nbsp;public class Expense implements java.io.Serializable
+&nbsp;{
+&nbsp;    private final long id; // Updated to long for Database and Intent compatibility
+&nbsp;    private String name;
+&nbsp;    private BigDecimal amount; //Price of the expense
+&nbsp;    private String category; //Expense category
+&nbsp;    private LocalDate date;     //Expense date
+&nbsp;    private String note;     //Optional note
+&nbsp;
+&nbsp;    //Constructor (@param: name, amount, category, date, note)
+&nbsp;    public Expense(long id, String name, BigDecimal amount, String category, LocalDate date, String note)
+<b class="fc">&nbsp;    {</b>
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;        this.name = name;</b>
+<b class="fc">&nbsp;        this.amount = amount;</b>
+<b class="fc">&nbsp;        this.category = category;</b>
+<b class="fc">&nbsp;        this.date = date;</b>
+<b class="fc">&nbsp;        this.note = note;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getters
+&nbsp;    public long getId()
+&nbsp;    {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getName()
+&nbsp;    {
+<b class="fc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public BigDecimal getAmount()
+&nbsp;    {
+<b class="fc">&nbsp;        return amount;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LocalDate getDate()
+&nbsp;    {
+<b class="fc">&nbsp;        return date;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCategory()
+&nbsp;    {
+<b class="fc">&nbsp;        return category;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getNote()
+&nbsp;    {
+<b class="fc">&nbsp;        return note;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Setters (Note: setId removed as per feedback to maintain immutability)
+&nbsp;    public void setName(String name)
+&nbsp;    {
+<b class="fc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setAmount(BigDecimal amount)
+&nbsp;    {
+<b class="fc">&nbsp;        this.amount = amount;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDate(LocalDate date)
+&nbsp;    {
+<b class="fc">&nbsp;        this.date = date;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCategory(String category)
+&nbsp;    {
+<b class="fc">&nbsp;        this.category = category;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setNote(String note)
+&nbsp;    {
+<b class="fc">&nbsp;        this.note = note;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-10 15:08</div>
+</div>
+</body>
+</html>

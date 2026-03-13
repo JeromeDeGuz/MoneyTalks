@@ -1,18 +1,22 @@
 package com.bugbytes.moneytalks.models;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 //Represents an expense and allows it to be serialized between activities.
 public class Expense implements java.io.Serializable
 {
-    private int id;
+    private final long id;
     private String name;
-    private double amount; //Price of the expense
-    private String category; //Expense category
-    private String date;     //Expense date
-    private String note;     //Optional note
+    private BigDecimal amount;
+    private String category;
+    private LocalDate date;
+    private String note;
 
     //Constructor (@param: name, amount, category, date, note)
-    public Expense(String name, double amount, String category, String date, String note)
+    public Expense(long id, String name, BigDecimal amount, String category, LocalDate date, String note)
     {
+        this.id = id;
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -21,7 +25,7 @@ public class Expense implements java.io.Serializable
     }
 
     // Getters
-    public int getId()
+    public long getId()
     {
         return id;
     }
@@ -31,14 +35,19 @@ public class Expense implements java.io.Serializable
         return name;
     }
 
-    public double getAmount()
+    public BigDecimal getAmount()
     {
         return amount;
     }
 
-    public String getDate()
+    public LocalDate getDate()
     {
         return date;
+    }
+
+    public String getCategory()
+    {
+        return category;
     }
 
     public String getNote()
@@ -46,12 +55,25 @@ public class Expense implements java.io.Serializable
         return note;
     }
 
-    public String getCategory() { return category; }
-
-    // Setters
-    public void setId(int id)
+    // Setters (Note: setId removed as per feedback to maintain immutability)
+    public void setName(String name)
     {
-        this.id = id;
+        this.name = name;
+    }
+
+
+    public void setDate(LocalDate date)
+    {
+        this.date = date;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    public void setNote(String note)
+    {
+        this.note = note;
     }
 }
-
