@@ -3,7 +3,6 @@ package com.bugbytes.moneytalks.persistence.real;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
