@@ -1,26 +1,27 @@
 package com.bugbytes.moneytalks.persistence.fake;
 
+import android.content.Context;
+
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeCategoryRepository implements CategoryRepository {
+public class FakeCategoryRepository implements CategoryRepository
+{
     private final List<Category> categories = new ArrayList<>();
-    private int nextId = 1;
 
-    public FakeCategoryRepository() {
-        // Initial data
-        addCategory(new Category(nextId++, "Food", BigDecimal.ZERO));
-        addCategory(new Category(nextId++, "Transport", BigDecimal.ZERO));
+    public FakeCategoryRepository()
+    {
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateCategories(this);
     }
 
     @Override
     public void addCategory(Category category) {
-        Category toAdd = new Category(nextId++, category.getName(), category.getBudget());
-        categories.add(toAdd);
+        categories.add(category);
     }
 
     @Override
@@ -29,25 +30,24 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void updateCategory(Category category) {
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getId() == category.getId()) {
-                categories.set(i, category);
-                return;
+    public void updateCategory(Category oldCategory, Category newCategory) {
+        for(Category x : categories){
+            if(x.getName().equals(oldCategory.getName())) {
+                x.setName(newCategory.getName());
             }
         }
     }
 
     @Override
     public void deleteCategory(Category category) {
-        categories.removeIf(c -> c.getId() == category.getId());
+        categories.remove(category);
     }
 
     @Override
     public Category getCategoryByName(String name) {
-        for (Category c : categories) {
-            if (c.getName().equalsIgnoreCase(name)) {
-                return c;
+        for(Category x : categories){
+            if(x.getName().equals(name)) {
+                return x;
             }
         }
         return null;
@@ -57,4 +57,6 @@ public class FakeCategoryRepository implements CategoryRepository {
     public boolean isEmpty() {
         return categories.isEmpty();
     }
+
+
 }

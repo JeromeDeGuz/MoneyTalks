@@ -58,6 +58,8 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
+import com.bugbytes.moneytalks.business.validation.Validator;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
@@ -92,16 +94,19 @@ public class CategoryServiceImpl implements CategoryService
     }
 
     @Override
-    public void updateCategory(Category category)
+    public void updateCategory(Category oldCategory, Category newCategory)
     {
-        categoryRepo.updateCategory(category);
+
+        expenseRepo.updateExpenseCategory(oldCategory, newCategory);
+        categoryRepo.updateCategory(oldCategory, newCategory);
     }
 
     @Override
     public void deleteCategory(Category category)
     {
-        // No cast needed — validator is already typed as CategoryValidator
-        validator.validateDelete(category, expenseRepo);
+        if(expenseRepo.categoryExists(category)){
+            throw new ValidationException("Cannot delete category with expenses");
+        }
         categoryRepo.deleteCategory(category);
     }
 

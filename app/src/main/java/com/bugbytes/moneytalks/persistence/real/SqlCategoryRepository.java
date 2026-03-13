@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,12 +22,8 @@ public class SqlCategoryRepository implements CategoryRepository
     public SqlCategoryRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-        if(isEmpty()){
-            addCategory(new Category(0, "Transport", new BigDecimal("100.0")));
-            addCategory(new Category(0, "Food", new BigDecimal("200.0")));
-            addCategory(new Category(0, "Shopping", new BigDecimal("300.0")));
-        }
-
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateCategories(this);
     }
 
     @Override
@@ -63,16 +61,18 @@ public class SqlCategoryRepository implements CategoryRepository
     }
 
     @Override
-    public void updateCategory(Category category)
+    public void updateCategory(Category oldCategory, Category newCategory)
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DbContract.CategoryEntry.COLUMN_NAME, category.getName());
-        values.put(DbContract.CategoryEntry.COLUMN_BUDGET, category.getBudget().toPlainString());
+        values.put(DbContract.CategoryEntry.COLUMN_NAME, newCategory.getName());
+        values.put(DbContract.CategoryEntry.COLUMN_BUDGET, newCategory.getBudget().toPlainString());
 
-        db.update(DbContract.CategoryEntry.TABLE_NAME, values,
-                DbContract.CategoryEntry.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(category.getId())});
+        String selection = DbContract.CategoryEntry.COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(oldCategory.getId())};
+
+        db.update(DbContract.CategoryEntry.TABLE_NAME, values, selection, selectionArgs);
+
     }
 
     @Override
@@ -111,4 +111,5 @@ public class SqlCategoryRepository implements CategoryRepository
         cursor.close();
         return isEmpty;
     }
+
 }

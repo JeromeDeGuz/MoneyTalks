@@ -7,7 +7,9 @@ import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.persistence.real.SqlRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeCategoryRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeExpenseRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
 // Adding category-specific imports for the new feature
 import com.bugbytes.moneytalks.business.services.CategoryService;
 import com.bugbytes.moneytalks.business.services.CategoryServiceImpl;
@@ -26,11 +28,14 @@ public class MoneyTalksApp extends Application
     {
         super.onCreate();
         //create repo using our fake db
-//        ExpenseRepository expenseRepository = new FakeRepository();
-        ExpenseRepository expenseRepository = new SqlRepository(this);
+//        ExpenseRepository expenseRepository = new FakeExpenseRepository();                      // Uncomment this to use FakeRepository (Dependency Injection)
+        ExpenseRepository expenseRepository = new SqlExpenseRepository(this);           // Comment this to use FakeRepository (Dependency Injection)
 
         // Setup for the dynamic category feature
-        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
+//        CategoryRepository categoryRepository = new FakeCategoryRepository();                   // Uncomment this to use FakeRepository (Dependency Injection)
+        CategoryRepository categoryRepository = new SqlCategoryRepository(this);        // Comment this to use FakeRepository (Dependency Injection)
+
+
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
 
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);

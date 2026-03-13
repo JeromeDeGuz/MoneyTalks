@@ -62,6 +62,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.tvAmount.setText(String.format(Locale.US, "$%s", e.getAmount().toPlainString()));
         holder.tvDate.setText(e.getDate().format(DATE_FORMATTER));
 
+        // Updated: Set the category text
+        holder.tvCategory.setText(e.getCategory());
+
         final String note = e.getNote();
         if (note != null && !note.trim().isEmpty())
         {
@@ -115,7 +118,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        final TextView tvTitle, tvAmount, tvDate, tvNote;
+        // Added tvCategory to the ViewHolder
+        final TextView tvTitle, tvAmount, tvDate, tvNote, tvCategory;
         final ImageButton deleteButton;
         final ImageButton editButton;
 
@@ -126,6 +130,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             tvAmount = itemView.findViewById(R.id.tvAmount);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvNote = itemView.findViewById(R.id.tvNote);
+            tvCategory = itemView.findViewById(R.id.tvCategory); // Link to the new layout ID
             deleteButton = itemView.findViewById(R.id.deleteButton);
             editButton = itemView.findViewById(R.id.editButton);
         }

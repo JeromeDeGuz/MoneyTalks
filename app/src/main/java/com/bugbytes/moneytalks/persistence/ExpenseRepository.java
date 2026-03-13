@@ -24,4 +24,8 @@ public interface ExpenseRepository
     boolean isEmpty();
 
     boolean categoryExists(Category category);
+
+    void updateExpenseCategory(Category oldCategory, Category newCategory);
 }
+
+

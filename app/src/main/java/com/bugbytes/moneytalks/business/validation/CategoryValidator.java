@@ -45,10 +45,5 @@ public class CategoryValidator implements Validator<Category>{
             }
     }
 
-    //do not delete a category that exists within any expense
-    public void validateDelete(Category category, ExpenseRepository expenseRepo){
-        if(expenseRepo.categoryExists(category)){
-            throw new ValidationException("Cannot delete category that exists within an expense");
-        }
-    }
+
 }
