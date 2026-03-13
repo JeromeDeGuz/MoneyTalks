@@ -7,6 +7,8 @@ public class Category implements Serializable
 {
     private int id;
     private String name;
+
+    //Note: Budget is not being implemented in i2, we will do it in i3.
     private BigDecimal budget;
 
     //Standard constructor for new categories (ID will be assigned by DB)
