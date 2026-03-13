@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.persistence.fake;
 
-import android.content.Context;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
