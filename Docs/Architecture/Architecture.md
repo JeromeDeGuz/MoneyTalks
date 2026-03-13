@@ -75,50 +75,64 @@ This layer contains the **core functionality** and **rules** of the app. It proc
 
 
 ---
+
 ### 4. Persistence Layer (Storage)
-Responsible for **storing and retrieving data**, this layer abstracts the storage mechanism, allowing flexibility to swap databases in the future.
+Responsible for storing and retrieving data, this layer abstracts the storage mechanism, allowing flexibility to swap databases in the future.
 
-In Iteration 1 a stub implementation (FakeRepository) was used.
-
-In Iteration 2, a SQLite persistence layer has been implemented.
+In Iteration 1, a stub implementation (FakeRepository) was used. In Iteration 2, a full SQLite persistence layer has been implemented under the real package.
 
 **Components:**
-1. fake
-- **FakeRepository:** In-memory implementation used in Iteration 1 for development/testing.
-- **FakeCategoryRepository:** In-memory implementation used in Iteration 1 for development/testing.
 
-2. real
-- **AppDbHelper:** SQLite database helper responsible for creating and managing the database.
-- **DbContract:** Defines table names and column names for the database schema.
-- **ExpenseRepository:** Interface that defines rules for saving and accessing expenses.
-- **CategoryRepository:** Interface that defines rules for saving and accessing categories.
-- **FakeRepository:** In-memory implementation used in Iteration 1 for development/testing.
+1. **fake**
+**FakeRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
+**FakeCategoryRepository:** In-memory implementation of CategoryRepository.
 
-1. Stores expenses during runtime.
-2. Resets to default data when the app restarts.
-3. Implements ExpenseRepository.
+Behavior: These components store data in memory during runtime and reset to default data whenever the app restarts.
 
+2. **real (SQLite Implementation)**
+- **AppDbHelper:** SQLite database helper responsible for creating the database and managing schema versions.
 
-- **SqlExpenseRepository:** SQLite implementation of ExpenseRepository. It Handles:
-1. inserting expenses
-1. retrieving expenses
-1. deleting expenses
+- **DbContract:** Defines the formal schema (table names and column names) for the database.
 
+- **SqlExpenseRepository:** SQLite implementation of ExpenseRepository. It handles:
+    1. Inserting, updating, and deleting expenses.
+    1. Retrieving expenses (all or by specific ID).
+    1. Syncing expense categories when a category name is updated.
 
-- **SqlCategoryRepository:** SQLite implementation of CategoryRepository, It Handles:
-1. inserting categories
-1. retrieving categories
-1. deleting categories
+- **SqlCategoryRepository:** SQLite implementation of CategoryRepository. It handles:
 
+  1. CRUD operations for categories.
+  1. Retrieving categories by name.
+    
+
+3. **Core Interfaces & Exceptions**: 
+- **ExpenseRepository:** Interface defining the contract for expense data operations (Add, Delete, Update, Get, Category Sync).
+- **CategoryRepository:** Interface defining the contract for category management (Add, Delete, Update, Find).
+- **DefaultContent:** Centralized class that populates repositories with initial sample data (e.g., "Uber", "Rent", "Spotify") if they are empty.
+- **PersistenceException:** A custom RuntimeException thrown when database operations fail.
 
 
 **Interactions:**
+
 - `ExpenseServiceImpl` → calls → `ExpenseRepository`
 - `CategoryServiceImpl` → calls → `CategoryRepository`
+- `CategoryServiceImpl` → calls → ExpenseRepository` (for checking category usage)
+- `FakeRepository` — implements → `ExpenseRepository`
+- `FakeCategoryRepository` — implements → `CategoryRepository`
 - `SqlExpenseRepository` — implements → `ExpenseRepository`
 - `SqlCategoryRepository` — implements → `CategoryRepository`
-- `SqlRepository` → uses → `AppDbHelper`
-- `SqlCategoryRepository` → uses → `AppDbHelper`
+- `SqlExpenseRepository` / `SqlCategoryRepository` → uses → `AppDbHelper`
+
+
+**Additional Business & Validation Logic**:
+To ensure data integrity before it reaches the persistence layer, the following interactions occur:
+
+- `ExpenseServiceImpl` → uses → `Validator<Expense>`
+- `CategoryServiceImpl` → uses → `Validator<Category>`
+- `ExpenseValidator` → validates → `Expense`
+- `CategoryValidator` → validates → `Category`
+- `Validator` → throws → ValidationException (if rules are breached)
+
 
 ---
 ### 5. Models (Data Objects)
