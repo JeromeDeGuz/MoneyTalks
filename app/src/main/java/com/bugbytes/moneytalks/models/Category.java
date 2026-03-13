@@ -44,14 +44,9 @@ public class Category implements Serializable
         return this.budget;
     }
 
+    // TODO: Tech-debt: Will implement feature in iteration-3
     public void setBudget(BigDecimal budget)
     {
         this.budget = budget;
-    }
-
-    // Helpful for debugging
-    @Override
-    public String toString() {
-        return name;
     }
 }
