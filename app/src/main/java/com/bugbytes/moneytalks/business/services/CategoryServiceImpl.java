@@ -38,15 +38,17 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public void updateCategory(Category oldCategory, Category newCategory)
     {
-        categoryRepo.updateCategory(oldCategory, newCategory);
+
         expenseRepo.updateExpenseCategory(oldCategory, newCategory);
+        categoryRepo.updateCategory(oldCategory, newCategory);
     }
 
     @Override
     public void deleteCategory(Category category)
     {
-        CategoryValidator validator = (CategoryValidator) this.validator;
-        validator.validateDelete(category, expenseRepo);
+        if(expenseRepo.categoryExists(category)){
+            throw new ValidationException("Cannot delete category with expenses");
+        }
         categoryRepo.deleteCategory(category);
     }
 

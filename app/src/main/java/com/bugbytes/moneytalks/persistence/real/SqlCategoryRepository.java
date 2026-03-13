@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,12 +22,8 @@ public class SqlCategoryRepository implements CategoryRepository
     public SqlCategoryRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-        if(isEmpty()){
-            addCategory(new Category("Transport"));
-            addCategory(new Category("Food"));
-            addCategory(new Category("Shopping"));
-        }
-
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateCategories(this);
     }
 
     @Override

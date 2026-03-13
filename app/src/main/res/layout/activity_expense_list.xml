@@ -47,7 +47,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Settings"
                     android:padding="8dp"
-                    android:src="@android:drawable/ic_menu_preferences"
+                    android:src="@android:drawable/ic_menu_manage"
                     android:tint="@color/fab_icon_purple" />
             </LinearLayout>
 
@@ -82,7 +82,9 @@
                     android:textAllCaps="false"
                     android:textSize="12sp"
                     app:icon="@android:drawable/ic_menu_sort_by_size"
-                    app:iconGravity="textStart" />
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/fab_icon_purple"
+                    android:textColor="@color/fab_icon_purple" />
 
                 <View
                     android:layout_width="match_parent"
@@ -110,7 +112,9 @@
                     android:textAllCaps="false"
                     android:textSize="12sp"
                     app:icon="@android:drawable/ic_menu_search"
-                    app:iconGravity="textStart" />
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/fab_icon_purple"
+                    android:textColor="@color/fab_icon_purple" />
             </LinearLayout>
 
         </LinearLayout>

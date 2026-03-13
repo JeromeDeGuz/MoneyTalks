@@ -5,29 +5,30 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.PersistenceException;
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlExpenseRepository implements ExpenseRepository
+public class SqlRepository implements ExpenseRepository
 {
     private final AppDbHelper dbHelper;
 
-    public SqlExpenseRepository(Context context)
+
+    public SqlRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-        // Only add sample data if the database is empty to prevent duplicates on every instance creation
-        if (isEmpty())
-        {
-            addExpense(new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib"));
-            addExpense(new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill..."));
-            addExpense(new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard"));
-        }
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populateExpenses(this);
+
     }
 
     @Override
@@ -170,7 +171,6 @@ public class SqlExpenseRepository implements ExpenseRepository
     @Override
     public boolean categoryExists(Category category) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        // Compare case-insensitively using SQL UPPER() or COLLATE NOCASE
         String selection = "UPPER(" + DbContract.ExpenseEntry.COLUMN_CATEGORY + ") = UPPER(?)";
         String[] selectionArgs = {category.getName()};
         Cursor cursor = db.query(DbContract.ExpenseEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null);
@@ -181,10 +181,6 @@ public class SqlExpenseRepository implements ExpenseRepository
 
     @Override
     public void updateExpenseCategory(Category oldCategory, Category newCategory) {
-       if(!categoryExists(oldCategory)){
-           return;
-       }
-
         List<Expense> expenses = getAllExpenses();
         for (Expense expense : expenses) {
             if (expense.getCategory().equalsIgnoreCase(oldCategory.getName())) {
