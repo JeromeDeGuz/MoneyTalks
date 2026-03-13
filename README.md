@@ -21,8 +21,20 @@ We’re Bug Bytes, the team behind MoneyTalks:
 ## 📂 Project Materials
 
 - [Iteration 0 Materials](Docs/Iteration-0 material/)  
-- [Iteration 1 Materials](Docs/Iteration-1 material/)  
+- [Iteration 1 Materials](Docs/Iteration-1 material/)
+- [Iteration 2 Materials](Docs/Iteration-2 material/)  
 - [Architecture Folder](Docs/Architecture/)
+
+## 📱 Current Features
+
+- Adding expenses
+- Editing existing expenses
+- Deleting expenses
+- Viewing all expenses
+- Managing expense categories (add, edit, delete)
+- Filtering expenses by category
+- Sorting expenses by date
+- Offline data storage using SQLite
 
 ## 🛠 Dependencies
 The following are the key tools and libraries required to build and run MoneyTalks:
@@ -50,7 +62,9 @@ git clone https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks
     - Android Studio will usually prompt to "Sync Project with Gradle Files."
     - Wait for all dependencies to download and the build to finish.
 4. Build and run the app on an emulator or device.
-5. Use AddExpenseActivity to add expenses and ExpenseListActivity to view them.
-
+5. Use the app:
+    - `AddAndEditExpense` to add or edit expenses
+    - `ExpenseListActivity` to view, filter, and sort expenses
+    - `ManageCategoriesActivity` to manage categories
 
 
