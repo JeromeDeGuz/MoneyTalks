@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.persistence.fake;
 
-import android.content.Context;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
@@ -20,17 +19,20 @@ public class FakeCategoryRepository implements CategoryRepository
     }
 
     @Override
-    public void addCategory(Category category) {
+    public void addCategory(Category category)
+    {
         categories.add(category);
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getAllCategories()
+    {
         return new ArrayList<>(categories);
     }
 
     @Override
-    public void updateCategory(Category oldCategory, Category newCategory) {
+    public void updateCategory(Category oldCategory, Category newCategory)
+    {
         for(Category x : categories){
             if(x.getName().equals(oldCategory.getName())) {
                 x.setName(newCategory.getName());
@@ -39,14 +41,18 @@ public class FakeCategoryRepository implements CategoryRepository
     }
 
     @Override
-    public void deleteCategory(Category category) {
+    public void deleteCategory(Category category)
+    {
         categories.remove(category);
     }
 
     @Override
-    public Category getCategoryByName(String name) {
-        for(Category x : categories){
-            if(x.getName().equals(name)) {
+    public Category getCategoryByName(String name)
+    {
+        for(Category x : categories)
+        {
+            if(x.getName().equals(name))
+            {
                 return x;
             }
         }
@@ -54,7 +60,8 @@ public class FakeCategoryRepository implements CategoryRepository
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return categories.isEmpty();
     }
 

@@ -8,22 +8,22 @@ import com.bugbytes.moneytalks.persistence.DefaultContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeExpenseRepository implements ExpenseRepository {
-    //Static list so data persists while the app is running
+public class FakeExpenseRepository implements ExpenseRepository
+{
     private static final List<Expense> expenses = new ArrayList<>();
     private static long autoIncrementId = 100; // Updated to long to match Expense model
 
-    //Constructor: creates temporary, non-persistent sample data
-    public FakeExpenseRepository() {
+    public FakeExpenseRepository()
+    {
 
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
         DefaultContent defaultContent = new DefaultContent();
         defaultContent.populateExpenses(this);
     }
 
-    //Adds an expense (@param: expense to add)
     @Override
-    public void addExpense(Expense expense) {
+    public void addExpense(Expense expense)
+    {
         // Re-creating the object to assign the final id through the constructor
         Expense expenseWithId = new Expense(
                 autoIncrementId,
@@ -37,12 +37,14 @@ public class FakeExpenseRepository implements ExpenseRepository {
         autoIncrementId++; //increment id for next expense
     }
 
-    //Deletes an expense (@param: expense to delete, @return: true if removed, false otherwise)
     @Override
-    public boolean deleteExpense(Expense expense) {
+    public boolean deleteExpense(Expense expense)
+    {
         // Find by ID because the object instance might be different (e.g. recreated from DB/List)
-        for (int i = 0; i < expenses.size(); i++) {
-            if (expenses.get(i).getId() == expense.getId()) {
+        for (int i = 0; i < expenses.size(); i++)
+        {
+            if (expenses.get(i).getId() == expense.getId())
+            {
                 expenses.remove(i);
                 return true;
             }
@@ -51,9 +53,12 @@ public class FakeExpenseRepository implements ExpenseRepository {
     }
 
     @Override
-    public boolean updateExpense(Expense expense) {
-        for (int i = 0; i < expenses.size(); i++) {
-            if (expenses.get(i).getId() == expense.getId()) {
+    public boolean updateExpense(Expense expense)
+    {
+        for (int i = 0; i < expenses.size(); i++)
+        {
+            if (expenses.get(i).getId() == expense.getId())
+            {
                 expenses.set(i, expense);
                 return true;
             }
@@ -61,9 +66,9 @@ public class FakeExpenseRepository implements ExpenseRepository {
         return false;
     }
 
-    //Returns all expenses (@return: list of all stored expenses)
     @Override
-    public List<Expense> getAllExpenses() {
+    public List<Expense> getAllExpenses()
+    {
         // Return a copy to avoid external modification of the internal list
         return new ArrayList<>(expenses);
     }
@@ -71,9 +76,12 @@ public class FakeExpenseRepository implements ExpenseRepository {
 
     // NEW: Implementation for getExpenseById to fix interface mismatch error
     @Override
-    public Expense getExpenseById(long id) {
-        for (Expense e : expenses) {
-            if (e.getId() == id) {
+    public Expense getExpenseById(long id)
+    {
+        for (Expense e : expenses)
+        {
+            if (e.getId() == id)
+            {
                 return e;
             }
         }
@@ -81,12 +89,14 @@ public class FakeExpenseRepository implements ExpenseRepository {
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return expenses.isEmpty();
     }
 
     @Override
-    public boolean categoryExists(Category category) {
+    public boolean categoryExists(Category category)
+    {
         for (Expense e : expenses) {
             if (e.getCategory().equalsIgnoreCase(category.getName())) {
                 return true;
@@ -96,9 +106,12 @@ public class FakeExpenseRepository implements ExpenseRepository {
     }
 
     @Override
-    public void updateExpenseCategory(Category oldCategory, Category newCategory) {
-        for (Expense e : expenses) {
-            if (e.getCategory().equalsIgnoreCase(oldCategory.getName())) {
+    public void updateExpenseCategory(Category oldCategory, Category newCategory)
+    {
+        for (Expense e : expenses)
+        {
+            if (e.getCategory().equalsIgnoreCase(oldCategory.getName()))
+            {
                 e.setCategory(newCategory.getName());
             }
         }
