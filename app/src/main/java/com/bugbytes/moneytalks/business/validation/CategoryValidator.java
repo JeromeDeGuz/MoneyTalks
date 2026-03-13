@@ -5,18 +5,19 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
 import java.util.List;
-
+import java.util.Objects;
 
 public class CategoryValidator implements Validator<Category>
 {
-
-    CategoryRepository repo;
+    private final CategoryRepository repo;
 
     public CategoryValidator(CategoryRepository repo)
     {
-        this.repo = repo;
+        //Added null check as per Iteration 1 feedback to prevent initialization with null repo
+        this.repo = Objects.requireNonNull(repo, "Repository cannot be null");
     }
 
+    //validate: It runs all business rule checks for a category. Takes in @param category.
     @Override
     public void validate(Category category)
     {
@@ -25,7 +26,7 @@ public class CategoryValidator implements Validator<Category>
         isNotNumbers(category);
     }
 
-    //Check for null or empty
+    //isNullorEmpty: It checks if category is null or has no text. Takes in @param category.
     private void isNullorEmpty(Category category)
     {
         if (category == null || category.getName().trim().isEmpty())
@@ -34,7 +35,7 @@ public class CategoryValidator implements Validator<Category>
         }
     }
 
-    //Check for duplicates case-insensitive
+    //isCaseDuplicate: It prevents duplicate names regardless of capitalization. Takes in @param category.
     private void isCaseDuplicate(Category category)
     {
         List<Category> existing = repo.getAllCategories();
@@ -47,7 +48,7 @@ public class CategoryValidator implements Validator<Category>
         }
     }
 
-    // do not delete a category that exists within any expense
+    //validateDelete: It ensures a category isn't used by expenses before removal. Takes in @param category and expenseRepo.
     public void validateDelete(Category category, ExpenseRepository expenseRepo)
     {
         if (expenseRepo.categoryExists(category))
@@ -56,7 +57,7 @@ public class CategoryValidator implements Validator<Category>
         }
     }
 
-    //Check that Category name isn't all numbers e.g. "123124125"
+    //isNotNumbers: It checks that the name isn't just a string of digits. Takes in @param category.
     private void isNotNumbers(Category category)
     {
         if (category.getName().trim().matches("^\\d+$"))
@@ -64,6 +65,4 @@ public class CategoryValidator implements Validator<Category>
             throw new ValidationException("Category name cannot be only numbers.");
         }
     }
-
-
 }

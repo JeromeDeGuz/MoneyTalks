@@ -24,6 +24,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+//Integration tests for filtering and sorting logic ensuring SQLite data is correctly ordered and scoped.
 @RunWith(AndroidJUnit4.class)
 public class FilterSortIntegrationTest
 {
@@ -33,33 +34,32 @@ public class FilterSortIntegrationTest
     private ExpenseRepository repo;
     private ExpenseService service;
 
+    //setup: It prepares the Android context and resets the real database before each test. Takes in nothing.
     @Before
     public void setup()
     {
         context = ApplicationProvider.getApplicationContext();
-
-        // Reset the real database before each test.
         context.deleteDatabase(TEST_DB_NAME);
 
         repo = new SqlExpenseRepository(context);
         service = new ExpenseServiceImpl(repo, new ExpenseValidator());
     }
 
+    //tearDown: It ensures the database is wiped after tests to maintain environment cleanliness. Takes in nothing.
     @After
     public void tearDown()
     {
-        // Return the database to its default state after each test.
         context.deleteDatabase(TEST_DB_NAME);
     }
 
+    //filterByCategoryReturnsOnlyMatchingExpensesFromSqlite: It verifies that the filtering logic correctly narrows down results from the database. Takes in nothing.
     @Test
-    public void filterByCategory_returnsOnlyMatchingExpensesFromSQLite()
+    public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite()
     {
         final long timestamp = System.currentTimeMillis();
         final String targetCategory = "FilterCat" + timestamp;
         final String otherCategory = "OtherCat" + timestamp;
 
-        // Persist expenses through the service layer.
         service.addExpense(new Expense(
                 0,
                 "Filter Match 1 " + timestamp,
@@ -87,19 +87,18 @@ public class FilterSortIntegrationTest
                 "Non-matching expense"
         ));
 
-        // Read through the service layer using the filter + sort seam.
         List<Expense> filtered = service.getExpensesByCategorySortedByDate(targetCategory, true);
 
         assertEquals(2, filtered.size());
         assertEquals(targetCategory, filtered.get(0).getCategory());
         assertEquals(targetCategory, filtered.get(1).getCategory());
 
-        // Newest-first ordering should still apply within the filtered results.
         assertTrue(filtered.get(0).getDate().isAfter(filtered.get(1).getDate()));
     }
 
+    //sortByDateReturnsNewestFirstAndOldestFirstFromSqlite: It confirms that data retrieved from SQLite follows the requested date ordering. Takes in nothing.
     @Test
-    public void sortByDate_returnsNewestFirstAndOldestFirstFromSQLite()
+    public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite()
     {
         final long timestamp = System.currentTimeMillis();
         final String category = "SortCat" + timestamp;
@@ -108,7 +107,6 @@ public class FilterSortIntegrationTest
         final String middleName = "Middle Expense " + timestamp;
         final String newName = "New Expense " + timestamp;
 
-        // Persist expenses with distinct dates through the service layer.
         service.addExpense(new Expense(
                 0,
                 oldName,
@@ -136,7 +134,6 @@ public class FilterSortIntegrationTest
                 "Newest record"
         ));
 
-        // Filter by the unique test category so seeded default data does not affect ordering.
         List<Expense> newestFirst = service.getExpensesByCategorySortedByDate(category, true);
         List<Expense> oldestFirst = service.getExpensesByCategorySortedByDate(category, false);
 

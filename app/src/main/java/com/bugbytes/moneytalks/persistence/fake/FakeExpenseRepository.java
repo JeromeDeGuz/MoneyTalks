@@ -11,20 +11,21 @@ import java.util.List;
 public class FakeExpenseRepository implements ExpenseRepository
 {
     private static final List<Expense> expenses = new ArrayList<>();
-    private static long autoIncrementId = 100; // Updated to long to match Expense model
+    private static long autoIncrementId = 100;
 
+    //FakeExpenseRepository: Constructor for the fake repository. Takes in nothing.
     public FakeExpenseRepository()
     {
-
-        // Only add sample data if the list is empty to prevent duplicates on every instance creation
+        //Only add sample data if the list is empty to prevent duplicates on every instance creation
         DefaultContent defaultContent = new DefaultContent();
         defaultContent.populateExpenses(this);
     }
 
+    //addExpense: It adds a new expense with a generated ID. Takes in @param expense.
     @Override
     public void addExpense(Expense expense)
     {
-        // Re-creating the object to assign the final id through the constructor
+        //Re-creating the object to assign the final id through the constructor
         Expense expenseWithId = new Expense(
                 autoIncrementId,
                 expense.getName(),
@@ -37,10 +38,11 @@ public class FakeExpenseRepository implements ExpenseRepository
         autoIncrementId++; //increment id for next expense
     }
 
+    //deleteExpense: It removes an expense by matching its ID. Takes in @param expense and @return boolean result.
     @Override
     public boolean deleteExpense(Expense expense)
     {
-        // Find by ID because the object instance might be different (e.g. recreated from DB/List)
+        //Find by ID because the object instance might be different (e.g. recreated from DB/List)
         for (int i = 0; i < expenses.size(); i++)
         {
             if (expenses.get(i).getId() == expense.getId())
@@ -52,6 +54,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         return false;
     }
 
+    //updateExpense: It replaces an existing expense record. Takes in @param expense and @return boolean result.
     @Override
     public boolean updateExpense(Expense expense)
     {
@@ -66,15 +69,15 @@ public class FakeExpenseRepository implements ExpenseRepository
         return false;
     }
 
+    //getAllExpenses: It retrieves the full list of expenses. Takes in nothing and @return List of expenses.
     @Override
     public List<Expense> getAllExpenses()
     {
-        // Return a copy to avoid external modification of the internal list
+        //Return a copy to avoid external modification of the internal list
         return new ArrayList<>(expenses);
     }
 
-
-    // NEW: Implementation for getExpenseById to fix interface mismatch error
+    //getExpenseById: It fetches a single expense by its unique ID. Takes in @param id and @return Expense object.
     @Override
     public Expense getExpenseById(long id)
     {
@@ -88,12 +91,14 @@ public class FakeExpenseRepository implements ExpenseRepository
         return null;
     }
 
+    //isEmpty: It checks if the repository is empty. Takes in nothing and @return boolean result.
     @Override
     public boolean isEmpty()
     {
         return expenses.isEmpty();
     }
 
+    //categoryExists: It checks if a category name is currently used by any expense. Takes in @param category and @return boolean result.
     @Override
     public boolean categoryExists(Category category)
     {
@@ -107,6 +112,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         return false;
     }
 
+    //updateExpenseCategory: It updates the category string for all matching expenses. Takes in @param oldCategory and newCategory.
     @Override
     public void updateExpenseCategory(Category oldCategory, Category newCategory)
     {

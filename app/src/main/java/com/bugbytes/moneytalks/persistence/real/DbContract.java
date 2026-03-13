@@ -1,7 +1,9 @@
 package com.bugbytes.moneytalks.persistence.real;
 
+//DbContract: Defines the schema for the database tables and columns.
 public final class DbContract
 {
+    //ExpenseEntry: Contains column definitions for the expenses table.
     public static class ExpenseEntry
     {
         public static final String TABLE_NAME = "expenses";
@@ -13,6 +15,7 @@ public final class DbContract
         public static final String COLUMN_NOTE = "note";
     }
 
+    //CategoryEntry: Contains column definitions for the categories table.
     public static class CategoryEntry
     {
         public static final String TABLE_NAME = "categories";

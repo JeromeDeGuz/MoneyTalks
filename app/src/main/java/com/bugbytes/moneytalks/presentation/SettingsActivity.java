@@ -11,6 +11,7 @@ import com.bugbytes.moneytalks.R;
 
 public class SettingsActivity extends AppCompatActivity
 {
+    //onCreate: It initializes the settings layout and sets up navigation listeners. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

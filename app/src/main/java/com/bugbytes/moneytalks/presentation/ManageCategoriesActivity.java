@@ -25,6 +25,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
     private CategoryService categoryService;
     private CategoryAdapter adapter;
 
+    //onCreate: It sets up the activity layout, initializes the service, and configures the RecyclerView. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,6 +45,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
         btnBackManageCategories.setOnClickListener(v -> finish());
     }
 
+    //onResume: It triggers a data refresh whenever the activity is brought to the foreground. Takes in nothing.
     @Override
     protected void onResume()
     {
@@ -51,18 +53,21 @@ public class ManageCategoriesActivity extends AppCompatActivity
         loadCategories();
     }
 
+    //loadCategories: It fetches the latest categories from the service and updates the adapter. Takes in nothing.
     private void loadCategories()
     {
         List<Category> categories = categoryService.getAllCategories();
         adapter.setCategories(categories);
     }
 
+    //onAddClick: It handles the callback from the adapter when the user wants to add a category. Takes in nothing.
     @Override
     public void onAddClick()
     {
         showAddCategoryDialog();
     }
 
+    //showAddCategoryDialog: It displays an AlertDialog to capture a new category name and saves it via the service. Takes in nothing.
     private void showAddCategoryDialog()
     {
         final EditText input = new EditText(this);
@@ -79,25 +84,26 @@ public class ManageCategoriesActivity extends AppCompatActivity
                     if (name.isEmpty())
                     {
                         Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
-                        return;
                     }
-
-                    try
+                    else
                     {
-                        Category newCategory = new Category(name);
-                        categoryService.addCategory(newCategory);
-                        Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
-                        loadCategories();
-                    }
-                    catch (Exception e)
-                    {
-                        Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
+                        try
+                        {
+                            categoryService.addCategory(new Category(name));
+                            Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
+                            loadCategories();
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
+    //onEditClick: It handles the callback to modify an existing category. Takes in @param category.
     @Override
     public void onEditClick(Category category)
     {
@@ -116,25 +122,26 @@ public class ManageCategoriesActivity extends AppCompatActivity
                     if (newName.isEmpty())
                     {
                         Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
-                        return;
                     }
-
-                    try
+                    else
                     {
-//                        category.setName(newName);
-                        categoryService.updateCategory(category, new Category(newName));
-                        Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
-                        loadCategories();
-                    }
-                    catch (Exception e)
-                    {
-                        Toast.makeText(this, "Failed to update category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        try
+                        {
+                            categoryService.updateCategory(category, new Category(newName));
+                            Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
+                            loadCategories();
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
+    //onDeleteClick: It prompts the user for confirmation before removing a category via the service. Takes in @param category.
     @Override
     public void onDeleteClick(Category category)
     {

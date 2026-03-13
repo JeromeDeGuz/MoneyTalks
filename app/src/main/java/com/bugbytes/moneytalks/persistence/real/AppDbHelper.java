@@ -10,11 +10,13 @@ public class AppDbHelper extends SQLiteOpenHelper
     private static final String DATABASE_NAME = "moneytalks.db";
     private static final int DATABASE_VERSION = 1;
 
+    //AppDbHelper: Constructor to initialize the database helper. Takes in @param context.
     public AppDbHelper(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //onCreate: It initializes the database schema and populates initial data. Takes in @param db.
     @Override
     public void onCreate(SQLiteDatabase db)
     {
@@ -24,6 +26,7 @@ public class AppDbHelper extends SQLiteOpenHelper
         insertDefaultCategories(db);
     }
 
+    //onUpgrade: It handles database version changes by dropping and recreating tables. Takes in @param db and oldVersion and newVersion.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
@@ -32,6 +35,7 @@ public class AppDbHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
+    //createExpenseTable: It executes the SQL query to create the expense table. Takes in @param db.
     private void createExpenseTable(SQLiteDatabase db)
     {
         String createExpenseTableQuery = "CREATE TABLE IF NOT EXISTS " + DbContract.ExpenseEntry.TABLE_NAME + " (" +
@@ -45,6 +49,7 @@ public class AppDbHelper extends SQLiteOpenHelper
         db.execSQL(createExpenseTableQuery);
     }
 
+    //createCategoriesTable: It executes the SQL query to create the categories table. Takes in @param db.
     public void createCategoriesTable(SQLiteDatabase db)
     {
         String createCategoriesTableQuery = "CREATE TABLE IF NOT EXISTS " + DbContract.CategoryEntry.TABLE_NAME + " (" +
@@ -55,6 +60,7 @@ public class AppDbHelper extends SQLiteOpenHelper
         db.execSQL(createCategoriesTableQuery);
     }
 
+    //insertDefaultCategories: It populates the categories table with initial values. Takes in @param db.
     private void insertDefaultCategories(SQLiteDatabase db)
     {
         String[] categories = {"Food", "Transport", "Shopping", "Entertainment", "Health", "Bills"};

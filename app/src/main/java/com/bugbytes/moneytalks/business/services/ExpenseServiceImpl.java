@@ -14,17 +14,18 @@ public class ExpenseServiceImpl implements ExpenseService
     private final ExpenseRepository repository;
     private final Validator<Expense> validator;
 
-    //Constructor for dependency injection (@param: repository, validator).
+    //Constructor for dependency injection. Takes in @param repository and validator.
     public ExpenseServiceImpl(ExpenseRepository repository, Validator<Expense> validator)
     {
         this.repository = Objects.requireNonNull(repository, "Repository cannot be null");
         this.validator = Objects.requireNonNull(validator, "Validator cannot be null");
     }
 
-    //Adds a new expense (@param: expense to add).
+    //addExpense: It validates and adds a new expense to the repository. Takes in @param expense.
     @Override
     public void addExpense(Expense expense)
     {
+        Objects.requireNonNull(expense, "Expense cannot be null");
         //Delegate validation to the validator interface
         validator.validate(expense);
 
@@ -32,7 +33,7 @@ public class ExpenseServiceImpl implements ExpenseService
         repository.addExpense(expense);
     }
 
-    //Retrieves all stored expenses (@return: list of expenses).
+    //getAllExpenses: It retrieves all stored expenses. Takes in nothing and @return List of expenses.
     @Override
     public List<Expense> getAllExpenses()
     {
@@ -44,8 +45,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return result;
     }
 
-    //Deletes an expense (@param: expense to delete).
-    //Returns true if deleted, false otherwise.
+    //deleteExpense: It removes an expense from the system. Takes in @param expense and @return boolean result.
     @Override
     public boolean deleteExpense(Expense expense)
     {
@@ -57,6 +57,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return repository.deleteExpense(expense);
     }
 
+    //updateExpense: It validates and updates an existing expense. Takes in @param expense and @return boolean result.
     @Override
     public boolean updateExpense(Expense expense)
     {
@@ -68,7 +69,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return repository.updateExpense(expense);
     }
 
-    // Implementing the missing sorting method for the main list
+    //getExpensesSortedByDate: It fetches expenses sorted by their date. Takes in @param newestFirst and @return Sorted list of expenses.
     @Override
     public List<Expense> getExpensesSortedByDate(boolean newestFirst)
     {
@@ -77,6 +78,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return newList;
     }
 
+    //getExpensesByCategorySortedByDate: It filters by category then sorts by date. Takes in @param categoryName and newestFirst and @return Filtered sorted list.
     @Override
     public List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst)
     {
@@ -92,20 +94,20 @@ public class ExpenseServiceImpl implements ExpenseService
             );
         }
 
-        // 2) Sort
+        //2) Sort
         sortListByDate(newList, newestFirst);
 
         return newList;
     }
 
-    // New method to fetch a single expense by ID for the Edit feature
+    //getExpenseById: It retrieves a single expense record using its ID. Takes in @param id and @return Expense object.
     @Override
     public Expense getExpenseById(long id)
     {
         return repository.getExpenseById(id);
     }
 
-    // Helper method to keep the code DRY (Don't Repeat Yourself)
+    //sortListByDate: Helper method to sort a list in place. Takes in @param list and newestFirst.
     private void sortListByDate(List<Expense> list, boolean newestFirst)
     {
         list.sort((e1, e2) ->
