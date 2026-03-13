@@ -47,18 +47,31 @@ This layer handles everything the user sees and interacts with. It **displays da
 ### 3. Business Layer (Logic)
 This layer contains the **core functionality** and **rules** of the app. It processes data and enforces validation without concern for storage or UI.  
 
-**Components:**
-- **ExpenseService:** Defines operations such as addExpense, deleteExpense, and getAllExpenses.
-- **ExpenseValidator:** Ensures user input is valid (e.g., non-empty name, positive amount, valid date).
-- **ExpenseServiceImpl:** Implements ExpenseService operations, including data management and simple calculations.
-- **CategoryService:** Defines operations such as addCategory, deleteCategory, and getAllCategories.
-- **CategoryServiceImpl:** Implements CategoryService operations and manages category data.
+1. **services**
+
+- **ExpenseService:** Defines operations such as addExpense, deleteExpense, updateExpense, getAllExpenses, getExpensesSortedByDate, getExpensesByCategorySortedByDate, and getExpenseById.
+- **CategoryService:** Defines operations such as addCategory, updateCategory, deleteCategory, getCategory, and getAllCategories.
+- **ExpenseServiceImpl:** Implements ExpenseService operations, including expense validation, editing, deleting, filtering by category, and sorting by date.
+- **CategoryServiceImpl:** Implements CategoryService operations and manages category data, including updating category names and preventing deletion of categories that still contain expenses.
+
+
+2. **validation**
+
+- **ExpenseValidator:** Ensures user input for expenses is valid (e.g., non-empty name, positive amount, valid category, and valid date).
+- **CategoryValidator:** Ensures category input is valid (e.g., non-empty category name, no duplicate category names, and category name cannot contain only numbers).
+- **ValidationException:** Custom exception thrown when validation rules are violated.
+- **Validator:** Generic validation interface used to enforce validation rules for different models.
 
 
 **Interactions:**
-- `ExpenseServiceImpl` → uses → `ExpenseRepository`
-- `CategoryServiceImpl` → uses → `CategoryRepository`
-- `ExpenseValidator` → validates → user input
+- ExpenseServiceImpl → uses → ExpenseRepository
+- CategoryServiceImpl → uses → CategoryRepository
+- CategoryServiceImpl → uses → ExpenseRepository
+- ExpenseServiceImpl → uses → Validator<Expense>
+- CategoryServiceImpl → uses → Validator<Category>
+- ExpenseValidator → validates → Expense
+- CategoryValidator → validates → Category
+- Validator → throws → ValidationException
 
 
 ---
@@ -70,6 +83,13 @@ In Iteration 1 a stub implementation (FakeRepository) was used.
 In Iteration 2, a SQLite persistence layer has been implemented.
 
 **Components:**
+1. fake
+- **FakeRepository:** In-memory implementation used in Iteration 1 for development/testing.
+- **FakeCategoryRepository:** In-memory implementation used in Iteration 1 for development/testing.
+
+2. real
+- **AppDbHelper:** SQLite database helper responsible for creating and managing the database.
+- **DbContract:** Defines table names and column names for the database schema.
 - **ExpenseRepository:** Interface that defines rules for saving and accessing expenses.
 - **CategoryRepository:** Interface that defines rules for saving and accessing categories.
 - **FakeRepository:** In-memory implementation used in Iteration 1 for development/testing.
@@ -79,7 +99,7 @@ In Iteration 2, a SQLite persistence layer has been implemented.
 3. Implements ExpenseRepository.
 
 
-- **SqlRepository:** SQLite implementation of ExpenseRepository. It Handles:
+- **SqlExpenseRepository:** SQLite implementation of ExpenseRepository. It Handles:
 1. inserting expenses
 1. retrieving expenses
 1. deleting expenses
@@ -91,15 +111,11 @@ In Iteration 2, a SQLite persistence layer has been implemented.
 1. deleting categories
 
 
-- **AppDbHelper:** SQLite database helper responsible for creating and managing the database.
-
-- **DbContract:** Defines table names and column names for the database schema.
-
 
 **Interactions:**
 - `ExpenseServiceImpl` → calls → `ExpenseRepository`
 - `CategoryServiceImpl` → calls → `CategoryRepository`
-- `SqlRepository` — implements → `ExpenseRepository`
+- `SqlExpenseRepository` — implements → `ExpenseRepository`
 - `SqlCategoryRepository` — implements → `CategoryRepository`
 - `SqlRepository` → uses → `AppDbHelper`
 - `SqlCategoryRepository` → uses → `AppDbHelper`
