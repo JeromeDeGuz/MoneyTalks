@@ -1,5 +1,5 @@
 # Overview
-MoneyTalks helps users track their expenses efficiently. It allows adding, viewing, and categorizing expenses, with the flexibility to calculate totals and filter by date or category.
+MoneyTalks helps users track their expenses efficiently. It allows adding, editing, deleting, and viewing expenses. Users can also organize expenses using categories, filter expenses by category, and sort expenses by date.
 
 The app follows a **3-tier architecture** for clean separation of concerns:  
 
@@ -11,7 +11,15 @@ The app follows a **3-tier architecture** for clean separation of concerns:
 ## Architecture
 
 ### 1. Application Layer 
-This layer initializes application-wide services and wires the business layer to the persistence layer. Wiring the SqlExpense
+This layer acts as the Dependency Injector for the entire application. Instead of classes creating their own dependencies, MoneyTalksApp explicitly wires them together.
+
+**Specific Concrete Wiring**:
+- Expense Service Wiring: It instantiates SqlExpenseRepository and injects it into the ExpenseServiceImpl constructor.
+- Category Service Wiring: It instantiates SqlCategoryRepository and injects it into the CategoryServiceImpl constructor.
+- Cross-Layer Integrity Wiring: It provides the SqlExpenseRepository to the CategoryServiceImpl so the business layer can verify if a category is in use before allowing deletion.
+- Validation Wiring: It instantiates the concrete ExpenseValidator and CategoryValidator classes and provides them to their respective services.
+
+**Why this matters:** This explicit wiring ensures that our Business Layer only communicates with Interfaces (like ExpenseRepository) and remains completely unaware of the underlying SQLite implementation.
 
 **Components**
 - **MoneyTalksApp:** Entry point of the app. It initializes application-wide services and wires Business Layer to Persistence Layer.
