@@ -79,7 +79,7 @@ This layer contains the **core functionality** and **rules** of the app. It proc
 ### 4. Persistence Layer (Storage)
 Responsible for storing and retrieving data, this layer abstracts the storage mechanism, allowing flexibility to swap databases in the future.
 
-In Iteration 1, a stub implementation (FakeRepository) was used. In Iteration 2, a full SQLite persistence layer has been implemented under the real package.
+In Iteration 1, a stub implementation (FakeExpenseRepository) was used. In Iteration 2, a full SQLite persistence layer has been implemented under the real package. With an addition of FakeCategoryRepository that was included to reflect/mirror the behaviour of the SqlCategoryRepository.
 
 **Components:**
 
