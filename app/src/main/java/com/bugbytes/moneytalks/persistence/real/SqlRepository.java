@@ -10,8 +10,6 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.DefaultContent;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.persistence.PersistenceException;
-import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

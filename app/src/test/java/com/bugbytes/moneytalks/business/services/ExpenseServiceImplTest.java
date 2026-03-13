@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.models.Expense;
@@ -82,13 +83,14 @@ public class ExpenseServiceImplTest
 
     //Ensure delete returns false when expense is not in repository
     @Test
-    public void deleteExpenseShouldReturnFalseIfNotFound()
+    public void deleteExpenseShouldReturnExceptionIfNotFound()
     {
         // Added 0 as the first parameter for the id
         final Expense nonExistent = new Expense(0, "Missing", BigDecimal.ZERO, "None", LocalDate.of(2026, 1, 1), "");
 
-        final boolean deleted = expenseService.deleteExpense(nonExistent);
 
-        assertFalse(deleted);
+        assertThrows(ValidationException.class, () -> expenseService.deleteExpense(nonExistent));
+
+
     }
 }
