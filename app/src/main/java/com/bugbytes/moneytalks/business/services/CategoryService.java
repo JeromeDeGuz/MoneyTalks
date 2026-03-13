@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.models.Category;
+
 import java.util.List;
 
 public interface CategoryService

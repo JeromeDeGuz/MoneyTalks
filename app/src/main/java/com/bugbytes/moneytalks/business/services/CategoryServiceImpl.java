@@ -18,8 +18,8 @@ public class CategoryServiceImpl implements CategoryService
     public CategoryServiceImpl(CategoryRepository categoryRepo, CategoryValidator validator, ExpenseRepository expenseRepo)
     {
         this.categoryRepo = Objects.requireNonNull(categoryRepo, "Repository cannot be null");
-        this.validator    = Objects.requireNonNull(validator,    "Validator cannot be null");
-        this.expenseRepo  = Objects.requireNonNull(expenseRepo,  "Expense Repository cannot be null");
+        this.validator = Objects.requireNonNull(validator, "Validator cannot be null");
+        this.expenseRepo = Objects.requireNonNull(expenseRepo, "Expense Repository cannot be null");
     }
 
     @Override
@@ -46,7 +46,8 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public void deleteCategory(Category category)
     {
-        if(expenseRepo.categoryExists(category)){
+        if (expenseRepo.categoryExists(category))
+        {
             throw new ValidationException("Cannot delete category with expenses");
         }
         categoryRepo.deleteCategory(category);

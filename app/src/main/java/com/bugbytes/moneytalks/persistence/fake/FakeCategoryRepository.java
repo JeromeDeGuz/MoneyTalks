@@ -33,8 +33,10 @@ public class FakeCategoryRepository implements CategoryRepository
     @Override
     public void updateCategory(Category oldCategory, Category newCategory)
     {
-        for(Category x : categories){
-            if(x.getName().equals(oldCategory.getName())) {
+        for (Category x : categories)
+        {
+            if (x.getName().equals(oldCategory.getName()))
+            {
                 x.setName(newCategory.getName());
             }
         }
@@ -49,9 +51,9 @@ public class FakeCategoryRepository implements CategoryRepository
     @Override
     public Category getCategoryByName(String name)
     {
-        for(Category x : categories)
+        for (Category x : categories)
         {
-            if(x.getName().equals(name))
+            if (x.getName().equals(name))
             {
                 return x;
             }

@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.application;
 
 //Android Application class import
+
 import android.app.Application;
 
 //Business layer imports: services and validators

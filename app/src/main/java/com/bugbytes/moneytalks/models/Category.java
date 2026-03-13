@@ -2,6 +2,7 @@ package com.bugbytes.moneytalks.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
 //Serializable is important if you want to pass Category between Activities via Intent
 public class Category implements Serializable
 {

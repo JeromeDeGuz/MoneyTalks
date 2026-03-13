@@ -2,8 +2,8 @@ package com.bugbytes.moneytalks.persistence;
 
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.models.Category;
-import java.util.List;
 
+import java.util.List;
 
 
 public interface ExpenseRepository
@@ -21,6 +21,7 @@ public interface ExpenseRepository
     boolean updateExpense(Expense expense);
 
     Expense getExpenseById(long id);
+
     boolean isEmpty();
 
     boolean categoryExists(Category category);

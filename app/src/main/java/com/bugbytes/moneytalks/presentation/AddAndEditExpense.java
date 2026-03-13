@@ -97,7 +97,8 @@ public class AddAndEditExpense extends AppCompatActivity
     {
         List<Category> categories = app.getCategoryService().getAllCategories();
         categoryNames = new ArrayList<>();
-        for (Category c : categories) {
+        for (Category c : categories)
+        {
             categoryNames.add(c.getName());
         }
 
@@ -117,21 +118,27 @@ public class AddAndEditExpense extends AppCompatActivity
 
         builder.setPositiveButton("Add", null); // Set to null first to override listener later
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        
+
         AlertDialog dialog = builder.create();
         dialog.show();
 
         // Override the "Add" button click to prevent automatic dismissal on validation error
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v ->
+        {
             String name = input.getText().toString().trim();
-            try {
+            try
+            {
                 app.getCategoryService().addCategory(new Category(name));
                 loadCategories(app);
                 autoCompleteCategory.setText(name, false);
                 dialog.dismiss();
-            } catch (ValidationException e) {
+            }
+            catch (ValidationException e)
+            {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }
         });
@@ -209,10 +216,12 @@ public class AddAndEditExpense extends AppCompatActivity
                     Toast.makeText(this, "Update failed (expense not found)", Toast.LENGTH_SHORT).show();
                 }
             }
-        } catch (NumberFormatException e)
+        }
+        catch (NumberFormatException e)
         {
             Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
-        } catch (ValidationException e)
+        }
+        catch (ValidationException e)
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }

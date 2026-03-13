@@ -19,7 +19,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface OnCategoryEventListener
     {
         void onAddClick();
+
         void onEditClick(Category category);
+
         void onDeleteClick(Category category);
     }
 

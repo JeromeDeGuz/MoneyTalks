@@ -108,14 +108,15 @@ public class ExpenseServiceImpl implements ExpenseService
     // Helper method to keep the code DRY (Don't Repeat Yourself)
     private void sortListByDate(List<Expense> list, boolean newestFirst)
     {
-        list.sort((e1, e2) -> {
+        list.sort((e1, e2) ->
+        {
             if (newestFirst)
             {
                 return e2.getDate().compareTo(e1.getDate());
             }
             else
             {
-               return e1.getDate().compareTo(e2.getDate());
+                return e1.getDate().compareTo(e2.getDate());
             }
         });
     }

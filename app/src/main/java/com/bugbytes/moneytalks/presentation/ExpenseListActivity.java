@@ -99,6 +99,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             startActivity(intent);
         });
     }
+
     private void setupSortButton()
     {
         btnSort = findViewById(R.id.btnSort);
@@ -107,7 +108,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             return;
         }
 
-        btnSort.setOnClickListener(v -> {
+        btnSort.setOnClickListener(v ->
+        {
             PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnSort);
             Menu menu = popup.getMenu();
 
@@ -128,7 +130,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             oldestItem.setCheckable(true);
             menu.setGroupCheckable(GROUP_SORT, true, true);
 
-            popup.setOnMenuItemClickListener(item -> {
+            popup.setOnMenuItemClickListener(item ->
+            {
                 // Update state based on selection and mark the chosen item checked
                 if (item.getItemId() == ID_NEWEST)
                 {
@@ -162,7 +165,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         // Default label
         btnFilter.setText("Filtering by Category (All)");
 
-        btnFilter.setOnClickListener(v -> {
+        btnFilter.setOnClickListener(v ->
+        {
             PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnFilter);
             Menu menu = popup.getMenu();
 
@@ -200,7 +204,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             // Enforce single selection within the group
             menu.setGroupCheckable(GROUP_FILTER, true, true);
 
-            popup.setOnMenuItemClickListener(item -> {
+            popup.setOnMenuItemClickListener(item ->
+            {
                 // Update state and mark selected item checked
                 selectedCategory = item.getTitle().toString();
                 item.setChecked(true);

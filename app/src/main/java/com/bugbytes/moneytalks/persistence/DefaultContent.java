@@ -12,7 +12,7 @@ public class DefaultContent
 
     public void populateExpenses(ExpenseRepository expenseRepo)
     {
-        if(expenseRepo.isEmpty())
+        if (expenseRepo.isEmpty())
         {
             expenseRepo.addExpense(new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib"));
             expenseRepo.addExpense(new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill..."));

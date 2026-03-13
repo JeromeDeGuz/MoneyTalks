@@ -22,7 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ExpenseServiceImplTest {
+public class ExpenseServiceImplTest
+{
 
     private ExpenseServiceImpl service;
 
@@ -33,44 +34,49 @@ public class ExpenseServiceImplTest {
     private ExpenseValidator validator;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp()
+    {
         service = new ExpenseServiceImpl(repo, validator);
     }
 
     // ---------------- Constructor ----------------
 
     @Test
-    public void testConstructor_NullRepository_ThrowsException() {
+    public void testConstructor_NullRepository_ThrowsException()
+    {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(null, validator));
     }
 
     @Test
-    public void testConstructor_NullValidator_ThrowsException() {
+    public void testConstructor_NullValidator_ThrowsException()
+    {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(repo, null));
     }
 
     // ---------------- getAllExpenses ----------------
 
     @Test
-    public void testGetAllExpenses_RepoReturnsNull_ReturnsEmptyList() {
+    public void testGetAllExpenses_RepoReturnsNull_ReturnsEmptyList()
+    {
         when(repo.getAllExpenses()).thenReturn(null);
-        
+
         List<Expense> result = service.getAllExpenses();
-        
+
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(repo).getAllExpenses();
     }
 
     @Test
-    public void testGetAllExpenses_Success() {
+    public void testGetAllExpenses_Success()
+    {
         List<Expense> mockList = Arrays.asList(
-            new Expense(1, "Item", BigDecimal.TEN, "Food", LocalDate.now(), "")
+                new Expense(1, "Item", BigDecimal.TEN, "Food", LocalDate.now(), "")
         );
         when(repo.getAllExpenses()).thenReturn(mockList);
 
         List<Expense> result = service.getAllExpenses();
-        
+
         assertEquals(1, result.size());
         assertEquals("Item", result.get(0).getName());
     }
@@ -78,9 +84,10 @@ public class ExpenseServiceImplTest {
     // ---------------- Add Expense ----------------
 
     @Test
-    public void testAddExpense_Valid_Success() {
+    public void testAddExpense_Valid_Success()
+    {
         Expense e = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
-        
+
         service.addExpense(e);
 
         verify(validator).validate(e);
@@ -88,7 +95,8 @@ public class ExpenseServiceImplTest {
     }
 
     @Test
-    public void testAddExpense_Invalid_ThrowsException() {
+    public void testAddExpense_Invalid_ThrowsException()
+    {
         Expense e = new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "");
         doThrow(new ValidationException("Too short")).when(validator).validate(e);
 
@@ -99,24 +107,27 @@ public class ExpenseServiceImplTest {
     // ---------------- Update Expense ----------------
 
     @Test
-    public void testUpdateExpense_Success() {
+    public void testUpdateExpense_Success()
+    {
         Expense e = new Expense(1, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(true);
 
         assertTrue(service.updateExpense(e));
-        
+
         verify(validator).validate(e);
         verify(repo).updateExpense(e);
     }
 
     @Test
-    public void testUpdateExpense_Null_ReturnsFalse() {
+    public void testUpdateExpense_Null_ReturnsFalse()
+    {
         assertFalse(service.updateExpense(null));
         verifyNoInteractions(repo, validator);
     }
 
     @Test
-    public void testUpdateExpense_NotFound_ReturnsFalse() {
+    public void testUpdateExpense_NotFound_ReturnsFalse()
+    {
         Expense e = new Expense(99, "Fake", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(false);
 
@@ -126,7 +137,8 @@ public class ExpenseServiceImplTest {
     // ---------------- Delete Expense ----------------
 
     @Test
-    public void testDeleteExpense_Success() {
+    public void testDeleteExpense_Success()
+    {
         Expense e = new Expense(1, "Coffee", BigDecimal.ONE, "Food", LocalDate.now(), "");
         when(repo.deleteExpense(e)).thenReturn(true);
 
@@ -135,7 +147,8 @@ public class ExpenseServiceImplTest {
     }
 
     @Test
-    public void testDeleteExpense_Null_ReturnsFalse() {
+    public void testDeleteExpense_Null_ReturnsFalse()
+    {
         assertFalse(service.deleteExpense(null));
         verifyNoInteractions(repo);
     }
@@ -143,35 +156,38 @@ public class ExpenseServiceImplTest {
     // ---------------- Sorting & Filtering ----------------
 
     @Test
-    public void testSorting_NewestFirst() {
+    public void testSorting_NewestFirst()
+    {
         Expense old = new Expense(1, "Old", BigDecimal.TEN, "Food", LocalDate.now().minusDays(5), "");
         Expense mid = new Expense(2, "Mid", BigDecimal.TEN, "Food", LocalDate.now().minusDays(2), "");
         Expense now = new Expense(3, "Now", BigDecimal.TEN, "Food", LocalDate.now(), "");
-        
+
         when(repo.getAllExpenses()).thenReturn(Arrays.asList(old, mid, now));
 
         List<Expense> result = service.getExpensesSortedByDate(true);
-        
+
         assertEquals("Now", result.get(0).getName());
         assertEquals("Mid", result.get(1).getName());
         assertEquals("Old", result.get(2).getName());
     }
 
     @Test
-    public void testFiltering_ByCategory() {
+    public void testFiltering_ByCategory()
+    {
         Expense food = new Expense(1, "Pizza", BigDecimal.TEN, "Food", LocalDate.now(), "");
         Expense taxi = new Expense(2, "Uber", BigDecimal.TEN, "Transport", LocalDate.now(), "");
-        
+
         when(repo.getAllExpenses()).thenReturn(Arrays.asList(food, taxi));
 
         List<Expense> result = service.getExpensesByCategorySortedByDate("Food", true);
-        
+
         assertEquals(1, result.size());
         assertEquals("Pizza", result.get(0).getName());
     }
 
     @Test
-    public void testFiltering_SpecialCategories() {
+    public void testFiltering_SpecialCategories()
+    {
         List<Expense> mockList = Arrays.asList(new Expense(1, "X", BigDecimal.ONE, "Cat", LocalDate.now(), ""));
         when(repo.getAllExpenses()).thenReturn(mockList);
 
@@ -182,7 +198,8 @@ public class ExpenseServiceImplTest {
     }
 
     @Test
-    public void testFiltering_LambdaDefensiveBranches() {
+    public void testFiltering_LambdaDefensiveBranches()
+    {
         // newList.removeIf(e -> e == null || e.getCategory() == null || !categoryName.equals(e.getCategory()));
         Expense eNull = null;
         Expense noCat = new Expense(1, "NoCat", BigDecimal.ONE, null, LocalDate.now(), "");
@@ -193,7 +210,7 @@ public class ExpenseServiceImplTest {
         when(repo.getAllExpenses()).thenReturn(dirtyList);
 
         List<Expense> result = service.getExpensesByCategorySortedByDate("Target", true);
-        
+
         assertEquals(1, result.size());
         assertEquals("Right", result.get(0).getName());
     }
@@ -201,7 +218,8 @@ public class ExpenseServiceImplTest {
     // ---------------- getExpenseById ----------------
 
     @Test
-    public void testGetExpenseById() {
+    public void testGetExpenseById()
+    {
         Expense e = new Expense(1, "Target", BigDecimal.TEN, "Shopping", LocalDate.now(), "");
         when(repo.getExpenseById(1)).thenReturn(e);
 

@@ -97,8 +97,10 @@ public class FakeExpenseRepository implements ExpenseRepository
     @Override
     public boolean categoryExists(Category category)
     {
-        for (Expense e : expenses) {
-            if (e.getCategory().equalsIgnoreCase(category.getName())) {
+        for (Expense e : expenses)
+        {
+            if (e.getCategory().equalsIgnoreCase(category.getName()))
+            {
                 return true;
             }
         }
