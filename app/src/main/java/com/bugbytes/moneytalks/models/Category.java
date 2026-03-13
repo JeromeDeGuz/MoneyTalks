@@ -2,14 +2,14 @@ package com.bugbytes.moneytalks.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-// Serializable is important if you want to pass Category between Activities via Intent
+//Serializable is important if you want to pass Category between Activities via Intent
 public class Category implements Serializable
 {
     private int id;
-    private String name; // Consistent naming with getter/setter
+    private String name;
     private BigDecimal budget;
 
-    // Standard constructor for new categories (ID will be assigned by DB)
+    //Standard constructor for new categories (ID will be assigned by DB)
     public Category(String name)
     {
         this.name = name;
@@ -17,8 +17,7 @@ public class Category implements Serializable
     }
 
 
-
-    // Overloaded constructor for database retrieval (includes ID)
+    //Overloaded constructor for database retrieval (includes ID)
     public Category(int id, String name, BigDecimal budget)
     {
         this.id = id;
@@ -26,17 +25,15 @@ public class Category implements Serializable
         this.budget = budget;
     }
 
-    public int getId() { return id; }
+    //Getters
+    public int getId()
+    {
+        return id;
+    }
 
-    // We use getName to keep it simple and clean
     public String getName()
     {
         return this.name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public BigDecimal getBudget()
@@ -44,9 +41,10 @@ public class Category implements Serializable
         return this.budget;
     }
 
-    // TODO: Tech-debt: Will implement feature in iteration-3
-    public void setBudget(BigDecimal budget)
+    //Setters
+    public void setName(String name)
     {
-        this.budget = budget;
+        this.name = name;
     }
+
 }
