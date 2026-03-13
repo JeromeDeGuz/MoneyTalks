@@ -5,6 +5,8 @@ import com.bugbytes.moneytalks.models.Expense;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultContent {
     //centralize where we will have default content populate in
@@ -27,14 +29,17 @@ public class DefaultContent {
     }
 
     public void populateCategories(CategoryRepository categoryRepo) {
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(new Category("Transport"));
+        categoryList.add(new Category("Food"));
+        categoryList.add(new Category("Shopping"));
+        categoryList.add(new Category("Housing"));
+        categoryList.add(new Category("Car"));
+        categoryList.add(new Category("Subscriptions"));
+        categoryList.add(new Category("School"));
+
         if (categoryRepo.isEmpty()) {
-            categoryRepo.addCategory(new Category("Transport"));
-            categoryRepo.addCategory(new Category("Food"));
-            categoryRepo.addCategory(new Category("Shopping"));
-            categoryRepo.addCategory(new Category("Housing"));
-            categoryRepo.addCategory(new Category("Car"));
-            categoryRepo.addCategory(new Category("Subscriptions"));
-            categoryRepo.addCategory(new Category("School"));
+
 
         }
     }
