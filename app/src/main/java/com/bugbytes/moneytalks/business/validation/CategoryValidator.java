@@ -37,6 +37,13 @@ public class CategoryValidator implements Validator<Category>{
         }
     }
 
+    // do not delete a category that exists within any expense
+    public void validateDelete(Category category, ExpenseRepository expenseRepo) {
+        if (expenseRepo.categoryExists(category)) {
+            throw new ValidationException("Cannot delete category that exists within an expense");
+        }
+    }
+
     //Check that Category name isn't all numbers e.g. "123124125"
     private void isNotNumbers(Category category){
             if (category.getName().trim().matches("^\\d+$"))

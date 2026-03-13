@@ -23,14 +23,9 @@ public class CategoryServiceImplTest {
 
     private CategoryServiceImpl service;
 
-    @Mock
-    private CategoryRepository categoryRepo;
-
-    @Mock
-    private ExpenseRepository expenseRepo;
-
-    @Mock
-    private CategoryValidator validator; // This matches the type in the implementation
+    @Mock private CategoryRepository categoryRepo;
+    @Mock private ExpenseRepository expenseRepo;
+    @Mock private CategoryValidator validator;
 
     @BeforeEach
     public void setUp() {
@@ -55,10 +50,7 @@ public class CategoryServiceImplTest {
     @Test
     public void testAddCategory_Valid_Success() {
         Category category = new Category("Bills");
-
-        // No stubbing needed for void methods that should succeed
         service.addCategory(category);
-
         verify(validator).validate(category);
         verify(categoryRepo).addCategory(category);
     }
@@ -66,9 +58,7 @@ public class CategoryServiceImplTest {
     @Test
     public void testAddCategory_Invalid_ThrowsException() {
         Category category = new Category("");
-        // Stub the void method to throw an exception
         doThrow(new ValidationException("Category name cannot be empty")).when(validator).validate(category);
-
         assertThrows(ValidationException.class, () -> service.addCategory(category));
         verify(categoryRepo, never()).addCategory(any());
     }
@@ -77,7 +67,6 @@ public class CategoryServiceImplTest {
     public void testAddCategory_Duplicate_ThrowsException() {
         Category category = new Category("Food");
         doThrow(new ValidationException("Category name already exists")).when(validator).validate(category);
-
         assertThrows(ValidationException.class, () -> service.addCategory(category));
         verify(categoryRepo, never()).addCategory(any());
     }
@@ -86,37 +75,39 @@ public class CategoryServiceImplTest {
     public void testGetAllCategories_Success() {
         List<Category> mockList = Arrays.asList(new Category("Food"), new Category("Bills"));
         when(categoryRepo.getAllCategories()).thenReturn(mockList);
-
         List<Category> result = service.getAllCategories();
-
         assertEquals(2, result.size());
         verify(categoryRepo).getAllCategories();
     }
 
     @Test
     public void testUpdateCategory_Success() {
-        Category category = new Category(1, "Health", java.math.BigDecimal.ZERO);
+        // updateCategory now takes TWO args: old and new
+        Category oldCategory = new Category(1, "Health", java.math.BigDecimal.ZERO);
+        Category newCategory = new Category(1, "Wellness", java.math.BigDecimal.ZERO);
 
-        service.updateCategory(category);
+        service.updateCategory(oldCategory, newCategory);
 
-        verify(categoryRepo).updateCategory(category);
+        verify(expenseRepo).updateExpenseCategory(oldCategory, newCategory);
+        verify(categoryRepo).updateCategory(oldCategory, newCategory);
     }
 
     @Test
     public void testDeleteCategory_Success() {
+        // deleteCategory no longer uses validator — it checks expenseRepo directly
         Category category = new Category(1, "Shopping", java.math.BigDecimal.ZERO);
+        when(expenseRepo.categoryExists(category)).thenReturn(false);
 
         service.deleteCategory(category);
 
-        verify(validator).validateDelete(category, expenseRepo);
         verify(categoryRepo).deleteCategory(category);
     }
 
     @Test
     public void testDeleteCategory_UsedInExpense_ThrowsException() {
+        // deleteCategory throws ValidationException if categoryExists returns true
         Category category = new Category(1, "Gas", java.math.BigDecimal.ZERO);
-        doThrow(new ValidationException("Cannot delete category that exists within an expense"))
-                .when(validator).validateDelete(category, expenseRepo);
+        when(expenseRepo.categoryExists(category)).thenReturn(true);
 
         assertThrows(ValidationException.class, () -> service.deleteCategory(category));
         verify(categoryRepo, never()).deleteCategory(any());
@@ -126,9 +117,7 @@ public class CategoryServiceImplTest {
     public void testGetCategory_Found() {
         Category mockCat = new Category(1, "Travel", java.math.BigDecimal.ZERO);
         when(categoryRepo.getCategoryByName("Travel")).thenReturn(mockCat);
-
         Category result = service.getCategory("Travel");
-
         assertNotNull(result);
         assertEquals("Travel", result.getName());
     }
