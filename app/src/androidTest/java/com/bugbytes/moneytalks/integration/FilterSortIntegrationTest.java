@@ -1,222 +1,154 @@
 package com.bugbytes.moneytalks.integration;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import android.content.Context;
 
-import android.view.View;
-
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.bugbytes.moneytalks.R;
-import com.bugbytes.moneytalks.application.MoneyTalksApp;
-import com.bugbytes.moneytalks.business.validation.ValidationException;
-import com.bugbytes.moneytalks.models.Category;
+import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.models.Expense;
-import com.bugbytes.moneytalks.presentation.ExpenseListActivity;
+import com.bugbytes.moneytalks.persistence.ExpenseRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FilterSortIntegrationTest
 {
-    private MoneyTalksApp app;
+    private static final String TEST_DB_NAME = "moneytalks.db";
+
+    private Context context;
+    private ExpenseRepository repo;
+    private ExpenseService service;
 
     @Before
     public void setup()
     {
-        app = ApplicationProvider.getApplicationContext();
+        context = ApplicationProvider.getApplicationContext();
+
+        // Reset the real database before each test.
+        context.deleteDatabase(TEST_DB_NAME);
+
+        repo = new SqlExpenseRepository(context);
+        service = new ExpenseServiceImpl(repo, new ExpenseValidator());
+    }
+
+    @After
+    public void tearDown()
+    {
+        // Return the database to its default state after each test.
+        context.deleteDatabase(TEST_DB_NAME);
     }
 
     @Test
-    public void filterExpenses_byCategory_showsOnlyMatchingExpenses()
+    public void filterByCategory_returnsOnlyMatchingExpensesFromSQLite()
     {
         final long timestamp = System.currentTimeMillis();
-
-        final String filterCategory = "FilterCat" + timestamp;
+        final String targetCategory = "FilterCat" + timestamp;
         final String otherCategory = "OtherCat" + timestamp;
 
-        ensureCategoryExists(filterCategory);
-        ensureCategoryExists(otherCategory);
-
-        final String matchingExpenseName = "Filter Match " + timestamp;
-        final String nonMatchingExpenseName = "Filter Other " + timestamp;
-
-        // Create one expense in the selected category and one in a different category.
-        app.getExpenseService().addExpense(new Expense(
+        // Persist expenses through the service layer.
+        service.addExpense(new Expense(
                 0,
-                matchingExpenseName,
-                new BigDecimal("11.25"),
-                filterCategory,
-                LocalDate.now().minusDays(2),
-                "Should remain visible after filtering"
+                "Filter Match 1 " + timestamp,
+                new BigDecimal("11.00"),
+                targetCategory,
+                LocalDate.now().minusDays(3),
+                "First matching expense"
         ));
 
-        app.getExpenseService().addExpense(new Expense(
+        service.addExpense(new Expense(
                 0,
-                nonMatchingExpenseName,
-                new BigDecimal("30.50"),
-                otherCategory,
+                "Filter Match 2 " + timestamp,
+                new BigDecimal("15.50"),
+                targetCategory,
                 LocalDate.now().minusDays(1),
-                "Should disappear after filtering"
+                "Second matching expense"
         ));
 
-        try (ActivityScenario<ExpenseListActivity> scenario =
-                     ActivityScenario.launch(ExpenseListActivity.class))
-        {
-            // Open the filter menu and select the target category.
-            onView(withId(R.id.btnFilter)).perform(click());
-            onView(withText(filterCategory)).perform(click());
+        service.addExpense(new Expense(
+                0,
+                "Filter Other " + timestamp,
+                new BigDecimal("20.00"),
+                otherCategory,
+                LocalDate.now().minusDays(2),
+                "Non-matching expense"
+        ));
 
-            // Verify the filter label updates to the selected category.
-            onView(withId(R.id.btnFilter))
-                    .check(matches(withText("Filtering by Category (" + filterCategory + ")")));
+        // Read through the service layer using the filter + sort seam.
+        List<Expense> filtered = service.getExpensesByCategorySortedByDate(targetCategory, true);
 
-            // Verify only the matching expense is shown.
-            onView(withText(matchingExpenseName)).check(matches(withText(matchingExpenseName)));
-            onView(withText(nonMatchingExpenseName)).check(doesNotExist());
-        }
+        assertEquals(2, filtered.size());
+        assertEquals(targetCategory, filtered.get(0).getCategory());
+        assertEquals(targetCategory, filtered.get(1).getCategory());
+
+        // Newest-first ordering should still apply within the filtered results.
+        assertTrue(filtered.get(0).getDate().isAfter(filtered.get(1).getDate()));
     }
 
     @Test
-    public void sortExpenses_byDate_oldestToNewest_updatesRecyclerViewOrder()
+    public void sortByDate_returnsNewestFirstAndOldestFirstFromSQLite()
     {
         final long timestamp = System.currentTimeMillis();
+        final String category = "SortCat" + timestamp;
 
-        final String sortCategory = "SortCat" + timestamp;
-        ensureCategoryExists(sortCategory);
+        final String oldName = "Old Expense " + timestamp;
+        final String middleName = "Middle Expense " + timestamp;
+        final String newName = "New Expense " + timestamp;
 
-        final String oldestExpenseName = "Old Expense " + timestamp;
-        final String newestExpenseName = "New Expense " + timestamp;
-
-        // Create two expenses in the same category with different dates.
-        app.getExpenseService().addExpense(new Expense(
+        // Persist expenses with distinct dates through the service layer.
+        service.addExpense(new Expense(
                 0,
-                oldestExpenseName,
+                oldName,
                 new BigDecimal("9.99"),
-                sortCategory,
+                category,
                 LocalDate.now().minusDays(10),
-                "Older record for sorting"
+                "Oldest record"
         ));
 
-        app.getExpenseService().addExpense(new Expense(
+        service.addExpense(new Expense(
                 0,
-                newestExpenseName,
-                new BigDecimal("19.99"),
-                sortCategory,
-                LocalDate.now().minusDays(1),
-                "Newer record for sorting"
+                middleName,
+                new BigDecimal("12.99"),
+                category,
+                LocalDate.now().minusDays(5),
+                "Middle record"
         ));
 
-        try (ActivityScenario<ExpenseListActivity> scenario =
-                     ActivityScenario.launch(ExpenseListActivity.class))
-        {
-            // Filter to a unique category so the list only contains the test records.
-            onView(withId(R.id.btnFilter)).perform(click());
-            onView(withText(sortCategory)).perform(click());
+        service.addExpense(new Expense(
+                0,
+                newName,
+                new BigDecimal("19.99"),
+                category,
+                LocalDate.now().minusDays(1),
+                "Newest record"
+        ));
 
-            // Change the sort order to oldest first.
-            onView(withId(R.id.btnSort)).perform(click());
-            onView(withText("Oldest to Newest")).perform(click());
+        // Filter by the unique test category so seeded default data does not affect ordering.
+        List<Expense> newestFirst = service.getExpensesByCategorySortedByDate(category, true);
+        List<Expense> oldestFirst = service.getExpensesByCategorySortedByDate(category, false);
 
-            // Verify the recycler view order changed correctly.
-            onView(withRecyclerView(R.id.rvExpenses).atPositionOnView(0, R.id.tvTitle))
-                    .check(matches(withText(oldestExpenseName)));
+        assertEquals(3, newestFirst.size());
+        assertEquals(3, oldestFirst.size());
 
-            onView(withRecyclerView(R.id.rvExpenses).atPositionOnView(1, R.id.tvTitle))
-                    .check(matches(withText(newestExpenseName)));
-        }
-    }
+        assertEquals(newName, newestFirst.get(0).getName());
+        assertEquals(middleName, newestFirst.get(1).getName());
+        assertEquals(oldName, newestFirst.get(2).getName());
 
-    private void ensureCategoryExists(String categoryName)
-    {
-        // Ensure the test category exists before running the UI flow.
-        boolean exists = false;
-
-        for (Category category : app.getCategoryService().getAllCategories())
-        {
-            if (category != null && categoryName.equals(category.getName()))
-            {
-                exists = true;
-                break;
-            }
-        }
-
-        if (!exists)
-        {
-            try
-            {
-                app.getCategoryService().addCategory(new Category(categoryName));
-            }
-            catch (ValidationException ignored)
-            {
-                // Ignore setup-time validation issues if the category becomes available.
-            }
-        }
-    }
-
-    private RecyclerViewMatcher withRecyclerView(int recyclerViewId)
-    {
-        return new RecyclerViewMatcher(recyclerViewId);
-    }
-
-    public static class RecyclerViewMatcher
-    {
-        private final int recyclerViewId;
-
-        public RecyclerViewMatcher(int recyclerViewId)
-        {
-            this.recyclerViewId = recyclerViewId;
-        }
-
-        public Matcher<View> atPositionOnView(int position, int targetViewId)
-        {
-            return new TypeSafeMatcher<View>()
-            {
-                @Override
-                public void describeTo(Description description)
-                {
-                    description.appendText("Matches view at position " + position +
-                            " in recycler view " + recyclerViewId);
-                }
-
-                @Override
-                protected boolean matchesSafely(View view)
-                {
-                    View recyclerView = view.getRootView().findViewById(recyclerViewId);
-                    if (!(recyclerView instanceof androidx.recyclerview.widget.RecyclerView))
-                    {
-                        return false;
-                    }
-
-                    androidx.recyclerview.widget.RecyclerView rv =
-                            (androidx.recyclerview.widget.RecyclerView) recyclerView;
-
-                    androidx.recyclerview.widget.RecyclerView.ViewHolder viewHolder =
-                            rv.findViewHolderForAdapterPosition(position);
-
-                    if (viewHolder == null)
-                    {
-                        return false;
-                    }
-
-                    View targetView = viewHolder.itemView.findViewById(targetViewId);
-                    return view == targetView;
-                }
-            };
-        }
+        assertEquals(oldName, oldestFirst.get(0).getName());
+        assertEquals(middleName, oldestFirst.get(1).getName());
+        assertEquals(newName, oldestFirst.get(2).getName());
     }
 }
