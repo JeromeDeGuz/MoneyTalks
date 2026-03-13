@@ -10,7 +10,7 @@ import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlRepository;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class ExpenseIntegrationTest
         // Reset the real database before each test.
         context.deleteDatabase(TEST_DB_NAME);
 
-        repo = new SqlExpenseRepository(context);
+        repo = new SqlRepository(context);
         service = new ExpenseServiceImpl(repo, new ExpenseValidator());
     }
 
