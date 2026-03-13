@@ -124,7 +124,6 @@ public class SqlExpenseRepository implements ExpenseRepository
         return count > 0;
     }
 
-    // NEW: Implementation to support the Edit feature and fix ServiceImpl error
     public Expense getExpenseById(long id)
     {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -167,7 +166,8 @@ public class SqlExpenseRepository implements ExpenseRepository
     }
 
     @Override
-    public boolean categoryExists(Category category) {
+    public boolean categoryExists(Category category)
+    {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selection = "UPPER(" + DbContract.ExpenseEntry.COLUMN_CATEGORY + ") = UPPER(?)";
         String[] selectionArgs = {category.getName()};
@@ -178,10 +178,13 @@ public class SqlExpenseRepository implements ExpenseRepository
     }
 
     @Override
-    public void updateExpenseCategory(Category oldCategory, Category newCategory) {
+    public void updateExpenseCategory(Category oldCategory, Category newCategory)
+    {
         List<Expense> expenses = getAllExpenses();
-        for (Expense expense : expenses) {
-            if (expense.getCategory().equalsIgnoreCase(oldCategory.getName())) {
+        for (Expense expense : expenses)
+        {
+            if (expense.getCategory().equalsIgnoreCase(oldCategory.getName()))
+            {
                 expense.setCategory(newCategory.getName());
                 updateExpense(expense);
             }

@@ -8,11 +8,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultContent {
+public class DefaultContent
+{
     //centralize where we will have default content populate in
 
-    public void populateExpenses(ExpenseRepository expenseRepo){
-        if(expenseRepo.isEmpty()){
+    public void populateExpenses(ExpenseRepository expenseRepo)
+    {
+        if(expenseRepo.isEmpty())
+        {
             expenseRepo.addExpense(new Expense(0, "Uber", new BigDecimal("15.0"), "Transport", LocalDate.of(2026, 2, 1), "Palomino -> Crib"));
             expenseRepo.addExpense(new Expense(0, "Date", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 4), "Tinder date at IGI, he split the bill..."));
             expenseRepo.addExpense(new Expense(0, "Sportchek", new BigDecimal("20.0"), "Shopping", LocalDate.of(2026, 2, 6), "Nidecker supermatic bindings, and new Salomon snowboard"));
@@ -28,8 +31,10 @@ public class DefaultContent {
         }
     }
 
-    public void populateCategories(CategoryRepository categoryRepo) {
-        if (categoryRepo.isEmpty()) {
+    public void populateCategories(CategoryRepository categoryRepo)
+    {
+        if (categoryRepo.isEmpty())
+        {
             categoryRepo.addCategory(new Category("Transport"));
             categoryRepo.addCategory(new Category("Food"));
             categoryRepo.addCategory(new Category("Shopping"));
