@@ -16,12 +16,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlRepository implements ExpenseRepository
+public class SqlExpenseRepository implements ExpenseRepository
 {
     private final AppDbHelper dbHelper;
 
 
-    public SqlRepository(Context context)
+    public SqlExpenseRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
         DefaultContent defaultContent = new DefaultContent();

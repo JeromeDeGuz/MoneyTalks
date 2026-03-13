@@ -16,7 +16,7 @@ import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlCategoryRepository;
-import com.bugbytes.moneytalks.persistence.real.SqlRepository;
+import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
 
 import org.junit.After;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class CategoryIntegrationTest
         context.deleteDatabase(TEST_DB_NAME);
 
         categoryRepo = new SqlCategoryRepository(context);
-        expenseRepo = new SqlRepository(context);
+        expenseRepo = new SqlExpenseRepository(context);
 
         categoryService = new CategoryServiceImpl(
                 categoryRepo,
