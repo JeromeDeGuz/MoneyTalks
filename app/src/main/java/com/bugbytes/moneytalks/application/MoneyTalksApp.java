@@ -26,7 +26,7 @@ public class MoneyTalksApp extends Application
     {
         super.onCreate();
         //create repo using our fake db
-//        ExpenseRepository expenseRepository = new FakeRepository();
+//        ExpenseRepository expenseRepository = new FakeExpenseRepository();
         ExpenseRepository expenseRepository = new SqlExpenseRepository(this);
 
         // Setup for the dynamic category feature

@@ -2,7 +2,7 @@ package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
-import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
+import com.bugbytes.moneytalks.persistence.fake.FakeExpenseRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.models.Expense;
 
@@ -25,7 +25,7 @@ public class ExpenseServiceImplTest
     public void setUp()
     {
         //Initialize the fake repository and the service
-        repo = new FakeRepository();
+        repo = new FakeExpenseRepository();
         validator = new ExpenseValidator();
         expenseService = new ExpenseServiceImpl(repo, validator);
 

@@ -8,13 +8,13 @@ import com.bugbytes.moneytalks.persistence.DefaultContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeRepository implements ExpenseRepository {
+public class FakeExpenseRepository implements ExpenseRepository {
     //Static list so data persists while the app is running
     private static final List<Expense> expenses = new ArrayList<>();
     private static long autoIncrementId = 100; // Updated to long to match Expense model
 
     //Constructor: creates temporary, non-persistent sample data
-    public FakeRepository() {
+    public FakeExpenseRepository() {
 
         // Only add sample data if the list is empty to prevent duplicates on every instance creation
         DefaultContent defaultContent = new DefaultContent();
