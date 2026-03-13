@@ -22,7 +22,7 @@ We’re Bug Bytes, the team behind MoneyTalks:
 
 - [Iteration 0 Materials](Docs/Iteration-0 material/)  
 - [Iteration 1 Materials](Docs/Iteration-1 material/)  
-- [Architecture Folder](Docs/Iteration-1 material/Architecture/)
+- [Architecture Folder](Docs/Architecture/)
 
 ## 🛠 Dependencies
 The following are the key tools and libraries required to build and run MoneyTalks:
