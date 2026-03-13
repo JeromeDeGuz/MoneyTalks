@@ -30,7 +30,7 @@ public class CategoryServiceImplTest {
     private ExpenseRepository expenseRepo;
 
     @Mock
-    private CategoryValidator validator;
+    private CategoryValidator validator; // This matches the type in the implementation
 
     @BeforeEach
     public void setUp() {
@@ -55,9 +55,10 @@ public class CategoryServiceImplTest {
     @Test
     public void testAddCategory_Valid_Success() {
         Category category = new Category("Bills");
-        
+
+        // No stubbing needed for void methods that should succeed
         service.addCategory(category);
-        
+
         verify(validator).validate(category);
         verify(categoryRepo).addCategory(category);
     }
@@ -65,7 +66,17 @@ public class CategoryServiceImplTest {
     @Test
     public void testAddCategory_Invalid_ThrowsException() {
         Category category = new Category("");
-        doThrow(new ValidationException("Empty")).when(validator).validate(category);
+        // Stub the void method to throw an exception
+        doThrow(new ValidationException("Category name cannot be empty")).when(validator).validate(category);
+
+        assertThrows(ValidationException.class, () -> service.addCategory(category));
+        verify(categoryRepo, never()).addCategory(any());
+    }
+
+    @Test
+    public void testAddCategory_Duplicate_ThrowsException() {
+        Category category = new Category("Food");
+        doThrow(new ValidationException("Category name already exists")).when(validator).validate(category);
 
         assertThrows(ValidationException.class, () -> service.addCategory(category));
         verify(categoryRepo, never()).addCategory(any());
@@ -77,7 +88,7 @@ public class CategoryServiceImplTest {
         when(categoryRepo.getAllCategories()).thenReturn(mockList);
 
         List<Category> result = service.getAllCategories();
-        
+
         assertEquals(2, result.size());
         verify(categoryRepo).getAllCategories();
     }
@@ -85,18 +96,18 @@ public class CategoryServiceImplTest {
     @Test
     public void testUpdateCategory_Success() {
         Category category = new Category(1, "Health", java.math.BigDecimal.ZERO);
-        
+
         service.updateCategory(category);
-        
+
         verify(categoryRepo).updateCategory(category);
     }
 
     @Test
     public void testDeleteCategory_Success() {
         Category category = new Category(1, "Shopping", java.math.BigDecimal.ZERO);
-        
+
         service.deleteCategory(category);
-        
+
         verify(validator).validateDelete(category, expenseRepo);
         verify(categoryRepo).deleteCategory(category);
     }
@@ -104,7 +115,8 @@ public class CategoryServiceImplTest {
     @Test
     public void testDeleteCategory_UsedInExpense_ThrowsException() {
         Category category = new Category(1, "Gas", java.math.BigDecimal.ZERO);
-        doThrow(new ValidationException("In use")).when(validator).validateDelete(category, expenseRepo);
+        doThrow(new ValidationException("Cannot delete category that exists within an expense"))
+                .when(validator).validateDelete(category, expenseRepo);
 
         assertThrows(ValidationException.class, () -> service.deleteCategory(category));
         verify(categoryRepo, never()).deleteCategory(any());
@@ -116,7 +128,7 @@ public class CategoryServiceImplTest {
         when(categoryRepo.getCategoryByName("Travel")).thenReturn(mockCat);
 
         Category result = service.getCategory("Travel");
-        
+
         assertNotNull(result);
         assertEquals("Travel", result.getName());
     }
