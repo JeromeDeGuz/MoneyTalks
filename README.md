@@ -39,17 +39,33 @@ We’re Bug Bytes, the team behind MoneyTalks:
 ## 🛠 Dependencies
 The following are the key tools and libraries required to build and run MoneyTalks:
 
-- **Android SDK:** Minimum: 26 (Android 8.0)
-- **Java:** JDK 17  
-- **Gradle:** 8.8  
-- **AndroidX Libraries:**  
-  - Core: androidx.core:core-ktx  
-  - AppCompat: androidx.appcompat:appcompat  
-  - Material: com.google.android.material:material  
-  - ConstraintLayout: androidx.constraintlayout:constraintlayout  
-- **Navigation:** androidx.navigation:navigation-fragment-ktx, navigation-ui-ktx  
-- **Activity:** androidx.activity:activity-ktx  
-- **Unit Testing:** JUnit  
+### SDK & Tools
+- **Android SDK:** Minimum 26 (Android 8.0), Compile/Target SDK 34
+- **Java:** JDK 17
+- **Gradle:** 8.8
+- **Build Tools:** ViewBinding enabled, Proguard configured for release
+
+### AndroidX Libraries
+- **Core:** `androidx.core:core-ktx`
+- **AppCompat:** `androidx.appcompat:appcompat`
+- **Material Components:** `com.google.android.material:material`
+- **ConstraintLayout:** `androidx.constraintlayout:constraintlayout`
+- **Navigation:** `androidx.navigation:navigation-fragment-ktx`, `androidx.navigation:navigation-ui-ktx`
+- **Activity KTX:** `androidx.activity:activity-ktx`
+
+### Unit Testing
+- **JUnit 5:** 
+  - API: `org.junit.jupiter:junit-jupiter-api:5.10.2`
+  - Engine: `org.junit.jupiter:junit-jupiter-engine:5.10.2`
+  - Platform Launcher: `org.junit.platform:junit-platform-launcher:1.10.2`
+- **Mockito:** `org.mockito:mockito-core`, `org.mockito:mockito-junit-jupiter`
+- **Test Options:** Unit tests configured to use JUnit Platform
+
+### Android Instrumented Testing
+- **JUnit4:** `androidx.test.ext:junit`
+- **Espresso:** `androidx.test.espresso:core`, `androidx.test.espresso:contrib`
+- **AndroidX Test Core & Rules:** `androidx.test:core`, `androidx.test:runner`, `androidx.test:rules`
+
 
 ## 🚀 How to Run
 
