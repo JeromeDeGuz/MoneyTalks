@@ -84,7 +84,7 @@ In Iteration 1, a stub implementation (FakeRepository) was used. In Iteration 2,
 **Components:**
 
 1. **fake**
-**FakeRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
+**FakeExpenseRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
 **FakeCategoryRepository:** In-memory implementation of CategoryRepository.
 
 Behavior: These components store data in memory during runtime and reset to default data whenever the app restarts.
@@ -117,7 +117,7 @@ Behavior: These components store data in memory during runtime and reset to defa
 - `ExpenseServiceImpl` → calls → `ExpenseRepository`
 - `CategoryServiceImpl` → calls → `CategoryRepository`
 - `CategoryServiceImpl` → calls → ExpenseRepository` (for checking category usage)
-- `FakeRepository` — implements → `ExpenseRepository`
+- `FakeExpenseRepository` — implements → `ExpenseRepository`
 - `FakeCategoryRepository` — implements → `CategoryRepository`
 - `SqlExpenseRepository` — implements → `ExpenseRepository`
 - `SqlCategoryRepository` — implements → `CategoryRepository`
