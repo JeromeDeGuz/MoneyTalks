@@ -121,14 +121,14 @@ public class ManageCategoriesActivity extends AppCompatActivity
 
                     try
                     {
-                        category.setName(newName);
-                        categoryService.updateCategory(category);
+//                        category.setName(newName);
+                        categoryService.updateCategory(category, new Category(newName));
                         Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, "Failed to update category", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to update category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)

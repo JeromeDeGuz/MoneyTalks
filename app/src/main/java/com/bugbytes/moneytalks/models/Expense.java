@@ -61,6 +61,7 @@ public class Expense implements java.io.Serializable
         this.name = name;
     }
 
+    // TODO: Tech-debt: Figure out what to do with these unused methods
     public void setAmount(BigDecimal amount)
     {
         this.amount = amount;

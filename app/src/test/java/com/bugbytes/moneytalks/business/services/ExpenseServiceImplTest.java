@@ -1,94 +1,212 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
-import com.bugbytes.moneytalks.persistence.fake.FakeRepository;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
+import com.bugbytes.moneytalks.persistence.fake.FakeExpenseRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.models.Expense;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ExpenseServiceImplTest
-{
-    private ExpenseServiceImpl expenseService;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class ExpenseServiceImplTest {
+
+    private ExpenseServiceImpl service;
+
+    @Mock
     private ExpenseRepository repo;
+
+    @Mock
     private ExpenseValidator validator;
 
     @BeforeEach
-    public void setUp()
-    {
-        //Initialize the fake repository and the service
-        repo = new FakeRepository();
-        validator = new ExpenseValidator();
-        expenseService = new ExpenseServiceImpl(repo, validator);
-
-        // Clearing the static list by removing items individually since getAllExpenses() returns a copy
-        List<Expense> current = repo.getAllExpenses();
-        for (Expense e : current)
-        {
-            repo.deleteExpense(e);
-        }
+    public void setUp() {
+        service = new ExpenseServiceImpl(repo, validator);
     }
 
-    //Verify that adding an expense stores it in repository
+    // ---------------- Constructor ----------------
+
     @Test
-    public void addExpenseShouldDelegateToRepository()
-    {
-        // Added 0 as the first parameter for the id
-        final Expense expense = new Expense(0, "Groceries", new BigDecimal("45.0"), "Food", LocalDate.of(2026, 2, 12), "Weekly shop");
+    public void testConstructor_NullRepository_ThrowsException() {
+        assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(null, validator));
+    }
 
-        expenseService.addExpense(expense);
+    @Test
+    public void testConstructor_NullValidator_ThrowsException() {
+        assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(repo, null));
+    }
 
-        final List<Expense> result = expenseService.getAllExpenses();
+    // ---------------- getAllExpenses ----------------
+
+    @Test
+    public void testGetAllExpenses_RepoReturnsNull_ReturnsEmptyList() {
+        when(repo.getAllExpenses()).thenReturn(null);
+        
+        List<Expense> result = service.getAllExpenses();
+        
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(repo).getAllExpenses();
+    }
+
+    @Test
+    public void testGetAllExpenses_Success() {
+        List<Expense> mockList = Arrays.asList(
+            new Expense(1, "Item", BigDecimal.TEN, "Food", LocalDate.now(), "")
+        );
+        when(repo.getAllExpenses()).thenReturn(mockList);
+
+        List<Expense> result = service.getAllExpenses();
+        
         assertEquals(1, result.size());
-        assertEquals("Groceries", result.get(0).getName());
+        assertEquals("Item", result.get(0).getName());
     }
 
-    //Add multiple expenses and verify retrieval returns all items
+    // ---------------- Add Expense ----------------
+
     @Test
-    public void getAllExpensesShouldReturnAllStoredItems()
-    {
-        // Added 0 as the first parameter for the id
-        expenseService.addExpense(new Expense(0, "Rent", new BigDecimal("1200.0"), "Housing", LocalDate.of(2026, 2, 1), "Feb Rent"));
-        expenseService.addExpense(new Expense(0, "Coffee", new BigDecimal("5.0"), "Food", LocalDate.of(2026, 2, 2), "Latte"));
+    public void testAddExpense_Valid_Success() {
+        Expense e = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        
+        service.addExpense(e);
 
-        final List<Expense> list = expenseService.getAllExpenses();
-
-        assertEquals(2, list.size());
+        verify(validator).validate(e);
+        verify(repo).addExpense(e);
     }
 
-    //Ensure delete returns true when expense exists
     @Test
-    public void deleteExpenseShouldReturnTrueOnSuccess()
-    {
-        // Added 0 as the first parameter for the id
-        final Expense gas = new Expense(0, "Gas", new BigDecimal("60.0"), "Transport", LocalDate.of(2026, 2, 10), "Full tank");
-        expenseService.addExpense(gas);
+    public void testAddExpense_Invalid_ThrowsException() {
+        Expense e = new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        doThrow(new ValidationException("Too short")).when(validator).validate(e);
 
-        // Fetching the assigned ID from repo to ensure a clean match
-        Expense storedGas = expenseService.getAllExpenses().get(0);
-
-        final boolean deleted = expenseService.deleteExpense(storedGas);
-
-        assertTrue(deleted);
-        assertEquals(0, expenseService.getAllExpenses().size());
+        assertThrows(ValidationException.class, () -> service.addExpense(e));
+        verify(repo, never()).addExpense(any());
     }
 
-    //Ensure delete returns false when expense is not in repository
+    // ---------------- Update Expense ----------------
+
     @Test
-    public void deleteExpenseShouldReturnFalseIfNotFound()
-    {
-        // Added 0 as the first parameter for the id
-        final Expense nonExistent = new Expense(0, "Missing", BigDecimal.ZERO, "None", LocalDate.of(2026, 1, 1), "");
+    public void testUpdateExpense_Success() {
+        Expense e = new Expense(1, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        when(repo.updateExpense(e)).thenReturn(true);
 
-        final boolean deleted = expenseService.deleteExpense(nonExistent);
+        assertTrue(service.updateExpense(e));
+        
+        verify(validator).validate(e);
+        verify(repo).updateExpense(e);
+    }
 
-        assertFalse(deleted);
+    @Test
+    public void testUpdateExpense_Null_ReturnsFalse() {
+        assertFalse(service.updateExpense(null));
+        verifyNoInteractions(repo, validator);
+    }
+
+    @Test
+    public void testUpdateExpense_NotFound_ReturnsFalse() {
+        Expense e = new Expense(99, "Fake", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        when(repo.updateExpense(e)).thenReturn(false);
+
+        assertFalse(service.updateExpense(e));
+    }
+
+    // ---------------- Delete Expense ----------------
+
+    @Test
+    public void testDeleteExpense_Success() {
+        Expense e = new Expense(1, "Coffee", BigDecimal.ONE, "Food", LocalDate.now(), "");
+        when(repo.deleteExpense(e)).thenReturn(true);
+
+        assertTrue(service.deleteExpense(e));
+        verify(repo).deleteExpense(e);
+    }
+
+    @Test
+    public void testDeleteExpense_Null_ReturnsFalse() {
+        assertFalse(service.deleteExpense(null));
+        verifyNoInteractions(repo);
+    }
+
+    // ---------------- Sorting & Filtering ----------------
+
+    @Test
+    public void testSorting_NewestFirst() {
+        Expense old = new Expense(1, "Old", BigDecimal.TEN, "Food", LocalDate.now().minusDays(5), "");
+        Expense mid = new Expense(2, "Mid", BigDecimal.TEN, "Food", LocalDate.now().minusDays(2), "");
+        Expense now = new Expense(3, "Now", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        
+        when(repo.getAllExpenses()).thenReturn(Arrays.asList(old, mid, now));
+
+        List<Expense> result = service.getExpensesSortedByDate(true);
+        
+        assertEquals("Now", result.get(0).getName());
+        assertEquals("Mid", result.get(1).getName());
+        assertEquals("Old", result.get(2).getName());
+    }
+
+    @Test
+    public void testFiltering_ByCategory() {
+        Expense food = new Expense(1, "Pizza", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        Expense taxi = new Expense(2, "Uber", BigDecimal.TEN, "Transport", LocalDate.now(), "");
+        
+        when(repo.getAllExpenses()).thenReturn(Arrays.asList(food, taxi));
+
+        List<Expense> result = service.getExpensesByCategorySortedByDate("Food", true);
+        
+        assertEquals(1, result.size());
+        assertEquals("Pizza", result.get(0).getName());
+    }
+
+    @Test
+    public void testFiltering_SpecialCategories() {
+        List<Expense> mockList = Arrays.asList(new Expense(1, "X", BigDecimal.ONE, "Cat", LocalDate.now(), ""));
+        when(repo.getAllExpenses()).thenReturn(mockList);
+
+        // Branch: "All"
+        assertEquals(1, service.getExpensesByCategorySortedByDate("All", true).size());
+        // Branch: null
+        assertEquals(1, service.getExpensesByCategorySortedByDate(null, true).size());
+    }
+
+    @Test
+    public void testFiltering_LambdaDefensiveBranches() {
+        // newList.removeIf(e -> e == null || e.getCategory() == null || !categoryName.equals(e.getCategory()));
+        Expense eNull = null;
+        Expense noCat = new Expense(1, "NoCat", BigDecimal.ONE, null, LocalDate.now(), "");
+        Expense wrongCat = new Expense(2, "Wrong", BigDecimal.ONE, "Other", LocalDate.now(), "");
+        Expense rightCat = new Expense(3, "Right", BigDecimal.ONE, "Target", LocalDate.now(), "");
+
+        List<Expense> dirtyList = new ArrayList<>(Arrays.asList(eNull, noCat, wrongCat, rightCat));
+        when(repo.getAllExpenses()).thenReturn(dirtyList);
+
+        List<Expense> result = service.getExpensesByCategorySortedByDate("Target", true);
+        
+        assertEquals(1, result.size());
+        assertEquals("Right", result.get(0).getName());
+    }
+
+    // ---------------- getExpenseById ----------------
+
+    @Test
+    public void testGetExpenseById() {
+        Expense e = new Expense(1, "Target", BigDecimal.TEN, "Shopping", LocalDate.now(), "");
+        when(repo.getExpenseById(1)).thenReturn(e);
+
+        assertNotNull(service.getExpenseById(1));
+        assertNull(service.getExpenseById(99));
     }
 }

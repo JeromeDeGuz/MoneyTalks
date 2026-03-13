@@ -40,28 +40,22 @@ public class ExpenseServiceImpl implements ExpenseService
         List<Expense> result = repository.getAllExpenses();
         if (result == null)
         {
-            throw new IllegalStateException("Repository returned null instead of a list.");
+            return new ArrayList<>();
         }
         return result;
     }
 
     //Deletes an expense (@param: expense to delete).
-    //Throws ValidationException if deletion fails (e.g. not found).
+    //Returns true if deleted, false otherwise.
     @Override
     public boolean deleteExpense(Expense expense)
     {
         if (expense == null)
         {
-            throw new ValidationException("Cannot delete a null expense.");
+            return false;
         }
 
-        boolean removed = repository.deleteExpense(expense);
-
-        if (!removed)
-        {
-            throw new ValidationException("Expense not found: " + expense.getName());
-        }
-        return removed;
+        return repository.deleteExpense(expense);
     }
 
     @Override
@@ -69,7 +63,7 @@ public class ExpenseServiceImpl implements ExpenseService
     {
         if (expense == null)
         {
-            throw new ValidationException("Cannot update a null expense.");
+            return false;
         }
         validator.validate(expense);
         return repository.updateExpense(expense);
