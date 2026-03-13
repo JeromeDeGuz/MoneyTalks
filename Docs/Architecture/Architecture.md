@@ -84,8 +84,8 @@ In Iteration 1, a stub implementation (FakeExpenseRepository) was used. In Itera
 **Components:**
 
 1. **fake**
-**FakeExpenseRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
-**FakeCategoryRepository:** In-memory implementation of CategoryRepository.
+- **FakeExpenseRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
+- **FakeCategoryRepository:** In-memory implementation of CategoryRepository.
 
 Behavior: These components store data in memory during runtime and reset to default data whenever the app restarts.
 
