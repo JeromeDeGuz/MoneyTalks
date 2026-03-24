@@ -11,7 +11,7 @@ public class ExpenseValidator implements Validator<Expense>
 {
     //one big method that contains all the single validation checks
     @Override
-    public void validate(Expense expense)
+    public void validate(Expense expense) throws ValidationException
     {
         if (expense == null)
         {
@@ -29,7 +29,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates null or empty name
-    private void checkNameisNotNullorEmpty(Expense expense)
+    private void checkNameisNotNullorEmpty(Expense expense) throws ValidationException
     {
         if (expense.getName() == null || expense.getName().trim().isEmpty())
         {
@@ -38,7 +38,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates name isnt all digits
-    private void checkNameisNotNumbers(Expense expense)
+    private void checkNameisNotNumbers(Expense expense) throws ValidationException
     {
         if (expense.getName().trim().matches("^\\d+$"))
         {
@@ -47,7 +47,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates name within bounds
-    private void checkNameisValidLength(Expense expense)
+    private void checkNameisValidLength(Expense expense) throws ValidationException
     {
         String name = expense.getName().trim();
         if (name.length() < 2 || name.length() > 50)
@@ -57,7 +57,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates the amount is positive and not null
-    private void checkAmountisValid(Expense expense)
+    private void checkAmountisValid(Expense expense) throws ValidationException
     {
         if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0)
         {
@@ -66,7 +66,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates a category is not null or empty
-    private void checkCategoryisNotNullorEmpty(Expense expense)
+    private void checkCategoryisNotNullorEmpty(Expense expense) throws ValidationException
     {
         if (expense.getCategory() == null || expense.getCategory().trim().isEmpty())
         {
@@ -75,7 +75,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates date not null
-    private void checkDateisNotNull(Expense expense)
+    private void checkDateisNotNull(Expense expense) throws ValidationException
     {
         if (expense.getDate() == null)
         {
@@ -84,7 +84,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates that the date is not in the future
-    private void checkDateisNotFuture(Expense expense)
+    private void checkDateisNotFuture(Expense expense) throws ValidationException
     {
         if (expense.getDate() != null && expense.getDate().isAfter(LocalDate.now()))
         {
@@ -93,7 +93,7 @@ public class ExpenseValidator implements Validator<Expense>
     }
 
     //validates note length not out of bounds
-    private void checkNoteisValidLength(Expense expense)
+    private void checkNoteisValidLength(Expense expense) throws ValidationException
     {
         if (expense.getNote() != null && expense.getNote().length() > 500)
         {
@@ -101,7 +101,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) {
+    public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException {
         if (dateStr == null || dateStr.isEmpty()) {
             throw new ValidationException("Date is required.");
         }
@@ -130,3 +130,4 @@ public class ExpenseValidator implements Validator<Expense>
         return expense;
     }
 }
+

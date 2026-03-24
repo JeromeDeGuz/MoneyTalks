@@ -27,8 +27,7 @@ public class CategoryServiceImpl implements CategoryService
 
     //addCategory: It validates and adds a new category. Takes in @param category.
     @Override
-    public void addCategory(Category category)
-    {
+    public void addCategory(Category category) throws ValidationException {
         //Ensure inputs aren't null before proceeding to business logic
         Objects.requireNonNull(category, "Cannot add a null category");
 
@@ -57,8 +56,7 @@ public class CategoryServiceImpl implements CategoryService
 
     //deleteCategory: It removes category if no expenses are linked. Takes in @param category.
     @Override
-    public void deleteCategory(Category category)
-    {
+    public void deleteCategory(Category category) throws ValidationException {
         Objects.requireNonNull(category, "Category to delete cannot be null");
 
         //Logic check: prevent deletion if expenses are still linked (richer error handling)
