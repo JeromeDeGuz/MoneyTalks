@@ -26,4 +26,10 @@ public interface ExpenseService
 
     //getExpenseById: Finds a specific expense by unique ID. Takes in @param id and @return Expense.
     Expense getExpenseById(long id);
+
+    // new string-based versions for presentation layer
+    void addExpense(String name, String amountStr, String category, String dateStr, String notes);
+    boolean updateExpense(long id, String name, String amountStr, String category, String dateStr, String notes);
+
+
 }

@@ -4,6 +4,8 @@ import com.bugbytes.moneytalks.models.Expense;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ExpenseValidator implements Validator<Expense>
 {
@@ -60,5 +62,34 @@ public class ExpenseValidator implements Validator<Expense>
         {
             throw new ValidationException("Notes cannot exceed 500 characters.");
         }
+    }
+
+    public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) {
+        if (dateStr == null || dateStr.isEmpty()) {
+            throw new ValidationException("Date is required.");
+        }
+        if (amountStr == null || amountStr.isEmpty()) {
+            throw new ValidationException("Amount is required.");
+        }
+
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(amountStr);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Amount is not a valid number.");
+        }
+
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (DateTimeParseException e) {
+            throw new ValidationException("Date format must be dd-MM-yyyy.");
+        }
+
+        Expense expense = new Expense(0, name, amount, category, date, notes);
+
+        validate(expense);
+
+        return expense;
     }
 }
