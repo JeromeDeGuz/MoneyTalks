@@ -17,33 +17,33 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-//Adapter for displaying expenses in RecyclerView
+//ExpenseAdapter: Manages the display and user interaction for the list of expenses in a RecyclerView.
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder>
 {
     private List<Expense> expenses;
     private final OnExpenseEventListener listener;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    // Interface to delegate events back to the Activity (Suggestion #13)
     public interface OnExpenseEventListener
     {
         void onDeleteClick(Expense expense, int position);
     }
 
-    //Constructor to initialize adapter (@param: expenses, listener)
+    //ExpenseAdapter: Constructor to initialize the adapter with data and an event listener. Takes in @param expenses and listener.
     public ExpenseAdapter(List<Expense> expenses, OnExpenseEventListener listener)
     {
         this.expenses = expenses;
         this.listener = listener;
     }
 
-    // Allows updating the dataset without recreating the adapter (Suggestion #14)
+    //setExpenses: It updates the internal dataset and notifies the observer of the change. Takes in @param newExpenses.
     public void setExpenses(List<Expense> newExpenses)
     {
         this.expenses = newExpenses;
         notifyDataSetChanged();
     }
 
+    //onCreateViewHolder: It inflates the row layout and creates a new ViewHolder instance. Takes in @param parent and viewType and @return ViewHolder.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -53,6 +53,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         return new ViewHolder(row);
     }
 
+    //onBindViewHolder: It binds expense data to the UI components and sets up click listeners. Takes in @param holder and position.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
@@ -61,8 +62,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.tvTitle.setText(e.getName());
         holder.tvAmount.setText(String.format(Locale.US, "$%s", e.getAmount().toPlainString()));
         holder.tvDate.setText(e.getDate().format(DATE_FORMATTER));
-
-        // Updated: Set the category text
         holder.tvCategory.setText(e.getCategory());
 
         final String note = e.getNote();
@@ -85,20 +84,18 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             }
         });
 
-        // Edit button logic (Keep as is)
         holder.editButton.setOnClickListener(v ->
         {
             openEditScreen(v, holder.getAdapterPosition());
         });
 
-        // Improvement: Optional row click to edit
         holder.itemView.setOnClickListener(v ->
         {
             openEditScreen(v, holder.getAdapterPosition());
         });
     }
 
-    // Helper method to keep code clean
+    //openEditScreen: It launches the AddAndEditExpense activity with the selected expense data. Takes in @param v and position.
     private void openEditScreen(View v, int position)
     {
         if (position != RecyclerView.NO_POSITION)
@@ -110,15 +107,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         }
     }
 
+    //getItemCount: It returns the total number of items in the expense list. Takes in nothing and @return size of list.
     @Override
     public int getItemCount()
     {
         return expenses.size();
     }
 
+    //ViewHolder: Inner class that holds references to the views for each data item. Takes in @param itemView.
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        // Added tvCategory to the ViewHolder
         final TextView tvTitle, tvAmount, tvDate, tvNote, tvCategory;
         final ImageButton deleteButton;
         final ImageButton editButton;
@@ -130,7 +128,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             tvAmount = itemView.findViewById(R.id.tvAmount);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvNote = itemView.findViewById(R.id.tvNote);
-            tvCategory = itemView.findViewById(R.id.tvCategory); // Link to the new layout ID
+            tvCategory = itemView.findViewById(R.id.tvCategory);
             deleteButton = itemView.findViewById(R.id.deleteButton);
             editButton = itemView.findViewById(R.id.editButton);
         }

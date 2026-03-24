@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+//Integration tests for Expense flows ensuring Business logic and SQLite layers interact correctly.
 @RunWith(AndroidJUnit4.class)
 public class ExpenseIntegrationTest
 {
@@ -32,35 +33,38 @@ public class ExpenseIntegrationTest
     private ExpenseRepository repo;
     private ExpenseService service;
 
+    //setup: It initializes the test context and resets the real database. Takes in nothing.
     @Before
     public void setup()
     {
         context = ApplicationProvider.getApplicationContext();
 
-        // Reset the real database before each test.
+        //Reset the real database before each test.
         context.deleteDatabase(TEST_DB_NAME);
 
         repo = new SqlExpenseRepository(context);
         service = new ExpenseServiceImpl(repo, new ExpenseValidator());
     }
 
+    //tearDown: It cleans up the database after each test execution. Takes in nothing.
     @After
     public void tearDown()
     {
-        // Return the database to its default state after each test.
+        //Return the database to its default state after each test.
         context.deleteDatabase(TEST_DB_NAME);
     }
 
+    //addUpdateDeleteFlowWorksAcrossLogicAndSqlite: It verifies the full CRUD lifecycle through the service and database layers. Takes in nothing.
     @Test
-    public void addUpdateDelete_flow_worksAcrossLogicAndSQLite()
+    public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite()
     {
         final String originalName = "Expense IT " + System.currentTimeMillis();
         final String updatedName = "Expense IT Updated " + System.currentTimeMillis();
 
-        // Record the initial database state so the test remains deterministic.
+        //Record the initial database state so the test remains deterministic.
         final int countBefore = service.getAllExpenses().size();
 
-        // Add through the service layer.
+        //Add through the service layer.
         Expense created = new Expense(
                 0,
                 originalName,
@@ -71,7 +75,7 @@ public class ExpenseIntegrationTest
         );
         service.addExpense(created);
 
-        // Verify the record exists after persisting to SQLite.
+        //Verify the record exists after persisting to SQLite.
         List<Expense> afterAdd = service.getAllExpenses();
         assertEquals(countBefore + 1, afterAdd.size());
 
@@ -81,7 +85,7 @@ public class ExpenseIntegrationTest
         assertEquals("12.50", saved.getAmount().toPlainString());
         assertEquals("Food", saved.getCategory());
 
-        // Update through the service layer.
+        //Update through the service layer.
         Expense updated = new Expense(
                 saved.getId(),
                 updatedName,
@@ -94,23 +98,24 @@ public class ExpenseIntegrationTest
         boolean updateResult = service.updateExpense(updated);
         assertTrue(updateResult);
 
-        // Reload directly from the real repository to verify SQLite was updated.
+        //Reload directly from the real repository to verify SQLite was updated.
         Expense reloaded = repo.getExpenseById(saved.getId());
         assertNotNull(reloaded);
         assertEquals(updatedName, reloaded.getName());
         assertEquals("18.75", reloaded.getAmount().toPlainString());
         assertEquals("Updated by integration test", reloaded.getNote());
 
-        // Delete through the service layer.
+        //Delete through the service layer.
         boolean deleteResult = service.deleteExpense(reloaded);
         assertTrue(deleteResult);
 
-        // Verify the record is gone from SQLite.
+        //Verify the record is gone from SQLite.
         Expense deleted = repo.getExpenseById(saved.getId());
         assertNull(deleted);
         assertEquals(countBefore, service.getAllExpenses().size());
     }
 
+    //findExpenseByName: It searches for a specific expense in a list by its name. Takes in @param expenses, @param targetName.
     private Expense findExpenseByName(List<Expense> expenses, String targetName)
     {
         for (Expense expense : expenses)

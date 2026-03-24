@@ -1,7 +1,6 @@
 package com.bugbytes.moneytalks.application;
 
 //Android Application class import
-
 import android.app.Application;
 
 //Business layer imports: services and validators
@@ -34,42 +33,54 @@ public class MoneyTalksApp extends Application
     {
         super.onCreate();
 
-        // Expense Repository Setup: You can switch between a fake repository (for testing) and a real SQL repository (for production)
+        //Toggle this boolean to switch between SQLite and stub mode
+        //This addresses the i2 requirement for a single-line switch for graders.
+        final boolean useSqliteDB = true;
 
-        //Fake repository (for testing without database) – currently commented out
-        //ExpenseRepository expenseRepository = new FakeExpenseRepository();
+        ExpenseRepository expenseRepository;
+        CategoryRepository categoryRepository;
 
-        //Real repository using SQLite – currently active
-        ExpenseRepository expenseRepository = new SqlExpenseRepository(this);
+        if (useSqliteDB)
+        {
+            //Real repository using SQLite – currently active
+            expenseRepository = new SqlExpenseRepository(this);
+            categoryRepository = new SqlCategoryRepository(this);
+        }
+        else
+        {
+            //Fake repository (for testing)
+            expenseRepository = new FakeExpenseRepository();
+            categoryRepository = new FakeCategoryRepository();
+        }
 
-        // Category Repository Setup: Similar approach for categories as fake vs real repository
-
-        //Fake repository (for testing) – currently commented out
-        //CategoryRepository categoryRepository = new FakeCategoryRepository();
-
-        //Real repository using SQLite – currently active
-        CategoryRepository categoryRepository = new SqlCategoryRepository(this);
-
-
-        // Category Validator Setup: Validators check that data is correct before saving it
+        //Category Validator Setup: Validators check that data is correct before saving it
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
 
-        // Category Service Setup: Service connects repository and validator, providing business logic
+        //Category Service Setup: Service connects repository and validator, providing business logic
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
 
         ExpenseValidator expenseValidator = new ExpenseValidator();
-
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
     }
 
     //Getters for Services
     public ExpenseService getExpenseService()
     {
+        //Added null check as per Iteration 1 feedback to ensure app doesn't access before onCreate
+        if (expenseService == null)
+        {
+            throw new IllegalStateException("expenseService was accessed before initialization in MoneyTalksApp.");
+        }
         return expenseService;
     }
 
     public CategoryService getCategoryService()
     {
+        //Added null check as per Iteration 1 feedback
+        if (categoryService == null)
+        {
+            throw new IllegalStateException("categoryService was accessed before initialization in MoneyTalksApp.");
+        }
         return categoryService;
     }
 }

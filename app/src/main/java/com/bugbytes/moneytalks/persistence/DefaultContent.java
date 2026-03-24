@@ -10,6 +10,7 @@ public class DefaultContent
 {
     //centralize where we will have default content populate in
 
+    //populateExpenses: It fills the repository with initial sample expense data. Takes in @param expenseRepo.
     public void populateExpenses(ExpenseRepository expenseRepo)
     {
         if (expenseRepo.isEmpty())
@@ -25,10 +26,10 @@ public class DefaultContent
             expenseRepo.addExpense(new Expense(0, "Netflix", new BigDecimal("15.0"), "Subscriptions", LocalDate.of(2026, 2, 20), ""));
             expenseRepo.addExpense(new Expense(0, "Textbook", new BigDecimal("100.0"), "School", LocalDate.of(2026, 2, 23), "Clean Code"));
             expenseRepo.addExpense(new Expense(0, "Winter Tuition", new BigDecimal("8750.0"), "School", LocalDate.of(2026, 2, 5), "Comp 3350, Comp 4620, Comp 3190, Comp 3430"));
-
         }
     }
 
+    //populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
     public void populateCategories(CategoryRepository categoryRepo)
     {
         if (categoryRepo.isEmpty())

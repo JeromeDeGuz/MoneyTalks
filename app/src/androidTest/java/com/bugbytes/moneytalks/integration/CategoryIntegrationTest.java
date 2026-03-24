@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/** Integration tests for Category flows ensuring Business logic and SQLite layers interact correctly. */
 @RunWith(AndroidJUnit4.class)
 public class CategoryIntegrationTest
 {
@@ -40,12 +41,11 @@ public class CategoryIntegrationTest
     private CategoryService categoryService;
     private ExpenseService expenseService;
 
+    //setup: It prepares the test environment by resetting the database and initializing services. Takes in nothing.
     @Before
     public void setup()
     {
         context = ApplicationProvider.getApplicationContext();
-
-        // Reset the real database before each test.
         context.deleteDatabase(TEST_DB_NAME);
 
         categoryRepo = new SqlCategoryRepository(context);
@@ -63,15 +63,16 @@ public class CategoryIntegrationTest
         );
     }
 
+    //tearDown: It cleans up the database after each test to ensure isolation. Takes in nothing.
     @After
     public void tearDown()
     {
-        // Return the database to its default state after each test.
         context.deleteDatabase(TEST_DB_NAME);
     }
 
+    //addUpdateFlowWorksAcrossLogicAndSqlite: It verifies that adding and updating a category correctly reflects in the database. Takes in nothing.
     @Test
-    public void addUpdate_flow_worksAcrossLogicAndSQLite()
+    public void addUpdateFlowWorksAcrossLogicAndSqlite()
     {
         final String originalCategoryName = "Category IT " + System.currentTimeMillis();
         final String updatedCategoryName = "Category IT Updated " + System.currentTimeMillis();
@@ -79,7 +80,6 @@ public class CategoryIntegrationTest
 
         final int categoryCountBefore = categoryService.getAllCategories().size();
 
-        // Add a category through the service layer.
         categoryService.addCategory(new Category(originalCategoryName));
 
         List<Category> afterAdd = categoryService.getAllCategories();
@@ -90,7 +90,6 @@ public class CategoryIntegrationTest
         assertTrue(savedCategory.getId() > 0);
         assertEquals(originalCategoryName, savedCategory.getName());
 
-        // Create an expense that uses the original category.
         expenseService.addExpense(new Expense(
                 0,
                 expenseName,
@@ -103,44 +102,40 @@ public class CategoryIntegrationTest
         Expense linkedExpense = findExpenseByName(expenseService.getAllExpenses(), expenseName);
         assertNotNull(linkedExpense);
 
-        // Update the category through the service layer using the saved category with real id.
         categoryService.updateCategory(
                 savedCategory,
                 new Category(updatedCategoryName)
         );
 
-        // Verify the category table was updated in SQLite.
         assertNull(categoryService.getCategory(originalCategoryName));
 
         Category updatedCategory = categoryService.getCategory(updatedCategoryName);
         assertNotNull(updatedCategory);
         assertEquals(updatedCategoryName, updatedCategory.getName());
 
-        // Verify related expenses were also updated across the seam.
         Expense reloadedExpense = expenseRepo.getExpenseById(linkedExpense.getId());
         assertNotNull(reloadedExpense);
         assertEquals(updatedCategoryName, reloadedExpense.getCategory());
     }
 
+    //deleteUnusedCategoryRemovesItFromSqlite: It confirms that deleting a category through the service removes the record from SQLite. Takes in nothing.
     @Test
-    public void delete_unusedCategory_removesItFromSQLite()
+    public void deleteUnusedCategoryRemovesItFromSqlite()
     {
         final String categoryName = "Category Delete IT " + System.currentTimeMillis();
 
-        // Add a category that is not used by any expense.
         categoryService.addCategory(new Category(categoryName));
 
         Category savedCategory = categoryService.getCategory(categoryName);
         assertNotNull(savedCategory);
 
-        // Delete through the service layer.
         categoryService.deleteCategory(savedCategory);
 
-        // Verify the category is gone from SQLite.
         Category deletedCategory = categoryService.getCategory(categoryName);
         assertNull(deletedCategory);
     }
 
+    //findExpenseByName: It searches through a list of expenses for a specific name match. Takes in @param expenses, @param targetName.
     private Expense findExpenseByName(List<Expense> expenses, String targetName)
     {
         for (Expense expense : expenses)

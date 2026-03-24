@@ -31,18 +31,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Category> categories;
     private final OnCategoryEventListener listener;
 
+    //CategoryAdapter: Constructor to initialize the adapter with a list and listener. Takes in @param categories and listener.
     public CategoryAdapter(List<Category> categories, OnCategoryEventListener listener)
     {
         this.categories = categories;
         this.listener = listener;
     }
 
+    //setCategories: It updates the internal list and refreshes the RecyclerView UI. Takes in @param categories.
     public void setCategories(List<Category> categories)
     {
         this.categories = categories;
         notifyDataSetChanged();
     }
 
+    //getItemViewType: It determines if an item is a regular category or the 'Add' button. Takes in @param position and @return view type int.
     @Override
     public int getItemViewType(int position)
     {
@@ -53,12 +56,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return VIEW_TYPE_CATEGORY;
     }
 
+    //getItemCount: It returns the total number of items including the extra 'Add' item. Takes in nothing and @return total count.
     @Override
     public int getItemCount()
     {
         return categories == null ? 1 : categories.size() + 1;
     }
 
+    //onCreateViewHolder: It inflates the correct layout based on the view type. Takes in @param parent and viewType and @return ViewHolder.
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -75,6 +80,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return new CategoryViewHolder(view);
     }
 
+    //onBindViewHolder: It binds data to the ViewHolder and sets click listeners for actions. Takes in @param holder and position.
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
     {
@@ -92,6 +98,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         categoryHolder.btnDeleteCategory.setOnClickListener(v -> listener.onDeleteClick(category));
     }
 
+    //CategoryViewHolder: Inner class to hold references to category item UI components. Takes in @param itemView.
     static class CategoryViewHolder extends RecyclerView.ViewHolder
     {
         TextView tvCategoryName;
@@ -107,6 +114,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    //AddCategoryViewHolder: Inner class to hold the UI reference for the add category item. Takes in @param itemView.
     static class AddCategoryViewHolder extends RecyclerView.ViewHolder
     {
         public AddCategoryViewHolder(@NonNull View itemView)

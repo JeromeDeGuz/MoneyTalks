@@ -8,19 +8,24 @@ public class Category implements Serializable
 {
     private int id;
     private String name;
-
-    //Note: Budget is not being implemented in i2, we will do it in i3.
     private BigDecimal budget;
+    public static final BigDecimal DEFAULT_BUDGET = new BigDecimal("500.00");
 
-    //Standard constructor for new categories (ID will be assigned by DB)
+    //Category: Constructor for new categories where ID is assigned by DB. Takes in @param name.
     public Category(String name)
     {
         this.name = name;
-        this.budget = BigDecimal.ZERO;
+        this.budget = DEFAULT_BUDGET;
     }
 
+    // Category: constructor for name + budget
+    public Category(String name, BigDecimal budget)
+    {
+        this.name = name;
+        this.budget = budget;
+    }
 
-    //Overloaded constructor for database retrieval (includes ID)
+    //Category: Overloaded constructor for database retrieval. Takes in @param id and name and budget.
     public Category(int id, String name, BigDecimal budget)
     {
         this.id = id;
@@ -28,26 +33,29 @@ public class Category implements Serializable
         this.budget = budget;
     }
 
-    //Getters
+    //getId: Returns the unique identifier. Takes in nothing and @return int id.
     public int getId()
     {
         return id;
     }
 
+    //getName: Returns the category name. Takes in nothing and @return String name.
     public String getName()
     {
         return this.name;
     }
 
+    //getBudget: Returns the allocated budget amount. Takes in nothing and @return BigDecimal budget.
     public BigDecimal getBudget()
     {
         return this.budget;
     }
 
-    //Setters
+    public void setBudget(BigDecimal budget) { this.budget = budget; }
+
+    //setName: Updates the category name. Takes in @param name.
     public void setName(String name)
     {
         this.name = name;
     }
-
 }

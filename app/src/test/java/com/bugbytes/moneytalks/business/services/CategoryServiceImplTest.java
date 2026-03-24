@@ -21,42 +21,48 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceImplTest
 {
-
     private CategoryServiceImpl service;
 
     @Mock
     private CategoryRepository categoryRepo;
+
     @Mock
     private ExpenseRepository expenseRepo;
+
     @Mock
     private CategoryValidator validator;
 
+    //setUp: It initializes the service and mocks before each test. Takes in nothing.
     @BeforeEach
     public void setUp()
     {
         service = new CategoryServiceImpl(categoryRepo, validator, expenseRepo);
     }
 
+    //testConstructorNullRepositoryThrowsException: It verifies that passing a null repository triggers an exception. Takes in nothing.
     @Test
-    public void testConstructor_NullRepository_ThrowsException()
+    public void testConstructorNullRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(null, validator, expenseRepo));
     }
 
+    //testConstructorNullValidatorThrowsException: It ensures the service fails if the validator is missing. Takes in nothing.
     @Test
-    public void testConstructor_NullValidator_ThrowsException()
+    public void testConstructorNullValidatorThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(categoryRepo, null, expenseRepo));
     }
 
+    //testConstructorNullExpenseRepositoryThrowsException: It checks for null safety with the expense repository. Takes in nothing.
     @Test
-    public void testConstructor_NullExpenseRepository_ThrowsException()
+    public void testConstructorNullExpenseRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(categoryRepo, validator, null));
     }
 
+    //testAddCategoryValidSuccess: It confirms that a valid category is validated and added. Takes in nothing.
     @Test
-    public void testAddCategory_Valid_Success()
+    public void testAddCategoryValidSuccess()
     {
         Category category = new Category("Bills");
         service.addCategory(category);
@@ -64,8 +70,9 @@ public class CategoryServiceImplTest
         verify(categoryRepo).addCategory(category);
     }
 
+    //testAddCategoryInvalidThrowsException: It ensures that validation errors prevent a category from being saved. Takes in nothing.
     @Test
-    public void testAddCategory_Invalid_ThrowsException()
+    public void testAddCategoryInvalidThrowsException()
     {
         Category category = new Category("");
         doThrow(new ValidationException("Category name cannot be empty")).when(validator).validate(category);
@@ -73,8 +80,9 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).addCategory(any());
     }
 
+    //testAddCategoryDuplicateThrowsException: It verifies that the service handles duplicate category validation. Takes in nothing.
     @Test
-    public void testAddCategory_Duplicate_ThrowsException()
+    public void testAddCategoryDuplicateThrowsException()
     {
         Category category = new Category("Food");
         doThrow(new ValidationException("Category name already exists")).when(validator).validate(category);
@@ -82,8 +90,9 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).addCategory(any());
     }
 
+    //testGetAllCategoriesSuccess: It checks if all categories are correctly retrieved from the repository. Takes in nothing.
     @Test
-    public void testGetAllCategories_Success()
+    public void testGetAllCategoriesSuccess()
     {
         List<Category> mockList = Arrays.asList(new Category("Food"), new Category("Bills"));
         when(categoryRepo.getAllCategories()).thenReturn(mockList);
@@ -92,10 +101,10 @@ public class CategoryServiceImplTest
         verify(categoryRepo).getAllCategories();
     }
 
+    //testUpdateCategorySuccess: It verifies that updating a category also triggers an update in the expense repository. Takes in nothing.
     @Test
-    public void testUpdateCategory_Success()
+    public void testUpdateCategorySuccess()
     {
-        // updateCategory now takes TWO args: old and new
         Category oldCategory = new Category(1, "Health", java.math.BigDecimal.ZERO);
         Category newCategory = new Category(1, "Wellness", java.math.BigDecimal.ZERO);
 
@@ -105,10 +114,10 @@ public class CategoryServiceImplTest
         verify(categoryRepo).updateCategory(oldCategory, newCategory);
     }
 
+    //testDeleteCategorySuccess: It ensures a category is deleted when it is not in use by any expenses. Takes in nothing.
     @Test
-    public void testDeleteCategory_Success()
+    public void testDeleteCategorySuccess()
     {
-        // deleteCategory no longer uses validator — it checks expenseRepo directly
         Category category = new Category(1, "Shopping", java.math.BigDecimal.ZERO);
         when(expenseRepo.categoryExists(category)).thenReturn(false);
 
@@ -117,10 +126,10 @@ public class CategoryServiceImplTest
         verify(categoryRepo).deleteCategory(category);
     }
 
+    //testDeleteCategoryUsedInExpenseThrowsException: It prevents deletion when the category is linked to existing expenses. Takes in nothing.
     @Test
-    public void testDeleteCategory_UsedInExpense_ThrowsException()
+    public void testDeleteCategoryUsedInExpenseThrowsException()
     {
-        // deleteCategory throws ValidationException if categoryExists returns true
         Category category = new Category(1, "Gas", java.math.BigDecimal.ZERO);
         when(expenseRepo.categoryExists(category)).thenReturn(true);
 
@@ -128,8 +137,9 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).deleteCategory(any());
     }
 
+    //testGetCategoryFound: It checks if a category can be retrieved by its name successfully. Takes in nothing.
     @Test
-    public void testGetCategory_Found()
+    public void testGetCategoryFound()
     {
         Category mockCat = new Category(1, "Travel", java.math.BigDecimal.ZERO);
         when(categoryRepo.getCategoryByName("Travel")).thenReturn(mockCat);
@@ -138,8 +148,9 @@ public class CategoryServiceImplTest
         assertEquals("Travel", result.getName());
     }
 
+    //testGetCategoryNotFoundReturnsNull: It ensures that searching for a non-existent category returns null. Takes in nothing.
     @Test
-    public void testGetCategory_NotFound_ReturnsNull()
+    public void testGetCategoryNotFoundReturnsNull()
     {
         when(categoryRepo.getCategoryByName("Unknown")).thenReturn(null);
         assertNull(service.getCategory("Unknown"));

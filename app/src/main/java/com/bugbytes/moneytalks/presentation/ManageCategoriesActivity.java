@@ -5,6 +5,8 @@ import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.LinearLayout;
+import java.math.BigDecimal;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,12 +21,14 @@ import com.bugbytes.moneytalks.models.Category;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ManageCategoriesActivity extends AppCompatActivity
         implements CategoryAdapter.OnCategoryEventListener
 {
     private CategoryService categoryService;
     private CategoryAdapter adapter;
 
+    //onCreate: It sets up the activity layout, initializes the service, and configures the RecyclerView. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,6 +48,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
         btnBackManageCategories.setOnClickListener(v -> finish());
     }
 
+    //onResume: It triggers a data refresh whenever the activity is brought to the foreground. Takes in nothing.
     @Override
     protected void onResume()
     {
@@ -51,30 +56,44 @@ public class ManageCategoriesActivity extends AppCompatActivity
         loadCategories();
     }
 
+    //loadCategories: It fetches the latest categories from the service and updates the adapter. Takes in nothing.
     private void loadCategories()
     {
         List<Category> categories = categoryService.getAllCategories();
         adapter.setCategories(categories);
     }
 
+    //onAddClick: It handles the callback from the adapter when the user wants to add a category. Takes in nothing.
     @Override
     public void onAddClick()
     {
         showAddCategoryDialog();
     }
 
+    //showAddCategoryDialog: It displays an AlertDialog to capture a new category name and saves it via the service. Takes in nothing.
     private void showAddCategoryDialog()
     {
-        final EditText input = new EditText(this);
-        input.setHint("Enter category name");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText nameInput = new EditText(this);
+        nameInput.setHint("Enter category name");
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        final EditText budgetInput = new EditText(this);
+        budgetInput.setHint("Enter budget");
+        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        layout.addView(nameInput);
+        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Add Category")
-                .setView(input)
+                .setView(layout)
                 .setPositiveButton("Save", (dialog, which) ->
                 {
-                    String name = input.getText().toString().trim();
+                    String name = nameInput.getText().toString().trim();
+                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (name.isEmpty())
                     {
@@ -82,10 +101,16 @@ public class ManageCategoriesActivity extends AppCompatActivity
                         return;
                     }
 
+                    if (budgetText.isEmpty())
+                    {
+                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     try
                     {
-                        Category newCategory = new Category(name);
-                        categoryService.addCategory(newCategory);
+                        BigDecimal budget = new BigDecimal(budgetText);
+                        categoryService.addCategory(new Category(name, budget));
                         Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
@@ -98,20 +123,32 @@ public class ManageCategoriesActivity extends AppCompatActivity
                 .show();
     }
 
+    //onEditClick: It handles the callback to modify an existing category. Takes in @param category.
     @Override
     public void onEditClick(Category category)
     {
-        final EditText input = new EditText(this);
-        input.setText(category.getName());
-        input.setSelection(category.getName().length());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText nameInput = new EditText(this);
+        nameInput.setText(category.getName());
+        nameInput.setSelection(category.getName().length());
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        final EditText budgetInput = new EditText(this);
+        budgetInput.setText(category.getBudget().toPlainString());
+        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        layout.addView(nameInput);
+        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Edit Category")
-                .setView(input)
+                .setView(layout)
                 .setPositiveButton("Save", (dialog, which) ->
                 {
-                    String newName = input.getText().toString().trim();
+                    String newName = nameInput.getText().toString().trim();
+                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (newName.isEmpty())
                     {
@@ -119,22 +156,29 @@ public class ManageCategoriesActivity extends AppCompatActivity
                         return;
                     }
 
+                    if (budgetText.isEmpty())
+                    {
+                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     try
                     {
-//                        category.setName(newName);
-                        categoryService.updateCategory(category, new Category(newName));
+                        BigDecimal budget = new BigDecimal(budgetText);
+                        categoryService.updateCategory(category, new Category(newName, budget));
                         Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, "Failed to update category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
+    //onDeleteClick: It prompts the user for confirmation before removing a category via the service. Takes in @param category.
     @Override
     public void onDeleteClick(Category category)
     {

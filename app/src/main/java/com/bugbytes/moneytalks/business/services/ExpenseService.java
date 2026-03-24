@@ -1,30 +1,29 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.models.Expense;
-
 import java.util.List;
 
 //This defines business rule for our app, acts as contract that any ExpenseService implementation must follow.
 public interface ExpenseService
 {
-    //Adds a new expense (@param: expense to add).
+    //addExpense: Adds a new expense to the system. Takes in @param expense.
     void addExpense(Expense expense);
 
-    //Retrieves all expenses (@return: list of expenses).
+    //getAllExpenses: Retrieves all stored expenses. Takes in nothing and @return List<Expense>.
     List<Expense> getAllExpenses();
 
-    //Deletes an expense (@param: expense to delete, @return: true if successful).
+    //deleteExpense: Removes an expense from persistence. Takes in @param expense and @return true if successful.
     boolean deleteExpense(Expense expense);
 
-    // Updates an existing expense (@param: updated expense, @return: true if successful)
+    //updateExpense: Edits an existing expense record. Takes in @param expense and @return true if successful.
     boolean updateExpense(Expense expense);
 
-    // Retrieves expenses sorted by date (@param: newestFirst toggles sort order, @return: sorted list).
+    //getExpensesSortedByDate: Sorts expenses based on date. Takes in @param newestFirst and @return List<Expense>.
     List<Expense> getExpensesSortedByDate(boolean newestFirst);
 
-    //Retrieves expenses filtered by category and sorted by date (@param: categoryName, newestFirst toggles sort order, @return: sorted list).
+    //getExpensesByCategorySortedByDate: Filters by category then sorts. Takes in @param categoryName and newestFirst and @return List<Expense>.
     List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst);
 
-    // Retrieves a single expense by its ID for editing purposes (@param: id, @return: the found expense or null)
+    //getExpenseById: Finds a specific expense by unique ID. Takes in @param id and @return Expense.
     Expense getExpenseById(long id);
 }

@@ -24,7 +24,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ExpenseServiceImplTest
 {
-
     private ExpenseServiceImpl service;
 
     @Mock
@@ -33,30 +32,30 @@ public class ExpenseServiceImplTest
     @Mock
     private ExpenseValidator validator;
 
+    //setUp: It initializes the service and mocks before each test execution. Takes in nothing.
     @BeforeEach
     public void setUp()
     {
         service = new ExpenseServiceImpl(repo, validator);
     }
 
-    // ---------------- Constructor ----------------
-
+    //testConstructorNullRepositoryThrowsException: It verifies that a null repository triggers a NullPointerException. Takes in nothing.
     @Test
-    public void testConstructor_NullRepository_ThrowsException()
+    public void testConstructorNullRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(null, validator));
     }
 
+    //testConstructorNullValidatorThrowsException: It ensures the service fails if the validator is missing. Takes in nothing.
     @Test
-    public void testConstructor_NullValidator_ThrowsException()
+    public void testConstructorNullValidatorThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(repo, null));
     }
 
-    // ---------------- getAllExpenses ----------------
-
+    //testGetAllExpensesRepoReturnsNullReturnsEmptyList: It checks if the service returns an empty list when the repo returns null. Takes in nothing.
     @Test
-    public void testGetAllExpenses_RepoReturnsNull_ReturnsEmptyList()
+    public void testGetAllExpensesRepoReturnsNullReturnsEmptyList()
     {
         when(repo.getAllExpenses()).thenReturn(null);
 
@@ -67,8 +66,9 @@ public class ExpenseServiceImplTest
         verify(repo).getAllExpenses();
     }
 
+    //testGetAllExpensesSuccess: It verifies that all expenses are correctly retrieved from the repository. Takes in nothing.
     @Test
-    public void testGetAllExpenses_Success()
+    public void testGetAllExpensesSuccess()
     {
         List<Expense> mockList = Arrays.asList(
                 new Expense(1, "Item", BigDecimal.TEN, "Food", LocalDate.now(), "")
@@ -81,10 +81,9 @@ public class ExpenseServiceImplTest
         assertEquals("Item", result.get(0).getName());
     }
 
-    // ---------------- Add Expense ----------------
-
+    //testAddExpenseValidSuccess: It confirms that a valid expense is validated and added to the repository. Takes in nothing.
     @Test
-    public void testAddExpense_Valid_Success()
+    public void testAddExpenseValidSuccess()
     {
         Expense e = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
 
@@ -94,8 +93,9 @@ public class ExpenseServiceImplTest
         verify(repo).addExpense(e);
     }
 
+    //testAddExpenseInvalidThrowsException: It ensures that validation errors prevent the expense from being saved. Takes in nothing.
     @Test
-    public void testAddExpense_Invalid_ThrowsException()
+    public void testAddExpenseInvalidThrowsException()
     {
         Expense e = new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "");
         doThrow(new ValidationException("Too short")).when(validator).validate(e);
@@ -104,10 +104,9 @@ public class ExpenseServiceImplTest
         verify(repo, never()).addExpense(any());
     }
 
-    // ---------------- Update Expense ----------------
-
+    //testUpdateExpenseSuccess: It verifies that updating an expense validates it and returns true on success. Takes in nothing.
     @Test
-    public void testUpdateExpense_Success()
+    public void testUpdateExpenseSuccess()
     {
         Expense e = new Expense(1, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(true);
@@ -118,15 +117,17 @@ public class ExpenseServiceImplTest
         verify(repo).updateExpense(e);
     }
 
+    //testUpdateExpenseNullReturnsFalse: It ensures updating a null expense returns false without interactions. Takes in nothing.
     @Test
-    public void testUpdateExpense_Null_ReturnsFalse()
+    public void testUpdateExpenseNullReturnsFalse()
     {
         assertFalse(service.updateExpense(null));
         verifyNoInteractions(repo, validator);
     }
 
+    //testUpdateExpenseNotFoundReturnsFalse: It checks if updating a non-existent expense returns false. Takes in nothing.
     @Test
-    public void testUpdateExpense_NotFound_ReturnsFalse()
+    public void testUpdateExpenseNotFoundReturnsFalse()
     {
         Expense e = new Expense(99, "Fake", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(false);
@@ -134,10 +135,9 @@ public class ExpenseServiceImplTest
         assertFalse(service.updateExpense(e));
     }
 
-    // ---------------- Delete Expense ----------------
-
+    //testDeleteExpenseSuccess: It verifies that a valid expense is deleted successfully from the repository. Takes in nothing.
     @Test
-    public void testDeleteExpense_Success()
+    public void testDeleteExpenseSuccess()
     {
         Expense e = new Expense(1, "Coffee", BigDecimal.ONE, "Food", LocalDate.now(), "");
         when(repo.deleteExpense(e)).thenReturn(true);
@@ -146,17 +146,17 @@ public class ExpenseServiceImplTest
         verify(repo).deleteExpense(e);
     }
 
+    //testDeleteExpenseNullReturnsFalse: It ensures that deleting a null expense returns false without repository interaction. Takes in nothing.
     @Test
-    public void testDeleteExpense_Null_ReturnsFalse()
+    public void testDeleteExpenseNullReturnsFalse()
     {
         assertFalse(service.deleteExpense(null));
         verifyNoInteractions(repo);
     }
 
-    // ---------------- Sorting & Filtering ----------------
-
+    //testSortingNewestFirst: It confirms the logic for sorting expenses from newest to oldest. Takes in nothing.
     @Test
-    public void testSorting_NewestFirst()
+    public void testSortingNewestFirst()
     {
         Expense old = new Expense(1, "Old", BigDecimal.TEN, "Food", LocalDate.now().minusDays(5), "");
         Expense mid = new Expense(2, "Mid", BigDecimal.TEN, "Food", LocalDate.now().minusDays(2), "");
@@ -171,8 +171,9 @@ public class ExpenseServiceImplTest
         assertEquals("Old", result.get(2).getName());
     }
 
+    //testFilteringByCategory: It verifies that the list is correctly filtered based on a specific category name. Takes in nothing.
     @Test
-    public void testFiltering_ByCategory()
+    public void testFilteringByCategory()
     {
         Expense food = new Expense(1, "Pizza", BigDecimal.TEN, "Food", LocalDate.now(), "");
         Expense taxi = new Expense(2, "Uber", BigDecimal.TEN, "Transport", LocalDate.now(), "");
@@ -185,22 +186,21 @@ public class ExpenseServiceImplTest
         assertEquals("Pizza", result.get(0).getName());
     }
 
+    //testFilteringSpecialCategories: It checks if "All" or null category inputs return the full list. Takes in nothing.
     @Test
-    public void testFiltering_SpecialCategories()
+    public void testFilteringSpecialCategories()
     {
         List<Expense> mockList = Arrays.asList(new Expense(1, "X", BigDecimal.ONE, "Cat", LocalDate.now(), ""));
         when(repo.getAllExpenses()).thenReturn(mockList);
 
-        // Branch: "All"
         assertEquals(1, service.getExpensesByCategorySortedByDate("All", true).size());
-        // Branch: null
         assertEquals(1, service.getExpensesByCategorySortedByDate(null, true).size());
     }
 
+    //testFilteringLambdaDefensiveBranches: It verifies that the filter logic safely handles null expenses or null categories. Takes in nothing.
     @Test
-    public void testFiltering_LambdaDefensiveBranches()
+    public void testFilteringLambdaDefensiveBranches()
     {
-        // newList.removeIf(e -> e == null || e.getCategory() == null || !categoryName.equals(e.getCategory()));
         Expense eNull = null;
         Expense noCat = new Expense(1, "NoCat", BigDecimal.ONE, null, LocalDate.now(), "");
         Expense wrongCat = new Expense(2, "Wrong", BigDecimal.ONE, "Other", LocalDate.now(), "");
@@ -215,8 +215,7 @@ public class ExpenseServiceImplTest
         assertEquals("Right", result.get(0).getName());
     }
 
-    // ---------------- getExpenseById ----------------
-
+    //testGetExpenseById: It confirms that a specific expense can be retrieved by its ID. Takes in nothing.
     @Test
     public void testGetExpenseById()
     {

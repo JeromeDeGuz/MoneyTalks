@@ -24,28 +24,22 @@ import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.R;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-//Main screen that displays all expenses in a list
 public class ExpenseListActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseEventListener
 {
     private RecyclerView recyclerView;
     private ExpenseService expenseService;
-    private ExpenseAdapter adapter; // Instance kept for reuse (Suggestion #14)
-
-    // Chotu button for sorting functionality to replace the clunky spinner
+    private ExpenseAdapter adapter;
     private Button btnSort;
-
     private Button btnFilter;
-    // default
     private String selectedCategory = "All";
-    // Tracks current sort state
     private boolean isNewestFirst = true;
 
+    //onCreate: It initializes the activity, sets up the UI components, and handles window insets. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -68,20 +62,15 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         }
         else
         {
-            // Logging if layout guarantees are missed (Suggestion #15)
             android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
         }
 
-        // Setup the sorting button to allow immediate list updates via PopupMenu
         setupSortButton();
-
-        // Setup the filtering button to allow immediate list updates via PopupMenu
         setupFilterButton();
 
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize adapter with empty list and 'this' as listener (Suggestion #13)
         adapter = new ExpenseAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
 
@@ -100,6 +89,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
+    //setupSortButton: It configures the sorting button and its popup menu for date-based ordering. Takes in nothing.
     private void setupSortButton()
     {
         btnSort = findViewById(R.id.btnSort);
@@ -113,7 +103,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnSort);
             Menu menu = popup.getMenu();
 
-            // Use a menu group so items become mutually exclusive (single choice)
             final int GROUP_SORT = 1;
             final int ID_NEWEST = 101;
             final int ID_OLDEST = 102;
@@ -121,18 +110,15 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             MenuItem newestItem = menu.add(GROUP_SORT, ID_NEWEST, 0, "Newest to Oldest");
             MenuItem oldestItem = menu.add(GROUP_SORT, ID_OLDEST, 1, "Oldest to Newest");
 
-            // Pre-check the currently active sort option when opening the popup
             newestItem.setChecked(isNewestFirst);
             oldestItem.setChecked(!isNewestFirst);
 
-            // Make items checkable and enforce single selection within the group
             newestItem.setCheckable(true);
             oldestItem.setCheckable(true);
             menu.setGroupCheckable(GROUP_SORT, true, true);
 
             popup.setOnMenuItemClickListener(item ->
             {
-                // Update state based on selection and mark the chosen item checked
                 if (item.getItemId() == ID_NEWEST)
                 {
                     isNewestFirst = true;
@@ -144,7 +130,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                     item.setChecked(true);
                 }
 
-                // Refresh list using the current sort + filter state
                 loadExpenses();
                 return true;
             });
@@ -153,7 +138,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    // Configures the Filter button popup menu (shows a checkmark on the current selection)
+    //setupFilterButton: It configures the category filter button and dynamically builds its popup menu. Takes in nothing.
     private void setupFilterButton()
     {
         btnFilter = findViewById(R.id.btnFilter);
@@ -162,7 +147,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             return;
         }
 
-        // Default label
         btnFilter.setText("Filtering by Category (All)");
 
         btnFilter.setOnClickListener(v ->
@@ -170,14 +154,10 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             PopupMenu popup = new PopupMenu(ExpenseListActivity.this, btnFilter);
             Menu menu = popup.getMenu();
 
-            // Use a menu group so items become mutually exclusive (single choice)
             final int GROUP_FILTER = 2;
-
-            // Fetch dynamic categories from the service
             final MoneyTalksApp app = (MoneyTalksApp) getApplication();
             List<Category> dbCategories = app.getCategoryService().getAllCategories();
 
-            // Build the filter list starting with "All"
             List<String> categories = new ArrayList<>();
             categories.add("All");
             for (Category c : dbCategories)
@@ -185,7 +165,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                 categories.add(c.getName());
             }
 
-            // Build checkable menu items and pre-check the current category
             for (int i = 0; i < categories.size(); i++)
             {
                 String c = categories.get(i);
@@ -194,26 +173,19 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                 MenuItem mi = menu.add(GROUP_FILTER, itemId, i, c);
                 mi.setCheckable(true);
 
-                // Pre-check the currently active category when opening the popup
                 if (c.equals(selectedCategory))
                 {
                     mi.setChecked(true);
                 }
             }
 
-            // Enforce single selection within the group
             menu.setGroupCheckable(GROUP_FILTER, true, true);
 
             popup.setOnMenuItemClickListener(item ->
             {
-                // Update state and mark selected item checked
                 selectedCategory = item.getTitle().toString();
                 item.setChecked(true);
-
-                // Update the button label to reflect the chosen category
                 btnFilter.setText("Filtering by Category (" + selectedCategory + ")");
-
-                // Refresh list using the current sort + filter state
                 loadExpenses();
                 return true;
             });
@@ -222,6 +194,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
+    //onResume: It refreshes the expense list whenever the activity becomes active. Takes in nothing.
     @Override
     protected void onResume()
     {
@@ -229,7 +202,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         loadExpenses();
     }
 
-    // Implementing the callback from Adapter (Suggestion #13)
+    //onDeleteClick: It handles the deletion of an expense via the adapter callback. Takes in @param expense and position.
     @Override
     public void onDeleteClick(Expense expense, int position)
     {
@@ -245,12 +218,11 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         }
     }
 
+    //loadExpenses: It fetches sorted and filtered data from the service and updates the adapter. Takes in nothing.
     private void loadExpenses()
     {
-        // Fetch data based on the selected sort and filter state (either from initialization or Popup)
         final List<Expense> data = expenseService.getExpensesByCategorySortedByDate(selectedCategory, isNewestFirst);
 
-        // Update existing adapter instead of creating a new one (Suggestion #14)
         if (adapter != null)
         {
             adapter.setExpenses(data);

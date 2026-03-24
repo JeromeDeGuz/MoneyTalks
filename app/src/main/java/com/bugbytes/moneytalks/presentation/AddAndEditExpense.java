@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.presentation;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ImageButton;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +25,7 @@ import com.bugbytes.moneytalks.R;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,6 +50,7 @@ public class AddAndEditExpense extends AppCompatActivity
     private boolean isEditMode = false;
     private Expense expenseToEdit = null;
 
+    //onCreate: It initializes the UI components and sets up the expense mode. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -93,6 +97,7 @@ public class AddAndEditExpense extends AppCompatActivity
         btnSave.setOnClickListener(v -> saveOrUpdateExpense());
     }
 
+    //loadCategories: It retrieves category data and populates the adapter. Takes in @param app.
     private void loadCategories(MoneyTalksApp app)
     {
         List<Category> categories = app.getCategoryService().getAllCategories();
@@ -107,6 +112,7 @@ public class AddAndEditExpense extends AppCompatActivity
         autoCompleteCategory.setAdapter(categoryAdapter);
     }
 
+    //showAddCategoryDialog: It manages the dialog for on-the-fly category creation. Takes in @param app.
     private void showAddCategoryDialog(MoneyTalksApp app)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -116,13 +122,12 @@ public class AddAndEditExpense extends AppCompatActivity
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-        builder.setPositiveButton("Add", null); // Set to null first to override listener later
+        builder.setPositiveButton("Add", null);
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Override the "Add" button click to prevent automatic dismissal on validation error
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v ->
         {
             String name = input.getText().toString().trim();
@@ -144,6 +149,7 @@ public class AddAndEditExpense extends AppCompatActivity
         });
     }
 
+    //fillFields: It populates form fields with existing data for editing. Takes in @param e.
     private void fillFields(Expense e)
     {
         etExpenseName.setText(e.getName());
@@ -154,6 +160,7 @@ public class AddAndEditExpense extends AppCompatActivity
         autoCompleteCategory.setText(e.getCategory(), false);
     }
 
+    //showDatePicker: It displays a calendar dialog to select an expense date. Takes in nothing.
     private void showDatePicker()
     {
         Calendar calendar = Calendar.getInstance();
@@ -170,6 +177,7 @@ public class AddAndEditExpense extends AppCompatActivity
         datePicker.show();
     }
 
+    //saveOrUpdateExpense: It gathers input and delegates saving logic to the service layer. Takes in nothing.
     private void saveOrUpdateExpense()
     {
         final String name = etExpenseName.getText().toString().trim();
@@ -180,46 +188,50 @@ public class AddAndEditExpense extends AppCompatActivity
 
         try
         {
-            if (dateStr.isEmpty())
+            //Minimal UI-level validation
+            if (dateStr.isEmpty() || amountStr.isEmpty())
             {
-                throw new ValidationException("Expense date is required.");
-            }
-            if (amountStr.isEmpty())
-            {
-                throw new ValidationException("Expense amount is required.");
+                throw new ValidationException("Date and Amount are required.");
             }
 
-            final BigDecimal amount = new BigDecimal(amountStr);
-            final LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
             MoneyTalksApp app = (MoneyTalksApp) getApplication();
+            BigDecimal amount = new BigDecimal(amountStr);
+            LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
 
             if (!isEditMode)
             {
                 Expense newExpense = new Expense(0, name, amount, category, date, notes);
                 app.getExpenseService().addExpense(newExpense);
 
-                Toast.makeText(this, "Saved: " + newExpense.getName(), Toast.LENGTH_SHORT).show();
-                finish();
+                if (app.getCategoryService().hasExceededBudget(category, date))
+                {
+                    showBudgetWarningIfNeeded(category, date);
+                }
+                else
+                {
+                    Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
             else
             {
                 Expense updated = new Expense(expenseToEdit.getId(), name, amount, category, date, notes);
-                boolean ok = app.getExpenseService().updateExpense(updated);
+                app.getExpenseService().updateExpense(updated);
 
-                if (ok)
+                if (app.getCategoryService().hasExceededBudget(category, date))
                 {
-                    Toast.makeText(this, "Updated: " + updated.getName(), Toast.LENGTH_SHORT).show();
-                    finish();
+                    showBudgetWarningIfNeeded(category, date);
                 }
                 else
                 {
-                    Toast.makeText(this, "Update failed (expense not found)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         }
-        catch (NumberFormatException e)
+        catch (NumberFormatException | DateTimeParseException e)
         {
-            Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Check your amount or date format", Toast.LENGTH_SHORT).show();
         }
         catch (ValidationException e)
         {
@@ -227,7 +239,40 @@ public class AddAndEditExpense extends AppCompatActivity
         }
         catch (Exception e)
         {
-            Toast.makeText(this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showBudgetWarningIfNeeded(String categoryName, LocalDate expenseDate)
+    {
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+
+        if (app.getCategoryService().hasExceededBudget(categoryName, expenseDate))
+        {
+            View view = getLayoutInflater().inflate(R.layout.dialog_budget_warning, null);
+
+            TextView messageText = view.findViewById(R.id.tvWarningMessage);
+            Button okButton = view.findViewById(R.id.btnWarningOk);
+
+            messageText.setText(categoryName + " has exceeded its budget.");
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(view)
+                    .setCancelable(false)
+                    .create();
+
+            okButton.setOnClickListener(v ->
+            {
+                dialog.dismiss();
+                finish();
+            });
+
+            dialog.show();
+        }
+        else
+        {
+            finish();
+        }
+    }
+
 }

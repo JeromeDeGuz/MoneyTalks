@@ -5,16 +5,9 @@ import com.bugbytes.moneytalks.models.Expense;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Validates expense data before processing.
- * Implementation follows the Validator interface for the Business Layer.
- */
 public class ExpenseValidator implements Validator<Expense>
 {
-    /**
-     * Validates an expense object (@param: expense to validate).
-     * Ensures all required fields are present and logically sound.
-     */
+    //validate: It ensures all required fields are present and logically sound. Takes in @param expense.
     @Override
     public void validate(Expense expense)
     {
@@ -28,14 +21,14 @@ public class ExpenseValidator implements Validator<Expense>
             throw new ValidationException("Expense name is required and cannot be empty.");
         }
 
-        // Logic check: Expense names should not be purely numeric
+        //Logic check: Expense names should not be purely numeric
         if (expense.getName().trim().matches("^\\d+$"))
         {
             throw new ValidationException("Expense name cannot be only numbers.");
         }
 
-        // Name Length Check
-        if (expense.getName().trim().length() < 2 || expense.getName().length() > 50)
+        //Name Length Check
+        if (expense.getName().trim().length() < 2 || expense.getName().trim().length() > 50)
         {
             throw new ValidationException("Expense name must be between 2 and 50 characters.");
         }
@@ -45,25 +38,24 @@ public class ExpenseValidator implements Validator<Expense>
             throw new ValidationException("Expense amount must be greater than zero.");
         }
 
-        // Integrated Category check from Development branch
         if (expense.getCategory() == null || expense.getCategory().trim().isEmpty())
         {
             throw new ValidationException("Expense category is required.");
         }
 
-        // Strict Date check to ensure data integrity
+        //Strict Date check to ensure data integrity
         if (expense.getDate() == null)
         {
             throw new ValidationException("Expense date is required.");
         }
 
-        // Future Date Check
+        //Future Date Check
         if (expense.getDate().isAfter(LocalDate.now()))
         {
             throw new ValidationException("Expense date cannot be in the future.");
         }
 
-        // Note Length Check
+        //Note Length Check
         if (expense.getNote() != null && expense.getNote().length() > 500)
         {
             throw new ValidationException("Notes cannot exceed 500 characters.");
