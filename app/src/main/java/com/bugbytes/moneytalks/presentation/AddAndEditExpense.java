@@ -22,10 +22,10 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -178,101 +178,43 @@ public class AddAndEditExpense extends AppCompatActivity
     }
 
     //saveOrUpdateExpense: It gathers input and delegates saving logic to the service layer. Takes in nothing.
-    private void saveOrUpdateExpense()
-    {
-        final String name = etExpenseName.getText().toString().trim();
-        final String amountStr = etAmount.getText().toString().trim();
-        final String category = autoCompleteCategory.getText().toString().trim();
-        final String dateStr = etDate.getText().toString().trim();
-        final String notes = etNotes.getText().toString().trim();
-
-        try
-        {
-            //Minimal UI-level validation
-            if (dateStr.isEmpty() || amountStr.isEmpty())
-            {
-                throw new ValidationException("Date and Amount are required.");
+    private void saveOrUpdateExpense() {
+        try {
+            if (!isEditMode) {
+                saveExpense();
+            } else {
+                updateExpense();
             }
-
-            MoneyTalksApp app = (MoneyTalksApp) getApplication();
-            BigDecimal amount = new BigDecimal(amountStr);
-            LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
-
-            if (!isEditMode)
-            {
-                Expense newExpense = new Expense(0, name, amount, category, date, notes);
-                app.getExpenseService().addExpense(newExpense);
-
-                if (app.getCategoryService().hasExceededBudget(category, date))
-                {
-                    showBudgetWarningIfNeeded(category, date);
-                }
-                else
-                {
-                    Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-            else
-            {
-                Expense updated = new Expense(expenseToEdit.getId(), name, amount, category, date, notes);
-                app.getExpenseService().updateExpense(updated);
-
-                if (app.getCategoryService().hasExceededBudget(category, date))
-                {
-                    showBudgetWarningIfNeeded(category, date);
-                }
-                else
-                {
-                    Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
-        catch (NumberFormatException | DateTimeParseException e)
-        {
-            Toast.makeText(this, "Check your amount or date format", Toast.LENGTH_SHORT).show();
-        }
-        catch (ValidationException e)
-        {
+            finish();
+        } catch (ValidationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void showBudgetWarningIfNeeded(String categoryName, LocalDate expenseDate)
-    {
+    private void saveExpense() {
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
-
-        if (app.getCategoryService().hasExceededBudget(categoryName, expenseDate))
-        {
-            View view = getLayoutInflater().inflate(R.layout.dialog_budget_warning, null);
-
-            TextView messageText = view.findViewById(R.id.tvWarningMessage);
-            Button okButton = view.findViewById(R.id.btnWarningOk);
-
-            messageText.setText(categoryName + " has exceeded its budget.");
-
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setView(view)
-                    .setCancelable(false)
-                    .create();
-
-            okButton.setOnClickListener(v ->
-            {
-                dialog.dismiss();
-                finish();
-            });
-
-            dialog.show();
-        }
-        else
-        {
-            finish();
-        }
+        app.getExpenseService().addExpense(
+                etExpenseName.getText().toString().trim(),
+                etAmount.getText().toString().trim(),
+                autoCompleteCategory.getText().toString().trim(),
+                etDate.getText().toString().trim(),
+                etNotes.getText().toString().trim()
+        );
+        Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
     }
 
+    private void updateExpense() {
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+        app.getExpenseService().updateExpense(
+                expenseToEdit.getId(),
+                etExpenseName.getText().toString().trim(),
+                etAmount.getText().toString().trim(),
+                autoCompleteCategory.getText().toString().trim(),
+                etDate.getText().toString().trim(),
+                etNotes.getText().toString().trim()
+        );
+        Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+    }
 }

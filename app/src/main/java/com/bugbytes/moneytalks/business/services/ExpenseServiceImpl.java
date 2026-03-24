@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.business.validation.Validator;
+import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
@@ -12,14 +12,16 @@ import java.util.Objects;
 public class ExpenseServiceImpl implements ExpenseService
 {
     private final ExpenseRepository repository;
-    private final Validator<Expense> validator;
+    //private final Validator<Expense> validator;
+    private final ExpenseValidator validator;
 
     //Constructor for dependency injection. Takes in @param repository and validator.
-    public ExpenseServiceImpl(ExpenseRepository repository, Validator<Expense> validator)
+    public ExpenseServiceImpl(ExpenseRepository repository, ExpenseValidator validator)
     {
         this.repository = Objects.requireNonNull(repository, "Repository cannot be null");
         this.validator = Objects.requireNonNull(validator, "Validator cannot be null");
     }
+
 
     //addExpense: It validates and adds a new expense to the repository. Takes in @param expense.
     @Override
@@ -122,4 +124,26 @@ public class ExpenseServiceImpl implements ExpenseService
             }
         });
     }
+
+    @Override
+    public void addExpense(String name, String amountStr, String category, String dateStr, String notes) {
+        Expense expense =validator.validateAndParse(name, amountStr, category, dateStr, notes);
+        addExpense(expense);
+    }
+
+    @Override
+    public boolean updateExpense(long id, String name, String amountStr, String category, String dateStr, String notes) {
+        Expense expense = validator.validateAndParse(name, amountStr, category, dateStr, notes);
+        Expense updatedExpense = new Expense(
+                id,
+                expense.getName(),
+                expense.getAmount(),
+                expense.getCategory(),
+                expense.getDate(),
+                expense.getNote()
+        );
+
+        return updateExpense(updatedExpense);
+    }
+
 }
