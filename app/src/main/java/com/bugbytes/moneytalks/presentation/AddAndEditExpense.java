@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.presentation;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ImageButton;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -200,15 +202,32 @@ public class AddAndEditExpense extends AppCompatActivity
             {
                 Expense newExpense = new Expense(0, name, amount, category, date, notes);
                 app.getExpenseService().addExpense(newExpense);
-                Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
+
+                if (app.getCategoryService().hasExceededBudget(category, date))
+                {
+                    showBudgetWarningIfNeeded(category, date);
+                }
+                else
+                {
+                    Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
             else
             {
                 Expense updated = new Expense(expenseToEdit.getId(), name, amount, category, date, notes);
                 app.getExpenseService().updateExpense(updated);
-                Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+
+                if (app.getCategoryService().hasExceededBudget(category, date))
+                {
+                    showBudgetWarningIfNeeded(category, date);
+                }
+                else
+                {
+                    Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
-            finish();
         }
         catch (NumberFormatException | DateTimeParseException e)
         {
@@ -223,4 +242,37 @@ public class AddAndEditExpense extends AppCompatActivity
             Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showBudgetWarningIfNeeded(String categoryName, LocalDate expenseDate)
+    {
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+
+        if (app.getCategoryService().hasExceededBudget(categoryName, expenseDate))
+        {
+            View view = getLayoutInflater().inflate(R.layout.dialog_budget_warning, null);
+
+            TextView messageText = view.findViewById(R.id.tvWarningMessage);
+            Button okButton = view.findViewById(R.id.btnWarningOk);
+
+            messageText.setText(categoryName + " has exceeded its budget.");
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(view)
+                    .setCancelable(false)
+                    .create();
+
+            okButton.setOnClickListener(v ->
+            {
+                dialog.dismiss();
+                finish();
+            });
+
+            dialog.show();
+        }
+        else
+        {
+            finish();
+        }
+    }
+
 }

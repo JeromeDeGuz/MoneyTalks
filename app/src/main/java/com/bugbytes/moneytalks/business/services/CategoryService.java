@@ -2,6 +2,8 @@ package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.models.Category;
 import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public interface CategoryService
 {
@@ -19,4 +21,7 @@ public interface CategoryService
 
     //getAllCategories: Returns list of all categories.
     List<Category> getAllCategories();
+
+    BigDecimal getMonthSpent(String categoryName, LocalDate targetDate);
+    boolean hasExceededBudget(String categoryName, LocalDate targetDate);
 }

@@ -5,6 +5,8 @@ import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.LinearLayout;
+import java.math.BigDecimal;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import com.bugbytes.moneytalks.models.Category;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ManageCategoriesActivity extends AppCompatActivity
         implements CategoryAdapter.OnCategoryEventListener
@@ -70,33 +73,50 @@ public class ManageCategoriesActivity extends AppCompatActivity
     //showAddCategoryDialog: It displays an AlertDialog to capture a new category name and saves it via the service. Takes in nothing.
     private void showAddCategoryDialog()
     {
-        final EditText input = new EditText(this);
-        input.setHint("Enter category name");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText nameInput = new EditText(this);
+        nameInput.setHint("Enter category name");
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        final EditText budgetInput = new EditText(this);
+        budgetInput.setHint("Enter budget");
+        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        layout.addView(nameInput);
+        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Add Category")
-                .setView(input)
+                .setView(layout)
                 .setPositiveButton("Save", (dialog, which) ->
                 {
-                    String name = input.getText().toString().trim();
+                    String name = nameInput.getText().toString().trim();
+                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (name.isEmpty())
                     {
                         Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    else
+
+                    if (budgetText.isEmpty())
                     {
-                        try
-                        {
-                            categoryService.addCategory(new Category(name));
-                            Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
-                            loadCategories();
-                        }
-                        catch (Exception e)
-                        {
-                            Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    try
+                    {
+                        BigDecimal budget = new BigDecimal(budgetText);
+                        categoryService.addCategory(new Category(name, budget));
+                        Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
+                        loadCategories();
+                    }
+                    catch (Exception e)
+                    {
+                        Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -107,34 +127,51 @@ public class ManageCategoriesActivity extends AppCompatActivity
     @Override
     public void onEditClick(Category category)
     {
-        final EditText input = new EditText(this);
-        input.setText(category.getName());
-        input.setSelection(category.getName().length());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText nameInput = new EditText(this);
+        nameInput.setText(category.getName());
+        nameInput.setSelection(category.getName().length());
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        final EditText budgetInput = new EditText(this);
+        budgetInput.setText(category.getBudget().toPlainString());
+        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        layout.addView(nameInput);
+        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Edit Category")
-                .setView(input)
+                .setView(layout)
                 .setPositiveButton("Save", (dialog, which) ->
                 {
-                    String newName = input.getText().toString().trim();
+                    String newName = nameInput.getText().toString().trim();
+                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (newName.isEmpty())
                     {
                         Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    else
+
+                    if (budgetText.isEmpty())
                     {
-                        try
-                        {
-                            categoryService.updateCategory(category, new Category(newName));
-                            Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
-                            loadCategories();
-                        }
-                        catch (Exception e)
-                        {
-                            Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    try
+                    {
+                        BigDecimal budget = new BigDecimal(budgetText);
+                        categoryService.updateCategory(category, new Category(newName, budget));
+                        Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
+                        loadCategories();
+                    }
+                    catch (Exception e)
+                    {
+                        Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)

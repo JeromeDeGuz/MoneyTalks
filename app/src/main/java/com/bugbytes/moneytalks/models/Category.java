@@ -9,12 +9,20 @@ public class Category implements Serializable
     private int id;
     private String name;
     private BigDecimal budget;
+    public static final BigDecimal DEFAULT_BUDGET = new BigDecimal("500.00");
 
     //Category: Constructor for new categories where ID is assigned by DB. Takes in @param name.
     public Category(String name)
     {
         this.name = name;
-        this.budget = BigDecimal.ZERO;
+        this.budget = DEFAULT_BUDGET;
+    }
+
+    // Category: constructor for name + budget
+    public Category(String name, BigDecimal budget)
+    {
+        this.name = name;
+        this.budget = budget;
     }
 
     //Category: Overloaded constructor for database retrieval. Takes in @param id and name and budget.
@@ -42,6 +50,8 @@ public class Category implements Serializable
     {
         return this.budget;
     }
+
+    public void setBudget(BigDecimal budget) { this.budget = budget; }
 
     //setName: Updates the category name. Takes in @param name.
     public void setName(String name)
