@@ -3,11 +3,14 @@ package com.bugbytes.moneytalks.business.services;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
+import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class CategoryServiceImpl implements CategoryService
 {
@@ -77,4 +80,45 @@ public class CategoryServiceImpl implements CategoryService
         }
         return categoryRepo.getCategoryByName(categoryName);
     }
+
+    @Override
+    public BigDecimal getMonthSpent(String categoryName, LocalDate targetDate)
+    {
+        Objects.requireNonNull(categoryName, "Category name cannot be null");
+        Objects.requireNonNull(targetDate, "Target date cannot be null");
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (Expense expense : expenseRepo.getAllExpenses())
+        {
+            if (expense.getCategory() != null
+                    && expense.getCategory().equalsIgnoreCase(categoryName)
+                    && expense.getDate() != null)
+            {
+                LocalDate expenseDate = expense.getDate();
+
+                if (expenseDate.getYear() == targetDate.getYear()
+                        && expenseDate.getMonthValue() == targetDate.getMonthValue())
+                {
+                    total = total.add(expense.getAmount());
+                }
+            }
+        }
+
+        return total;
+    }
+
+    @Override
+    public boolean hasExceededBudget(String categoryName, LocalDate targetDate)
+    {
+        Category category = getCategory(categoryName);
+        if (category == null || category.getBudget() == null)
+        {
+            return false;
+        }
+
+        BigDecimal spent = getMonthSpent(categoryName, targetDate);
+        return spent.compareTo(category.getBudget()) > 0;
+    }
+
 }

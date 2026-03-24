@@ -24,6 +24,7 @@ public class CategoryValidator implements Validator<Category>
         isNullorEmpty(category);
         isCaseDuplicate(category);
         isNotNumbers(category);
+        isValidBudget(category);
     }
 
     //isNullorEmpty: It checks if category is null or has no text. Takes in @param category.
@@ -63,6 +64,19 @@ public class CategoryValidator implements Validator<Category>
         if (category.getName().trim().matches("^\\d+$"))
         {
             throw new ValidationException("Category name cannot be only numbers.");
+        }
+    }
+
+    private void isValidBudget(Category category)
+    {
+        if (category.getBudget() == null)
+        {
+            throw new ValidationException("Budget cannot be null.");
+        }
+
+        if (category.getBudget().compareTo(java.math.BigDecimal.ZERO) < 0)
+        {
+            throw new ValidationException("Budget cannot be negative.");
         }
     }
 }
