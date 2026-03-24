@@ -20,10 +20,10 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
