@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
 import com.bugbytes.moneytalks.business.services.ExpenseService;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.R;
@@ -206,15 +207,15 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     @Override
     public void onDeleteClick(Expense expense, int position)
     {
-        boolean success = expenseService.deleteExpense(expense);
-        if (success)
+        try
         {
+            expenseService.deleteExpense(expense);
             Toast.makeText(this, "Deleted: " + expense.getName(), Toast.LENGTH_SHORT).show();
             loadExpenses();
         }
-        else
+        catch (ValidationException | IllegalArgumentException e)
         {
-            Toast.makeText(this, "Failed to delete expense", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
