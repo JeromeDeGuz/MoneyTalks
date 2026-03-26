@@ -3,14 +3,11 @@ package com.bugbytes.moneytalks.business.services;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
-import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
 import java.util.List;
 import java.util.Objects;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class CategoryServiceImpl implements CategoryService
 {
@@ -27,14 +24,10 @@ public class CategoryServiceImpl implements CategoryService
 
     //addCategory: It validates and adds a new category. Takes in @param category.
     @Override
-    public void addCategory(Category category) throws ValidationException {
+    public void addCategory(Category category)
+    {
         //Ensure inputs aren't null before proceeding to business logic
-        try{
-            Objects.requireNonNull(category, "Cannot add a null category");
-        } catch (NullPointerException e) {
-            throw new ValidationException("Cannot add a null category");
-        }
-
+        Objects.requireNonNull(category, "Cannot add a null category");
 
         validator.validate(category);
         categoryRepo.addCategory(category);
@@ -49,17 +42,10 @@ public class CategoryServiceImpl implements CategoryService
 
     //updateCategory: It updates category data and syncs with expenses. Takes in @param oldCategory and newCategory.
     @Override
-    public void updateCategory(Category oldCategory, Category newCategory) throws ValidationException
+    public void updateCategory(Category oldCategory, Category newCategory)
     {
-
-        try{
-            Objects.requireNonNull(oldCategory, "Old category cannot be null");
-            Objects.requireNonNull(newCategory, "New category cannot be null");
-        } catch (NullPointerException e) {
-            throw new ValidationException("Old or new category cannot be null");
-        }
-
-
+        Objects.requireNonNull(oldCategory, "Old category cannot be null");
+        Objects.requireNonNull(newCategory, "New category cannot be null");
 
         //Per feedback: Ensure business logic handles synchronization between layers
         expenseRepo.updateExpenseCategory(oldCategory, newCategory);
@@ -68,14 +54,9 @@ public class CategoryServiceImpl implements CategoryService
 
     //deleteCategory: It removes category if no expenses are linked. Takes in @param category.
     @Override
-    public void deleteCategory(Category category) throws ValidationException {
-
-        try {
-            Objects.requireNonNull(category, "Category to delete cannot be null");
-        } catch (NullPointerException e) {
-            throw new ValidationException("Category to delete cannot be null");
-        }
-
+    public void deleteCategory(Category category)
+    {
+        Objects.requireNonNull(category, "Category to delete cannot be null");
 
         //Logic check: prevent deletion if expenses are still linked (richer error handling)
         if (expenseRepo.categoryExists(category))
@@ -96,50 +77,4 @@ public class CategoryServiceImpl implements CategoryService
         }
         return categoryRepo.getCategoryByName(categoryName);
     }
-
-    @Override
-    public BigDecimal getMonthSpent(String categoryName, LocalDate targetDate)
-    {
-        try {
-            Objects.requireNonNull(categoryName, "Category name cannot be null");
-            Objects.requireNonNull(targetDate, "Target date cannot be null");
-        } catch (NullPointerException e) {
-            return BigDecimal.ZERO;
-        }
-
-
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (Expense expense : expenseRepo.getAllExpenses())
-        {
-            if (expense.getCategory() != null
-                    && expense.getCategory().equalsIgnoreCase(categoryName)
-                    && expense.getDate() != null)
-            {
-                LocalDate expenseDate = expense.getDate();
-
-                if (expenseDate.getYear() == targetDate.getYear()
-                        && expenseDate.getMonthValue() == targetDate.getMonthValue())
-                {
-                    total = total.add(expense.getAmount());
-                }
-            }
-        }
-
-        return total;
-    }
-
-    @Override
-    public boolean hasExceededBudget(String categoryName, LocalDate targetDate)
-    {
-        Category category = getCategory(categoryName);
-        if (category == null || category.getBudget() == null)
-        {
-            return false;
-        }
-
-        BigDecimal spent = getMonthSpent(categoryName, targetDate);
-        return spent.compareTo(category.getBudget()) > 0;
-    }
-
 }

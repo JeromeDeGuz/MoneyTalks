@@ -95,8 +95,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_edit"
                 android:contentDescription="Edit"
-                app:tint="#8E6CCF"
-                android:padding="12dp" />
+                android:alpha="0.4"
+                android:padding="10dp" />
 
             <ImageButton
                 android:id="@+id/deleteButton"
@@ -105,8 +105,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_delete"
                 android:contentDescription="Delete"
-                app:tint="#E53935"
-                android:padding="12dp" />
+                android:alpha="0.4"
+                android:padding="10dp" />
         </LinearLayout>
 
     </LinearLayout>

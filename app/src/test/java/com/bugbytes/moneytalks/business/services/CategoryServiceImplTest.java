@@ -62,8 +62,8 @@ public class CategoryServiceImplTest
 
     //testAddCategoryValidSuccess: It confirms that a valid category is validated and added. Takes in nothing.
     @Test
-    public void testAddCategoryValidSuccess() throws ValidationException {
-
+    public void testAddCategoryValidSuccess()
+    {
         Category category = new Category("Bills");
         service.addCategory(category);
         verify(validator).validate(category);
@@ -72,7 +72,8 @@ public class CategoryServiceImplTest
 
     //testAddCategoryInvalidThrowsException: It ensures that validation errors prevent a category from being saved. Takes in nothing.
     @Test
-    public void testAddCategoryInvalidThrowsException() throws ValidationException {
+    public void testAddCategoryInvalidThrowsException()
+    {
         Category category = new Category("");
         doThrow(new ValidationException("Category name cannot be empty")).when(validator).validate(category);
         assertThrows(ValidationException.class, () -> service.addCategory(category));
@@ -81,7 +82,8 @@ public class CategoryServiceImplTest
 
     //testAddCategoryDuplicateThrowsException: It verifies that the service handles duplicate category validation. Takes in nothing.
     @Test
-    public void testAddCategoryDuplicateThrowsException() throws ValidationException {
+    public void testAddCategoryDuplicateThrowsException()
+    {
         Category category = new Category("Food");
         doThrow(new ValidationException("Category name already exists")).when(validator).validate(category);
         assertThrows(ValidationException.class, () -> service.addCategory(category));
@@ -101,7 +103,7 @@ public class CategoryServiceImplTest
 
     //testUpdateCategorySuccess: It verifies that updating a category also triggers an update in the expense repository. Takes in nothing.
     @Test
-    public void testUpdateCategorySuccess() throws ValidationException
+    public void testUpdateCategorySuccess()
     {
         Category oldCategory = new Category(1, "Health", java.math.BigDecimal.ZERO);
         Category newCategory = new Category(1, "Wellness", java.math.BigDecimal.ZERO);
@@ -114,7 +116,8 @@ public class CategoryServiceImplTest
 
     //testDeleteCategorySuccess: It ensures a category is deleted when it is not in use by any expenses. Takes in nothing.
     @Test
-    public void testDeleteCategorySuccess() throws ValidationException {
+    public void testDeleteCategorySuccess()
+    {
         Category category = new Category(1, "Shopping", java.math.BigDecimal.ZERO);
         when(expenseRepo.categoryExists(category)).thenReturn(false);
 
