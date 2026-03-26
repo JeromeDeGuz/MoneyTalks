@@ -187,7 +187,7 @@ public class AddAndEditExpense extends AppCompatActivity
         }
     }
 
-    private void saveExpense() {
+    private void saveExpense() throws ValidationException {
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
         app.getExpenseService().addExpense(
                 etExpenseName.getText().toString().trim(),
@@ -199,7 +199,7 @@ public class AddAndEditExpense extends AppCompatActivity
         Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateExpense() {
+    private void updateExpense() throws ValidationException {
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
         app.getExpenseService().updateExpense(
                 expenseToEdit.getId(),

@@ -19,7 +19,7 @@ public class CategoryValidator implements Validator<Category>
 
     //validate: It runs all business rule checks for a category. Takes in @param category.
     @Override
-    public void validate(Category category)
+    public void validate(Category category) throws ValidationException
     {
         isNullorEmpty(category);
         isCaseDuplicate(category);
@@ -28,7 +28,7 @@ public class CategoryValidator implements Validator<Category>
     }
 
     //isNullorEmpty: It checks if category is null or has no text. Takes in @param category.
-    private void isNullorEmpty(Category category)
+    private void isNullorEmpty(Category category) throws ValidationException
     {
         if (category == null || category.getName().trim().isEmpty())
         {
@@ -37,7 +37,7 @@ public class CategoryValidator implements Validator<Category>
     }
 
     //isCaseDuplicate: It prevents duplicate names regardless of capitalization. Takes in @param category.
-    private void isCaseDuplicate(Category category)
+    private void isCaseDuplicate(Category category) throws ValidationException
     {
         List<Category> existing = repo.getAllCategories();
         for (Category c : existing)
@@ -50,7 +50,7 @@ public class CategoryValidator implements Validator<Category>
     }
 
     //validateDelete: It ensures a category isn't used by expenses before removal. Takes in @param category and expenseRepo.
-    public void validateDelete(Category category, ExpenseRepository expenseRepo)
+    public void validateDelete(Category category, ExpenseRepository expenseRepo) throws ValidationException
     {
         if (expenseRepo.categoryExists(category))
         {
@@ -59,7 +59,7 @@ public class CategoryValidator implements Validator<Category>
     }
 
     //isNotNumbers: It checks that the name isn't just a string of digits. Takes in @param category.
-    private void isNotNumbers(Category category)
+    private void isNotNumbers(Category category) throws ValidationException
     {
         if (category.getName().trim().matches("^\\d+$"))
         {
@@ -67,7 +67,7 @@ public class CategoryValidator implements Validator<Category>
         }
     }
 
-    private void isValidBudget(Category category)
+    private void isValidBudget(Category category) throws ValidationException
     {
         if (category.getBudget() == null)
         {
