@@ -227,5 +227,9 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         {
             adapter.setExpenses(data);
         }
+        else
+        {
+            android.util.Log.e("ExpenseListActivity", "Adapter is null! Check onCreate initialization.");
+        }
     }
 }
