@@ -101,7 +101,7 @@ public class CategoryServiceImplTest
 
     //testUpdateCategorySuccess: It verifies that updating a category also triggers an update in the expense repository. Takes in nothing.
     @Test
-    public void testUpdateCategorySuccess()
+    public void testUpdateCategorySuccess() throws ValidationException
     {
         Category oldCategory = new Category(1, "Health", java.math.BigDecimal.ZERO);
         Category newCategory = new Category(1, "Wellness", java.math.BigDecimal.ZERO);

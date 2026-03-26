@@ -29,7 +29,12 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public void addCategory(Category category) throws ValidationException {
         //Ensure inputs aren't null before proceeding to business logic
-        Objects.requireNonNull(category, "Cannot add a null category");
+        try{
+            Objects.requireNonNull(category, "Cannot add a null category");
+        } catch (NullPointerException e) {
+            throw new ValidationException("Cannot add a null category");
+        }
+
 
         validator.validate(category);
         categoryRepo.addCategory(category);
@@ -44,10 +49,17 @@ public class CategoryServiceImpl implements CategoryService
 
     //updateCategory: It updates category data and syncs with expenses. Takes in @param oldCategory and newCategory.
     @Override
-    public void updateCategory(Category oldCategory, Category newCategory)
+    public void updateCategory(Category oldCategory, Category newCategory) throws ValidationException
     {
-        Objects.requireNonNull(oldCategory, "Old category cannot be null");
-        Objects.requireNonNull(newCategory, "New category cannot be null");
+
+        try{
+            Objects.requireNonNull(oldCategory, "Old category cannot be null");
+            Objects.requireNonNull(newCategory, "New category cannot be null");
+        } catch (NullPointerException e) {
+            throw new ValidationException("Old or new category cannot be null");
+        }
+
+
 
         //Per feedback: Ensure business logic handles synchronization between layers
         expenseRepo.updateExpenseCategory(oldCategory, newCategory);
@@ -57,7 +69,13 @@ public class CategoryServiceImpl implements CategoryService
     //deleteCategory: It removes category if no expenses are linked. Takes in @param category.
     @Override
     public void deleteCategory(Category category) throws ValidationException {
-        Objects.requireNonNull(category, "Category to delete cannot be null");
+
+        try {
+            Objects.requireNonNull(category, "Category to delete cannot be null");
+        } catch (NullPointerException e) {
+            throw new ValidationException("Category to delete cannot be null");
+        }
+
 
         //Logic check: prevent deletion if expenses are still linked (richer error handling)
         if (expenseRepo.categoryExists(category))
@@ -82,8 +100,13 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public BigDecimal getMonthSpent(String categoryName, LocalDate targetDate)
     {
-        Objects.requireNonNull(categoryName, "Category name cannot be null");
-        Objects.requireNonNull(targetDate, "Target date cannot be null");
+        try {
+            Objects.requireNonNull(categoryName, "Category name cannot be null");
+            Objects.requireNonNull(targetDate, "Target date cannot be null");
+        } catch (NullPointerException e) {
+            return BigDecimal.ZERO;
+        }
+
 
         BigDecimal total = BigDecimal.ZERO;
 

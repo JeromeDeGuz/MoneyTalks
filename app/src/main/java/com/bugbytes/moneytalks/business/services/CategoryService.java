@@ -12,7 +12,7 @@ public interface CategoryService
     void addCategory(Category category) throws ValidationException;
 
     //updateCategory: It edits an existing category. Takes in @param oldCategory, @param newCategory.
-    void updateCategory(Category oldCategory, Category newCategory);
+    void updateCategory(Category oldCategory, Category newCategory) throws ValidationException;
 
     //deleteCategory: It removes a category from persistence. Takes in @param category.
     void deleteCategory(Category category) throws ValidationException;
