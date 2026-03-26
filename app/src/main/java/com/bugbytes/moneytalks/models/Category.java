@@ -3,21 +3,27 @@ package com.bugbytes.moneytalks.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-//Serializable is important if you want to pass Category between Activities via Intent
 public class Category implements Serializable
 {
     private int id;
     private String name;
     private BigDecimal budget;
 
-    //Category: Constructor for new categories where ID is assigned by DB. Takes in @param name.
+    // 1. Constructor for new categories (No budget provided)
     public Category(String name)
     {
         this.name = name;
         this.budget = BigDecimal.ZERO;
     }
 
-    //Category: Overloaded constructor for database retrieval. Takes in @param id and name and budget.
+    // 2. MISSING CONSTRUCTOR: For adding new categories with a budget (Fixes your error!)
+    public Category(String name, BigDecimal budget)
+    {
+        this.name = name;
+        this.budget = (budget != null) ? budget : BigDecimal.ZERO;
+    }
+
+    // 3. Constructor for database retrieval (Existing)
     public Category(int id, String name, BigDecimal budget)
     {
         this.id = id;
@@ -25,27 +31,15 @@ public class Category implements Serializable
         this.budget = budget;
     }
 
-    //getId: Returns the unique identifier. Takes in nothing and @return int id.
-    public int getId()
-    {
-        return id;
-    }
+    public int getId() { return id; }
+    public String getName() { return this.name; }
+    public BigDecimal getBudget() { return this.budget; }
 
-    //getName: Returns the category name. Takes in nothing and @return String name.
-    public String getName()
-    {
-        return this.name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    //getBudget: Returns the allocated budget amount. Takes in nothing and @return BigDecimal budget.
-    public BigDecimal getBudget()
-    {
-        return this.budget;
-    }
+    // 4.
+    public void setBudget(BigDecimal budget) { this.budget = budget; }
 
-    //setName: Updates the category name. Takes in @param name.
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+    @Override
+    public String toString() { return name; }
 }
