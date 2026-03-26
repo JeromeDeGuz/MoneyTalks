@@ -27,4 +27,13 @@
 
     <string name="title_add_expense">Add Expense</string>
     <string name="title_edit_expense">Edit Expense</string>
+
+    <string name="error_name_empty">Category name cannot be empty</string>
+    <string name="error_budget_empty">Budget cannot be empty</string>
+    <string name="msg_category_added">Category added</string>
+    <string name="msg_category_updated">Category updated</string>
+    <string name="msg_category_deleted">Category deleted</string>
+    <string name="error_add_failed">Failed to add category</string>
+    <string name="error_update_failed">Failed to update: </string>
+    <string name="error_delete_failed">Failed to delete category</string>
 </resources>
