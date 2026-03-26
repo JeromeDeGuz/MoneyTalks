@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.presentation;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ImageButton;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,10 +22,10 @@ import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.R;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -136,13 +138,9 @@ public class AddAndEditExpense extends AppCompatActivity
                 autoCompleteCategory.setText(name, false);
                 dialog.dismiss();
             }
-            catch (ValidationException e)
+            catch (ValidationException | IllegalArgumentException e)
             {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -176,51 +174,41 @@ public class AddAndEditExpense extends AppCompatActivity
     }
 
     //saveOrUpdateExpense: It gathers input and delegates saving logic to the service layer. Takes in nothing.
-    private void saveOrUpdateExpense()
-    {
-        final String name = etExpenseName.getText().toString().trim();
-        final String amountStr = etAmount.getText().toString().trim();
-        final String category = autoCompleteCategory.getText().toString().trim();
-        final String dateStr = etDate.getText().toString().trim();
-        final String notes = etNotes.getText().toString().trim();
-
-        try
-        {
-            //Minimal UI-level validation
-            if (dateStr.isEmpty() || amountStr.isEmpty())
-            {
-                throw new ValidationException("Date and Amount are required.");
-            }
-
-            MoneyTalksApp app = (MoneyTalksApp) getApplication();
-            BigDecimal amount = new BigDecimal(amountStr);
-            LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
-
-            if (!isEditMode)
-            {
-                Expense newExpense = new Expense(0, name, amount, category, date, notes);
-                app.getExpenseService().addExpense(newExpense);
-                Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Expense updated = new Expense(expenseToEdit.getId(), name, amount, category, date, notes);
-                app.getExpenseService().updateExpense(updated);
-                Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+    private void saveOrUpdateExpense() {
+        try {
+            if (!isEditMode) {
+                saveExpense();
+            } else {
+                updateExpense();
             }
             finish();
-        }
-        catch (NumberFormatException | DateTimeParseException e)
-        {
-            Toast.makeText(this, "Check your amount or date format", Toast.LENGTH_SHORT).show();
-        }
-        catch (ValidationException e)
-        {
+        } catch (ValidationException | IllegalArgumentException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        catch (Exception e)
-        {
-            Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
-        }
+    }
+
+    private void saveExpense() throws ValidationException {
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+        app.getExpenseService().addExpense(
+                etExpenseName.getText().toString().trim(),
+                etAmount.getText().toString().trim(),
+                autoCompleteCategory.getText().toString().trim(),
+                etDate.getText().toString().trim(),
+                etNotes.getText().toString().trim()
+        );
+        Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateExpense() throws ValidationException {
+        MoneyTalksApp app = (MoneyTalksApp) getApplication();
+        app.getExpenseService().updateExpense(
+                expenseToEdit.getId(),
+                etExpenseName.getText().toString().trim(),
+                etAmount.getText().toString().trim(),
+                autoCompleteCategory.getText().toString().trim(),
+                etDate.getText().toString().trim(),
+                etNotes.getText().toString().trim()
+        );
+        Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
     }
 }

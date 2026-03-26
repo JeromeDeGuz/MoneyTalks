@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
@@ -54,8 +55,7 @@ public class FilterSortIntegrationTest
 
     //filterByCategoryReturnsOnlyMatchingExpensesFromSqlite: It verifies that the filtering logic correctly narrows down results from the database. Takes in nothing.
     @Test
-    public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite()
-    {
+    public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite() throws ValidationException {
         final long timestamp = System.currentTimeMillis();
         final String targetCategory = "FilterCat" + timestamp;
         final String otherCategory = "OtherCat" + timestamp;
@@ -98,8 +98,7 @@ public class FilterSortIntegrationTest
 
     //sortByDateReturnsNewestFirstAndOldestFirstFromSqlite: It confirms that data retrieved from SQLite follows the requested date ordering. Takes in nothing.
     @Test
-    public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite()
-    {
+    public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite() throws ValidationException {
         final long timestamp = System.currentTimeMillis();
         final String category = "SortCat" + timestamp;
 
