@@ -138,13 +138,9 @@ public class AddAndEditExpense extends AppCompatActivity
                 autoCompleteCategory.setText(name, false);
                 dialog.dismiss();
             }
-            catch (ValidationException e)
+            catch (ValidationException | IllegalArgumentException e)
             {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -186,10 +182,8 @@ public class AddAndEditExpense extends AppCompatActivity
                 updateExpense();
             }
             finish();
-        } catch (ValidationException e) {
+        } catch (ValidationException | IllegalArgumentException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
         }
     }
 
