@@ -11,7 +11,6 @@ import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
-import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
@@ -73,7 +72,8 @@ public class CategoryIntegrationTest
 
     //addUpdateFlowWorksAcrossLogicAndSqlite: It verifies that adding and updating a category correctly reflects in the database. Takes in nothing.
     @Test
-    public void addUpdateFlowWorksAcrossLogicAndSqlite() throws ValidationException {
+    public void addUpdateFlowWorksAcrossLogicAndSqlite()
+    {
         final String originalCategoryName = "Category IT " + System.currentTimeMillis();
         final String updatedCategoryName = "Category IT Updated " + System.currentTimeMillis();
         final String expenseName = "Expense Linked To Category " + System.currentTimeMillis();
@@ -120,7 +120,8 @@ public class CategoryIntegrationTest
 
     //deleteUnusedCategoryRemovesItFromSqlite: It confirms that deleting a category through the service removes the record from SQLite. Takes in nothing.
     @Test
-    public void deleteUnusedCategoryRemovesItFromSqlite() throws ValidationException {
+    public void deleteUnusedCategoryRemovesItFromSqlite()
+    {
         final String categoryName = "Category Delete IT " + System.currentTimeMillis();
 
         categoryService.addCategory(new Category(categoryName));

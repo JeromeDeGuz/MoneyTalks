@@ -83,7 +83,8 @@ public class ExpenseServiceImplTest
 
     //testAddExpenseValidSuccess: It confirms that a valid expense is validated and added to the repository. Takes in nothing.
     @Test
-    public void testAddExpenseValidSuccess() throws ValidationException {
+    public void testAddExpenseValidSuccess()
+    {
         Expense e = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
 
         service.addExpense(e);
@@ -94,7 +95,8 @@ public class ExpenseServiceImplTest
 
     //testAddExpenseInvalidThrowsException: It ensures that validation errors prevent the expense from being saved. Takes in nothing.
     @Test
-    public void testAddExpenseInvalidThrowsException() throws ValidationException {
+    public void testAddExpenseInvalidThrowsException()
+    {
         Expense e = new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "");
         doThrow(new ValidationException("Too short")).when(validator).validate(e);
 
@@ -104,7 +106,8 @@ public class ExpenseServiceImplTest
 
     //testUpdateExpenseSuccess: It verifies that updating an expense validates it and returns true on success. Takes in nothing.
     @Test
-    public void testUpdateExpenseSuccess() throws ValidationException {
+    public void testUpdateExpenseSuccess()
+    {
         Expense e = new Expense(1, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(true);
 
@@ -116,14 +119,16 @@ public class ExpenseServiceImplTest
 
     //testUpdateExpenseNullReturnsFalse: It ensures updating a null expense returns false without interactions. Takes in nothing.
     @Test
-    public void testUpdateExpenseNullReturnsFalse() throws ValidationException {
+    public void testUpdateExpenseNullReturnsFalse()
+    {
         assertFalse(service.updateExpense(null));
         verifyNoInteractions(repo, validator);
     }
 
     //testUpdateExpenseNotFoundReturnsFalse: It checks if updating a non-existent expense returns false. Takes in nothing.
     @Test
-    public void testUpdateExpenseNotFoundReturnsFalse() throws ValidationException {
+    public void testUpdateExpenseNotFoundReturnsFalse()
+    {
         Expense e = new Expense(99, "Fake", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(false);
 
