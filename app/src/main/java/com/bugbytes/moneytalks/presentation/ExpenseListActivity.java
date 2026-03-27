@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ExpenseListActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseEventListener
 {
@@ -68,6 +69,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
         setupSortButton();
         setupFilterButton();
+        setupBottomNavigation();
 
         recyclerView = findViewById(R.id.rvExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,12 +83,32 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             Intent intent = new Intent(ExpenseListActivity.this, AddAndEditExpense.class);
             startActivity(intent);
         });
+    }
 
-        final ImageButton btnSettings = findViewById(R.id.btnSettings);
-        btnSettings.setOnClickListener(v ->
-        {
-            Intent intent = new Intent(ExpenseListActivity.this, SettingsActivity.class);
-            startActivity(intent);
+    //setupBottomNavigation: It configures the bottom navigation bar to switch between Home, Budget, and Settings.
+    private void setupBottomNavigation()
+    {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_home);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home)
+            {
+                return true;
+            }
+            else if (itemId == R.id.nav_budget)
+            {
+                startActivity(new Intent(this, ManageCategoriesActivity.class));
+                return true;
+            }
+            else if (itemId == R.id.nav_settings)
+            {
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 
@@ -201,6 +223,12 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     {
         super.onResume();
         loadExpenses();
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        if (bottomNav != null)
+        {
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
     }
 
     //onDeleteClick: It handles the deletion of an expense via the adapter callback. Takes in @param expense and position.
