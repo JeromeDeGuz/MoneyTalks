@@ -2,8 +2,11 @@ package com.bugbytes.moneytalks.application;
 
 //Android Application class import
 import android.app.Application;
+import android.content.SharedPreferences;
 
 //Business layer imports: services and validators
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
@@ -61,7 +64,13 @@ public class MoneyTalksApp extends Application
 
         ExpenseValidator expenseValidator = new ExpenseValidator();
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
+
+        // Restore saved theme on app startup
+        SharedPreferences prefs = getSharedPreferences("moneytalks_prefs", MODE_PRIVATE);
+        int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(savedMode);
     }
+
 
     //Getters for Services
     public ExpenseService getExpenseService()
