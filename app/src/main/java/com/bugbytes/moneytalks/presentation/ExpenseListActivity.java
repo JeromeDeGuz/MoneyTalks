@@ -100,7 +100,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             }
             else if (itemId == R.id.nav_budget)
             {
-                startActivity(new Intent(this, ManageCategoriesActivity.class));
+                startActivity(new Intent(this, BudgetActivity.class));
                 return true;
             }
             else if (itemId == R.id.nav_settings)
