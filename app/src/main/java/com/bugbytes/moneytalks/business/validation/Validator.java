@@ -4,5 +4,5 @@ package com.bugbytes.moneytalks.business.validation;
 public interface Validator<T>
 {
     //Validates an object of type T.
-    void validate(T target);
+    void validate(T target) throws ValidationException;
 }
