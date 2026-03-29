@@ -36,4 +36,7 @@
     <string name="error_add_failed">Failed to add category</string>
     <string name="error_update_failed">Failed to update: </string>
     <string name="error_delete_failed">Failed to delete category</string>
+    <string name="home">Home</string>
+    <string name="budget">Budget</string>
+    <string name="settings">Settings</string>
 </resources>

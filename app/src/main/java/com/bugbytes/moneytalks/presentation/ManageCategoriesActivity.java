@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.LinearLayout;
-import java.math.BigDecimal;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,12 +79,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
         nameInput.setHint("Enter category name");
         nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        final EditText budgetInput = new EditText(this);
-        budgetInput.setHint("Enter budget");
-        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
         layout.addView(nameInput);
-        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Add Category")
@@ -93,7 +87,6 @@ public class ManageCategoriesActivity extends AppCompatActivity
                 .setPositiveButton("Save", (dialog, which) ->
                 {
                     String name = nameInput.getText().toString().trim();
-                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (name.isEmpty())
                     {
@@ -101,16 +94,9 @@ public class ManageCategoriesActivity extends AppCompatActivity
                         return;
                     }
 
-                    if (budgetText.isEmpty())
-                    {
-                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     try
                     {
-                        BigDecimal budget = new BigDecimal(budgetText);
-                        categoryService.addCategory(new Category(name, budget));
+                        categoryService.addCategory(new Category(name));
                         Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
@@ -135,12 +121,7 @@ public class ManageCategoriesActivity extends AppCompatActivity
         nameInput.setSelection(category.getName().length());
         nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        final EditText budgetInput = new EditText(this);
-        budgetInput.setText(category.getBudget().toPlainString());
-        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
         layout.addView(nameInput);
-        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
                 .setTitle("Edit Category")
@@ -148,7 +129,6 @@ public class ManageCategoriesActivity extends AppCompatActivity
                 .setPositiveButton("Save", (dialog, which) ->
                 {
                     String newName = nameInput.getText().toString().trim();
-                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (newName.isEmpty())
                     {
@@ -156,16 +136,9 @@ public class ManageCategoriesActivity extends AppCompatActivity
                         return;
                     }
 
-                    if (budgetText.isEmpty())
-                    {
-                        Toast.makeText(this, "Budget cannot be empty", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     try
                     {
-                        BigDecimal budget = new BigDecimal(budgetText);
-                        categoryService.updateCategory(category, new Category(newName, budget));
+                        categoryService.updateCategory(category, new Category(newName));
                         Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }

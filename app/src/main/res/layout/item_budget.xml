@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:minHeight="56dp"
+    android:paddingStart="12dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="10dp">
+
+    <!--Category name-->
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Food"
+        android:textSize="16sp" />
+
+    <!--Budget amount-->
+    <TextView
+        android:id="@+id/tvBudgetAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="0.00"
+        android:textSize="16sp" />
+
+    <!--Spent this month-->
+    <TextView
+        android:id="@+id/tvSpentThisMonth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="0.00"
+        android:textSize="16sp" />
+
+    <!--Edit budget button-->
+    <ImageButton
+        android:id="@+id/btnEditBudget"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Edit Budget"
+        android:padding="8dp"
+        android:src="@android:drawable/ic_menu_edit" />
+</LinearLayout>

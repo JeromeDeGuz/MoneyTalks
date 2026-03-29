@@ -27,6 +27,7 @@
 
         <activity android:name=".presentation.SettingsActivity" />
         <activity android:name=".presentation.ManageCategoriesActivity" />
+        <activity android:name=".presentation.BudgetActivity" />
 
     </application>
 

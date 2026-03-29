@@ -2,13 +2,12 @@ package com.bugbytes.moneytalks.application;
 
 //Android Application class import
 import android.app.Application;
-import android.content.SharedPreferences;
 
 //Business layer imports: services and validators
-import androidx.appcompat.app.AppCompatDelegate;
-
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
+import com.bugbytes.moneytalks.business.services.BudgetService;
+import com.bugbytes.moneytalks.business.services.BudgetServiceImpl;
 import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 
@@ -30,6 +29,7 @@ public class MoneyTalksApp extends Application
     //shared services accessible throughout the entire app
     private ExpenseService expenseService;      //Handles business logic for expenses
     private CategoryService categoryService;    //Handles business logic for categories
+    private BudgetService budgetService;        //Handles business logic for monthly budget overview
 
     @Override
     public void onCreate()
@@ -65,12 +65,8 @@ public class MoneyTalksApp extends Application
         ExpenseValidator expenseValidator = new ExpenseValidator();
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
 
-        // Restore saved theme on app startup
-        SharedPreferences prefs = getSharedPreferences("moneytalks_prefs", MODE_PRIVATE);
-        int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(savedMode);
+        budgetService = new BudgetServiceImpl(categoryService, expenseService);
     }
-
 
     //Getters for Services
     public ExpenseService getExpenseService()
@@ -91,5 +87,14 @@ public class MoneyTalksApp extends Application
             throw new IllegalStateException("categoryService was accessed before initialization in MoneyTalksApp.");
         }
         return categoryService;
+    }
+
+    public BudgetService getBudgetService()
+    {
+        if (budgetService == null)
+        {
+            throw new IllegalStateException("budgetService was accessed before initialization in MoneyTalksApp.");
+        }
+        return budgetService;
     }
 }
