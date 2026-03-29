@@ -1,5 +1,7 @@
 package com.bugbytes.moneytalks.presentation;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +59,17 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         holder.tvCategoryName.setText(budgetSummary.getCategoryName());
         holder.tvBudgetAmount.setText(budgetSummary.getBudget().toPlainString());
         holder.tvSpentThisMonth.setText(budgetSummary.getSpentThisMonth().toPlainString());
+
+        if (budgetSummary.isOverBudget())
+        {
+            holder.tvSpentThisMonth.setTextColor(Color.RED);
+            holder.tvSpentThisMonth.setTypeface(holder.tvSpentThisMonth.getTypeface(), Typeface.BOLD);
+        }
+        else
+        {
+            holder.tvSpentThisMonth.setTextColor(Color.BLACK);
+            holder.tvSpentThisMonth.setTypeface(holder.tvSpentThisMonth.getTypeface(), Typeface.NORMAL);
+        }
 
         holder.btnEditBudget.setOnClickListener(v -> listener.onEditBudgetClick(budgetSummary));
     }

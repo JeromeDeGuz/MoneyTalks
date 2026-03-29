@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
+import com.bugbytes.moneytalks.business.models.BudgetSummary;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
@@ -208,7 +209,18 @@ public class AddAndEditExpense extends AppCompatActivity
                 app.getExpenseService().updateExpense(updated);
                 Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
             }
-            finish();
+
+            BudgetSummary summary = app.getBudgetService()
+                    .getCategoryBudgetSummary(category, date.getYear(), date.getMonthValue());
+
+            if (summary.isOverBudget())
+            {
+                showOverBudgetDialog(summary);
+            }
+            else
+            {
+                finish();
+            }
         }
         catch (NumberFormatException | DateTimeParseException e)
         {
@@ -222,5 +234,25 @@ public class AddAndEditExpense extends AppCompatActivity
         {
             Toast.makeText(this, "An error occurred while saving", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //showOverBudgetDialog: It displays an over-budget warning and closes the screen only after the user presses OK. Takes in @param summary.
+    private void showOverBudgetDialog(BudgetSummary summary)
+    {
+        String message = "Category: " + summary.getCategoryName()
+                + "\nBudget: $" + summary.getBudget().toPlainString()
+                + "\nSpent This Month: $" + summary.getSpentThisMonth().toPlainString()
+                + "\nOver By: $" + summary.getOverAmount().toPlainString();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Over Budget")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) ->
+                {
+                    dialog.dismiss();
+                    finish();
+                })
+                .show();
     }
 }

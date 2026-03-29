@@ -52,6 +52,23 @@ public class BudgetServiceImpl implements BudgetService
         return summaries;
     }
 
+    //getCategoryBudgetSummary: Returns the budget summary for one category in the selected year and month. Takes in @param categoryName and year and month.
+    @Override
+    public BudgetSummary getCategoryBudgetSummary(String categoryName, int year, int month)
+    {
+        List<BudgetSummary> summaries = getMonthlyBudgetSummary(year, month);
+
+        for (BudgetSummary summary : summaries)
+        {
+            if (summary.getCategoryName().equals(categoryName))
+            {
+                return summary;
+            }
+        }
+
+        return new BudgetSummary(categoryName, BigDecimal.ZERO, BigDecimal.ZERO);
+    }
+
     //updateCategoryBudget: Updates only the budget amount for the specified category. Takes in @param categoryName and newBudget.
     @Override
     public void updateCategoryBudget(String categoryName, BigDecimal newBudget)

@@ -12,8 +12,8 @@ public class BudgetSummary
     public BudgetSummary(String categoryName, BigDecimal budget, BigDecimal spentThisMonth)
     {
         this.categoryName = categoryName;
-        this.budget = budget;
-        this.spentThisMonth = spentThisMonth;
+        this.budget = (budget != null) ? budget : BigDecimal.ZERO;
+        this.spentThisMonth = (spentThisMonth != null) ? spentThisMonth : BigDecimal.ZERO;
     }
 
     //getCategoryName: Returns the category name for this row. Takes in nothing and @return String categoryName.
@@ -32,5 +32,22 @@ public class BudgetSummary
     public BigDecimal getSpentThisMonth()
     {
         return spentThisMonth;
+    }
+
+    //isOverBudget: Returns whether the spent amount is greater than the budget. Takes in nothing and @return boolean.
+    public boolean isOverBudget()
+    {
+        return spentThisMonth.compareTo(budget) > 0;
+    }
+
+    //getOverAmount: Returns how much the category is over budget. Takes in nothing and @return BigDecimal overAmount.
+    public BigDecimal getOverAmount()
+    {
+        if (!isOverBudget())
+        {
+            return BigDecimal.ZERO;
+        }
+
+        return spentThisMonth.subtract(budget);
     }
 }
