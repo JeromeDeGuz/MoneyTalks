@@ -66,30 +66,30 @@ public class Expense implements Serializable
     //setName: Updates the expense name. Takes in @param name.
     public void setName(String name)
     {
-        if (name == null || name.isBlank())
-        {
-            throw new ValidationException("Name cannot be empty.");
-        }
+//        if (name == null || name.isBlank())
+//        {
+//            throw new ValidationException("Name cannot be empty.");
+//        }
         this.name = name;
     }
 
     //setDate: Updates the transaction date. Takes in @param date.
     public void setDate(LocalDate date)
     {
-        if (date == null)
-        {
-            throw new ValidationException("Date cannot be empty.");
-        }
+//        if (date == null)
+//        {
+//            throw new ValidationException("Date cannot be empty.");
+//        }
         this.date = date;
     }
 
     //setCategory: Updates the expense category. Takes in @param category.
     public void setCategory(String category)
     {
-        if (category == null || category.isBlank())
-        {
-            throw new ValidationException("Category cannot be empty.");
-        }
+//        if (category == null || category.isBlank())
+//        {
+//            throw new ValidationException("Category cannot be empty.");
+//        }
         this.category = category;
     }
 

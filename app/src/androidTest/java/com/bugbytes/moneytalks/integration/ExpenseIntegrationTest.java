@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.bugbytes.moneytalks.business.services.ExpenseService;
 import com.bugbytes.moneytalks.business.services.ExpenseServiceImpl;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlExpenseRepository;
@@ -56,8 +57,7 @@ public class ExpenseIntegrationTest
 
     //addUpdateDeleteFlowWorksAcrossLogicAndSqlite: It verifies the full CRUD lifecycle through the service and database layers. Takes in nothing.
     @Test
-    public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite()
-    {
+    public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite() throws ValidationException {
         final String originalName = "Expense IT " + System.currentTimeMillis();
         final String updatedName = "Expense IT Updated " + System.currentTimeMillis();
 
