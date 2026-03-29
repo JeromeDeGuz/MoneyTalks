@@ -241,7 +241,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
             Toast.makeText(this, "Deleted: " + expense.getName(), Toast.LENGTH_SHORT).show();
             loadExpenses();
         }
-        catch (ValidationException | IllegalArgumentException e)
+        catch (IllegalArgumentException e)
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }

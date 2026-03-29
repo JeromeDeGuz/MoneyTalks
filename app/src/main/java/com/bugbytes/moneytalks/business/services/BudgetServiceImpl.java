@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.models.BudgetSummary;
+import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 
@@ -81,6 +82,14 @@ public class BudgetServiceImpl implements BudgetService
         }
 
         Category updatedCategory = new Category(oldCategory.getName(), newBudget);
-        categoryService.updateCategory(oldCategory, updatedCategory);
+
+        try
+        {
+            categoryService.updateCategory(oldCategory, updatedCategory);
+        }
+        catch (ValidationException e)
+        {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 }
