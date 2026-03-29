@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="settings_card_bg">#1E1E1E</color>
+    <color name="settings_header_text">#BBBBBB</color>
+    <color name="selection_highlight">#3D2A6E</color>
+</resources>
