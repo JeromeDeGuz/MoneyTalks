@@ -116,7 +116,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ✅ Updated constraint to point to cardBudget -->
+    <!-- Updated constraint to point to cardBudget -->
     <TextView
         android:id="@+id/tvThemeHeader"
         android:layout_width="wrap_content"
