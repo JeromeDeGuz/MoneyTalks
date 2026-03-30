@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
 import com.bugbytes.moneytalks.business.services.ExpenseService;
-import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.R;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ExpenseListActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseEventListener
 {
@@ -41,7 +38,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private String selectedCategory = "All";
     private boolean isNewestFirst = true;
 
-    //onCreate: It initializes the activity, sets up the UI components, and handles window insets. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -62,10 +58,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                 return insets;
             });
         }
-        else
-        {
-            android.util.Log.e("ExpenseListActivity", "Main view layout_expense_list not found!");
-        }
 
         setupSortButton();
         setupFilterButton();
@@ -85,41 +77,25 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    //setupBottomNavigation: It configures the bottom navigation bar to switch between Home, Budget, and Settings.
+    //setupBottomNavigation: Configures the custom bottom nav bar.
     private void setupBottomNavigation()
     {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_home);
-
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home)
-            {
-                return true;
-            }
-            else if (itemId == R.id.nav_budget)
-            {
-                startActivity(new Intent(this, BudgetActivity.class));
-                return true;
-            }
-            else if (itemId == R.id.nav_settings)
-            {
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            }
-            return false;
+        findViewById(R.id.nav_home).setOnClickListener(v -> {
+            // already home, do nothing
         });
+
+        findViewById(R.id.nav_budget).setOnClickListener(v ->
+                startActivity(new Intent(this, BudgetActivity.class)));
+
+        findViewById(R.id.nav_settings).setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
     }
 
-    //setupSortButton: It configures the sorting button and its popup menu for date-based ordering. Takes in nothing.
+    //setupSortButton: It configures the sorting button and its popup menu for date-based ordering.
     private void setupSortButton()
     {
         btnSort = findViewById(R.id.btnSort);
-        if (btnSort == null)
-        {
-            return;
-        }
+        if (btnSort == null) return;
 
         btnSort.setOnClickListener(v ->
         {
@@ -135,7 +111,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
             newestItem.setChecked(isNewestFirst);
             oldestItem.setChecked(!isNewestFirst);
-
             newestItem.setCheckable(true);
             oldestItem.setCheckable(true);
             menu.setGroupCheckable(GROUP_SORT, true, true);
@@ -152,7 +127,6 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
                     isNewestFirst = false;
                     item.setChecked(true);
                 }
-
                 loadExpenses();
                 return true;
             });
@@ -161,14 +135,11 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    //setupFilterButton: It configures the category filter button and dynamically builds its popup menu. Takes in nothing.
+    //setupFilterButton: It configures the category filter button and dynamically builds its popup menu.
     private void setupFilterButton()
     {
         btnFilter = findViewById(R.id.btnFilter);
-        if (btnFilter == null)
-        {
-            return;
-        }
+        if (btnFilter == null) return;
 
         btnFilter.setText("Filtering by Category (All)");
 
@@ -183,23 +154,14 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
             List<String> categories = new ArrayList<>();
             categories.add("All");
-            for (Category c : dbCategories)
-            {
-                categories.add(c.getName());
-            }
+            for (Category c : dbCategories) categories.add(c.getName());
 
             for (int i = 0; i < categories.size(); i++)
             {
                 String c = categories.get(i);
-                int itemId = 200 + i;
-
-                MenuItem mi = menu.add(GROUP_FILTER, itemId, i, c);
+                MenuItem mi = menu.add(GROUP_FILTER, 200 + i, i, c);
                 mi.setCheckable(true);
-
-                if (c.equals(selectedCategory))
-                {
-                    mi.setChecked(true);
-                }
+                if (c.equals(selectedCategory)) mi.setChecked(true);
             }
 
             menu.setGroupCheckable(GROUP_FILTER, true, true);
@@ -217,21 +179,13 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    //onResume: It refreshes the expense list whenever the activity becomes active. Takes in nothing.
     @Override
     protected void onResume()
     {
         super.onResume();
         loadExpenses();
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        if (bottomNav != null)
-        {
-            bottomNav.setSelectedItemId(R.id.nav_home);
-        }
     }
 
-    //onDeleteClick: It handles the deletion of an expense via the adapter callback. Takes in @param expense and position.
     @Override
     public void onDeleteClick(Expense expense, int position)
     {
@@ -247,18 +201,9 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         }
     }
 
-    //loadExpenses: It fetches sorted and filtered data from the service and updates the adapter. Takes in nothing.
     private void loadExpenses()
     {
         final List<Expense> data = expenseService.getExpensesByCategorySortedByDate(selectedCategory, isNewestFirst);
-
-        if (adapter != null)
-        {
-            adapter.setExpenses(data);
-        }
-        else
-        {
-            android.util.Log.e("ExpenseListActivity", "Adapter is null! Check onCreate initialization.");
-        }
+        if (adapter != null) adapter.setExpenses(data);
     }
 }

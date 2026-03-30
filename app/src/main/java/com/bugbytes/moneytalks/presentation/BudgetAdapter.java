@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.R;
-import com.bugbytes.moneytalks.business.models.BudgetSummary;
+import com.bugbytes.moneytalks.models.BudgetSummary;
 
 import java.util.List;
 

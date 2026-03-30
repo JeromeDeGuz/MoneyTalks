@@ -23,6 +23,9 @@ import com.bugbytes.moneytalks.business.services.CategoryServiceImpl;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlCategoryRepository;
 
+import android.content.SharedPreferences;
+import androidx.appcompat.app.AppCompatDelegate;
+
 //This class is created once when the app starts and acts as a central place to initialize al shared services and repositories.
 public class MoneyTalksApp extends Application
 {
@@ -34,10 +37,13 @@ public class MoneyTalksApp extends Application
     @Override
     public void onCreate()
     {
+
         super.onCreate();
 
-        //Toggle this boolean to switch between SQLite and stub mode
-        //This addresses the i2 requirement for a single-line switch for graders.
+        SharedPreferences prefs = getSharedPreferences("moneytalks_prefs", MODE_PRIVATE);
+        int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(savedMode);
+
         final boolean useSqliteDB = true;
 
         ExpenseRepository expenseRepository;
@@ -45,27 +51,24 @@ public class MoneyTalksApp extends Application
 
         if (useSqliteDB)
         {
-            //Real repository using SQLite – currently active
             expenseRepository = new SqlExpenseRepository(this);
             categoryRepository = new SqlCategoryRepository(this);
         }
         else
         {
-            //Fake repository (for testing)
             expenseRepository = new FakeExpenseRepository();
             categoryRepository = new FakeCategoryRepository();
         }
 
-        //Category Validator Setup: Validators check that data is correct before saving it
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
-
-        //Category Service Setup: Service connects repository and validator, providing business logic
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
 
         ExpenseValidator expenseValidator = new ExpenseValidator();
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseValidator);
 
         budgetService = new BudgetServiceImpl(categoryService, expenseService);
+
+
     }
 
     //Getters for Services
