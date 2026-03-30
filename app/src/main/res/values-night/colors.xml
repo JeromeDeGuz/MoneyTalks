@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="fab_light_purple">#3D2B6B</color>
+    <color name="fab_icon_purple">#BB86FC</color>
     <color name="settings_card_bg">#1E1E1E</color>
-    <color name="settings_header_text">#BBBBBB</color>
-    <color name="selection_highlight">#3D2A6E</color>
+    <color name="settings_header_text">#AAAAAA</color>
+    <color name="selection_highlight">#2D1F4E</color>
 </resources>

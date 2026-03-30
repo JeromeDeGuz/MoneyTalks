@@ -1,4 +1,4 @@
-package com.bugbytes.moneytalks.business.models;
+package com.bugbytes.moneytalks.models;
 
 import java.math.BigDecimal;
 

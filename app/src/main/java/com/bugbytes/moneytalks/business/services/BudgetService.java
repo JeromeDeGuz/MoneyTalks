@@ -1,6 +1,6 @@
 package com.bugbytes.moneytalks.business.services;
 
-import com.bugbytes.moneytalks.business.models.BudgetSummary;
+import com.bugbytes.moneytalks.models.BudgetSummary;
 
 import java.math.BigDecimal;
 import java.util.List;

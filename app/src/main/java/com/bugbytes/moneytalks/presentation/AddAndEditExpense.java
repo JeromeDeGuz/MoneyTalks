@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
-import com.bugbytes.moneytalks.business.models.BudgetSummary;
+import com.bugbytes.moneytalks.models.BudgetSummary;
 import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;

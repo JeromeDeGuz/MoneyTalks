@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.R;
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
-import com.bugbytes.moneytalks.business.models.BudgetSummary;
+import com.bugbytes.moneytalks.models.BudgetSummary;
 import com.bugbytes.moneytalks.business.services.BudgetService;
 
 import java.math.BigDecimal;
