@@ -21,6 +21,12 @@ public class SettingsActivity extends AppCompatActivity
         setContentView(R.layout.activity_settings);
 
         LinearLayout btnCategorySettings = findViewById(R.id.btnCategorySettings);
+        LinearLayout btnBudgetSettings = findViewById(R.id.btnBudgetSettings);
+        btnBudgetSettings.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(SettingsActivity.this, BudgetActivity.class);
+            startActivity(intent);
+        });
         LinearLayout btnLightMode = findViewById(R.id.btnLightMode);
         LinearLayout btnDarkMode = findViewById(R.id.btnDarkMode);
         Button btnBackSettings = findViewById(R.id.btnBackSettings);
