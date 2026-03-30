@@ -86,11 +86,31 @@ public class BudgetActivity extends AppCompatActivity
             months.add(String.valueOf(month));
         }
 
-        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, years) {
+            @Override
+            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
+                android.widget.TextView tv = (android.widget.TextView) super.getView(position, convertView, parent);
+                int[] attrs = { android.R.attr.textColorPrimary };
+                android.content.res.TypedArray ta = getContext().obtainStyledAttributes(attrs);
+                tv.setTextColor(ta.getColor(0, android.graphics.Color.BLACK));
+                ta.recycle();
+                return tv;
+            }
+        };
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(yearAdapter);
 
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, months);
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, months) {
+            @Override
+            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
+                android.widget.TextView tv = (android.widget.TextView) super.getView(position, convertView, parent);
+                int[] attrs = { android.R.attr.textColorPrimary };
+                android.content.res.TypedArray ta = getContext().obtainStyledAttributes(attrs);
+                tv.setTextColor(ta.getColor(0, android.graphics.Color.BLACK));
+                ta.recycle();
+                return tv;
+            }
+        };
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMonth.setAdapter(monthAdapter);
 

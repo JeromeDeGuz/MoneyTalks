@@ -56,8 +56,18 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
     {
         BudgetSummary budgetSummary = budgetSummaries.get(position);
 
+        // Resolve theme text color once
+        int[] attrs = { android.R.attr.textColorPrimary };
+        android.content.res.TypedArray ta = holder.itemView.getContext().obtainStyledAttributes(attrs);
+        int themeTextColor = ta.getColor(0, Color.BLACK);
+        ta.recycle();
+
         holder.tvCategoryName.setText(budgetSummary.getCategoryName());
+        holder.tvCategoryName.setTextColor(themeTextColor);
+
         holder.tvBudgetAmount.setText(budgetSummary.getBudget().toPlainString());
+        holder.tvBudgetAmount.setTextColor(themeTextColor);
+
         holder.tvSpentThisMonth.setText(budgetSummary.getSpentThisMonth().toPlainString());
 
         if (budgetSummary.isOverBudget())
@@ -67,7 +77,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         }
         else
         {
-            holder.tvSpentThisMonth.setTextColor(Color.BLACK);
+            holder.tvSpentThisMonth.setTextColor(themeTextColor);
             holder.tvSpentThisMonth.setTypeface(holder.tvSpentThisMonth.getTypeface(), Typeface.NORMAL);
         }
 
