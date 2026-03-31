@@ -2,10 +2,14 @@ package com.bugbytes.moneytalks.presentation;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -15,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugbytes.moneytalks.R;
 import com.bugbytes.moneytalks.application.MoneyTalksApp;
-import com.bugbytes.moneytalks.models.BudgetSummary;
 import com.bugbytes.moneytalks.business.services.BudgetService;
+import com.bugbytes.moneytalks.models.BudgetSummary;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,7 +38,7 @@ public class BudgetActivity extends AppCompatActivity
     private int selectedYear;
     private int selectedMonth;
 
-    //onCreate: It sets up the activity layout, initializes the budget service, and prepares the RecyclerView and controls. Takes in @param savedInstanceState.
+    //onCreate: Sets up the activity layout, initializes the budget service, and prepares the RecyclerView and controls. @param savedInstanceState Stores the previous activity state if available.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -59,7 +63,7 @@ public class BudgetActivity extends AppCompatActivity
         setupYearMonthSpinners();
     }
 
-    //onResume: It refreshes the monthly budget data whenever the activity returns to the foreground. Takes in nothing.
+    //onResume: Reloads the budget summaries whenever the activity becomes visible again.
     @Override
     protected void onResume()
     {
@@ -67,7 +71,7 @@ public class BudgetActivity extends AppCompatActivity
         loadBudgetSummaries();
     }
 
-    //setupYearMonthSpinners: It sets the default selected year and month to the current date and reloads data when the selection changes. Takes in nothing.
+    //setupYearMonthSpinners: Creates and initializes the year and month spinners, then updates the selected values when the user changes them.
     private void setupYearMonthSpinners()
     {
         LocalDate today = LocalDate.now();
@@ -86,28 +90,42 @@ public class BudgetActivity extends AppCompatActivity
             months.add(String.valueOf(month));
         }
 
-        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, years) {
+        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years)
+        {
             @Override
-            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
-                android.widget.TextView tv = (android.widget.TextView) super.getView(position, convertView, parent);
-                int[] attrs = { android.R.attr.textColorPrimary };
-                android.content.res.TypedArray ta = getContext().obtainStyledAttributes(attrs);
-                tv.setTextColor(ta.getColor(0, android.graphics.Color.BLACK));
-                ta.recycle();
+            public View getView(int position, View convertView, ViewGroup parent)
+            {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface));
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent)
+            {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface));
                 return tv;
             }
         };
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(yearAdapter);
 
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, months) {
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, months)
+        {
             @Override
-            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
-                android.widget.TextView tv = (android.widget.TextView) super.getView(position, convertView, parent);
-                int[] attrs = { android.R.attr.textColorPrimary };
-                android.content.res.TypedArray ta = getContext().obtainStyledAttributes(attrs);
-                tv.setTextColor(ta.getColor(0, android.graphics.Color.BLACK));
-                ta.recycle();
+            public View getView(int position, View convertView, ViewGroup parent)
+            {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface));
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent)
+            {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface));
                 return tv;
             }
         };
@@ -130,7 +148,15 @@ public class BudgetActivity extends AppCompatActivity
         }));
     }
 
-    //loadBudgetSummaries: It retrieves the budget summaries for the selected year and month and updates the adapter. Takes in nothing.
+    //resolveThemeColor: Returns the color value for the given theme attribute. @param attr The theme color attribute to resolve.
+    private int resolveThemeColor(int attr)
+    {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(attr, typedValue, true);
+        return typedValue.data;
+    }
+
+    //loadBudgetSummaries: Retrieves the budget summaries for the selected year and month, then displays them in the RecyclerView.
     private void loadBudgetSummaries()
     {
         try
@@ -144,7 +170,7 @@ public class BudgetActivity extends AppCompatActivity
         }
     }
 
-    //showEditBudgetDialog: It shows a dialog that lets the user update only the budget value for one category. Takes in @param budgetSummary.
+    //showEditBudgetDialog: Opens a dialog for editing the selected category budget and saves the new value. @param budgetSummary The budget summary selected by the user.
     private void showEditBudgetDialog(BudgetSummary budgetSummary)
     {
         final EditText budgetInput = new EditText(this);
