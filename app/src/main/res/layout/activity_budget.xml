@@ -149,5 +149,5 @@
         android:background="@drawable/bg_back_button"
         android:text="Back"
         android:textAllCaps="false"
-        android:textColor="?attr/colorOnSurface" />
+        android:textColor="?attr/colorOnPrimary" />
 </LinearLayout>
