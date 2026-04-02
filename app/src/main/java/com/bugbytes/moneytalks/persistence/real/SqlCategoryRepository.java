@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
-import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,13 +20,6 @@ public class SqlCategoryRepository implements CategoryRepository
     public SqlCategoryRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-
-        //Safety Check: Only populate if empty to prevent duplicate primary keys in SQLite
-        if (isEmpty())
-        {
-            DefaultContent defaultContent = new DefaultContent();
-            defaultContent.populateCategories(this);
-        }
     }
 
     //addCategory: It inserts a new category record into the SQLite database. Takes in @param category.
