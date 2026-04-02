@@ -34,13 +34,13 @@ public class DefaultContent
     {
         if (categoryRepo.isEmpty())
         {
-            categoryRepo.addCategory(new Category("Transport"));
-            categoryRepo.addCategory(new Category("Food"));
-            categoryRepo.addCategory(new Category("Shopping"));
-            categoryRepo.addCategory(new Category("Housing"));
-            categoryRepo.addCategory(new Category("Car"));
-            categoryRepo.addCategory(new Category("Subscriptions"));
-            categoryRepo.addCategory(new Category("School"));
+            categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("Food", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("Shopping", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("Housing", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("Car", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("Subscriptions", new BigDecimal(500)));
+            categoryRepo.addCategory(new Category("School", new BigDecimal(500)));
         }
     }
 }

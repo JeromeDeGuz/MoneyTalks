@@ -44,7 +44,7 @@ public class MoneyTalksApp extends Application
         int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedMode);
 
-        final boolean useSqliteDB = true;
+        final boolean useSqliteDB = false;
 
         ExpenseRepository expenseRepository;
         CategoryRepository categoryRepository;
