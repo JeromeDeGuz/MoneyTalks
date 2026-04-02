@@ -3,7 +3,6 @@ package com.bugbytes.moneytalks.persistence.fake;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
-import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +15,6 @@ public class FakeExpenseRepository implements ExpenseRepository
     //FakeExpenseRepository: Constructor for the fake repository. Takes in nothing.
     public FakeExpenseRepository()
     {
-        //Only add sample data if the list is empty to prevent duplicates on every instance creation
-        DefaultContent defaultContent = new DefaultContent();
-        defaultContent.populateExpenses(this);
     }
 
     //addExpense: It adds a new expense with a generated ID. Takes in @param expense.

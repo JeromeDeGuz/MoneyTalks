@@ -12,6 +12,7 @@ import com.bugbytes.moneytalks.business.validation.CategoryValidator;
 import com.bugbytes.moneytalks.business.validation.ExpenseValidator;
 
 //Persistence layer imports: repositories (both fake and real)
+import com.bugbytes.moneytalks.persistence.DefaultContent;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 import com.bugbytes.moneytalks.persistence.fake.FakeCategoryRepository;
 import com.bugbytes.moneytalks.persistence.fake.FakeExpenseRepository;
@@ -44,7 +45,7 @@ public class MoneyTalksApp extends Application
         int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedMode);
 
-        final boolean useSqliteDB = false;
+        final boolean useSqliteDB = true;
 
         ExpenseRepository expenseRepository;
         CategoryRepository categoryRepository;
@@ -59,6 +60,10 @@ public class MoneyTalksApp extends Application
             expenseRepository = new FakeExpenseRepository();
             categoryRepository = new FakeCategoryRepository();
         }
+
+        //centralize default content population, only if both are empty
+        DefaultContent defaultContent = new DefaultContent();
+        defaultContent.populate(expenseRepository, categoryRepository);
 
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);

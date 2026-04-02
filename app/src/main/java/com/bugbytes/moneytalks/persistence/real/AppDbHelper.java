@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.persistence.real;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,14 +15,12 @@ public class AppDbHelper extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    //onCreate: It initializes the database schema and populates initial data. Takes in @param db.
+    //onCreate: It initializes the database schema. Takes in @param db.
     @Override
     public void onCreate(SQLiteDatabase db)
     {
         createExpenseTable(db);
         createCategoriesTable(db);
-        // CHANGE: Call the helper method to insert default data
-        insertDefaultCategories(db);
     }
 
     //onUpgrade: It handles database version changes by dropping and recreating tables. Takes in @param db and oldVersion and newVersion.
@@ -58,20 +55,5 @@ public class AppDbHelper extends SQLiteOpenHelper
                 DbContract.CategoryEntry.COLUMN_BUDGET + " TEXT NOT NULL)";
 
         db.execSQL(createCategoriesTableQuery);
-    }
-
-    //insertDefaultCategories: It populates the categories table with initial values. Takes in @param db.
-    private void insertDefaultCategories(SQLiteDatabase db)
-    {
-        String[] categories = {"Food", "Transport", "Shopping", "Entertainment", "Health", "Bills"};
-
-        for (String name : categories)
-        {
-            ContentValues values = new ContentValues();
-            values.put(DbContract.CategoryEntry.COLUMN_NAME, name);
-            values.put(DbContract.CategoryEntry.COLUMN_BUDGET, "0");
-
-            db.insert(DbContract.CategoryEntry.TABLE_NAME, null, values);
-        }
     }
 }

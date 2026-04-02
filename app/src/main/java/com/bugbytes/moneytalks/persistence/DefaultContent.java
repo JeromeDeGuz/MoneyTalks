@@ -10,7 +10,23 @@ public class DefaultContent
 {
     //centralize where we will have default content populate in
 
+    /**
+     * Fills both repositories with initial sample data if and only if both are empty.
+     * This prevents the issue where deleting all expenses but keeping one category
+     * would trigger a re-population of expenses only.
+     */
+    public void populate(ExpenseRepository expenseRepo, CategoryRepository categoryRepo)
+    {
+        if (expenseRepo.isEmpty() && categoryRepo.isEmpty())
+        {
+//            populateCategories(categoryRepo);
+            populateExpenses(expenseRepo);
+        }
+    }
+
     //populateExpenses: It fills the repository with initial sample expense data. Takes in @param expenseRepo.
+
+
     public void populateExpenses(ExpenseRepository expenseRepo)
     {
         if (expenseRepo.isEmpty())
@@ -30,17 +46,14 @@ public class DefaultContent
     }
 
     //populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
-    public void populateCategories(CategoryRepository categoryRepo)
-    {
-        if (categoryRepo.isEmpty())
-        {
-            categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("Food", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("Shopping", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("Housing", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("Car", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("Subscriptions", new BigDecimal(500)));
-            categoryRepo.addCategory(new Category("School", new BigDecimal(500)));
-        }
-    }
+//    public void populateCategories(CategoryRepository categoryRepo)
+//    {
+//        categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("Food", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("Shopping", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("Housing", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("Car", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("Subscriptions", new BigDecimal(500)));
+//        categoryRepo.addCategory(new Category("School", new BigDecimal(500)));
+//    }
 }
