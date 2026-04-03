@@ -1,176 +1,334 @@
-# Overview
-MoneyTalks helps users track their expenses efficiently. It allows adding, editing, deleting, and viewing expenses. Users can also organize expenses using categories, filter expenses by category, and sort expenses by date.
+# MoneyTalks Architecture
 
-The app follows a **3-tier architecture** for clean separation of concerns:  
+## Overview
+MoneyTalks is an offline-first Android expense tracker. Users can add, edit, delete, view, sort, and filter expenses, manage categories, assign category budgets, and review monthly budget summaries. The app keeps data local on the device and is organized around a **3-tier architecture** with an **application/composition root** that wires dependencies together.
 
-- **Presentation Layer:** Handles the user interface (UI)  
-- **Business Layer:** Manages core logic and application rules  
-- **Persistence Layer:** Handles data storage and retrieval  
-
-
-## Architecture
-
-### 1. Application Layer 
-This layer acts as the Dependency Injector for the entire application. Instead of classes creating their own dependencies, MoneyTalksApp explicitly wires them together.
-
-**Specific Concrete Wiring**:
-- Expense Service Wiring: It instantiates SqlExpenseRepository and injects it into the ExpenseServiceImpl constructor.
-- Category Service Wiring: It instantiates SqlCategoryRepository and injects it into the CategoryServiceImpl constructor.
-- Cross-Layer Integrity Wiring: It provides the SqlExpenseRepository to the CategoryServiceImpl so the business layer can verify if a category is in use before allowing deletion.
-- Validation Wiring: It instantiates the concrete ExpenseValidator and CategoryValidator classes and provides them to their respective services.
-
-**Why this matters:** This explicit wiring ensures that our Business Layer only communicates with Interfaces (like ExpenseRepository) and remains completely unaware of the underlying SQLite implementation.
-
-**Components**
-- **MoneyTalksApp:** Entry point of the app. It initializes application-wide services and wires Business Layer to Persistence Layer.
-
-In Iteration 2, it creates the SQLite database helper and repositories and provides them to the business services.
-
-It:
-
-- Creates `AppDbHelper` (SQLite database helper)
-- Creates `SqlRepository` and provides it to `ExpenseServiceImpl`
-- Creates `SqlCategoryRepository` and provides it to `CategoryServiceImpl`
-- Creates `ExpenseValidator` and provides it to `ExpenseServiceImpl`
-
-### 2. Presentation Layer (UI)
-This layer handles everything the user sees and interacts with. It **displays data** and **collects user input**.  
-
-**Components:**
-- **AddAndEditExpense:** Screen to add or edit expenses. Collects name, amount, category, date, and notes.
-- **ExpenseListActivity:** Displays all recorded expenses in a list format.
-- **ManageCategoriesActivity:** Screen used to add, view, and delete categories.
-- **SettingsActivity:** Displays application settings.
-- **ExpenseAdapter:** Bridges raw expense data with the UI, ensuring each expense is displayed correctly.
-- **CategoryAdapter:** Bridges raw category data with the UI.
-
-**Interactions:**
-
-- `AddAndEditExpense` → calls → `ExpenseService`
-- `ExpenseListActivity` → calls → `ExpenseService`
-- `ManageCategoriesActivity` → calls → `CategoryService`
-
-
----
-### 3. Business Layer (Logic)
-This layer contains the **core functionality** and **rules** of the app. It processes data and enforces validation without concern for storage or UI.  
-
-1. **services**
-
-- **ExpenseService:** Defines operations such as addExpense, deleteExpense, updateExpense, getAllExpenses, getExpensesSortedByDate, getExpensesByCategorySortedByDate, and getExpenseById.
-- **CategoryService:** Defines operations such as addCategory, updateCategory, deleteCategory, getCategory, and getAllCategories.
-- **ExpenseServiceImpl:** Implements ExpenseService operations, including expense validation, editing, deleting, filtering by category, and sorting by date.
-- **CategoryServiceImpl:** Implements CategoryService operations and manages category data, including updating category names and preventing deletion of categories that still contain expenses.
-
-
-2. **validation**
-
-- **ExpenseValidator:** Ensures user input for expenses is valid (e.g., non-empty name, positive amount, valid category, and valid date).
-- **CategoryValidator:** Ensures category input is valid (e.g., non-empty category name, no duplicate category names, and category name cannot contain only numbers).
-- **ValidationException:** Custom exception thrown when validation rules are violated.
-- **Validator:** Generic validation interface used to enforce validation rules for different models.
-
-
-**Interactions:**
-- ExpenseServiceImpl → uses → ExpenseRepository
-- CategoryServiceImpl → uses → CategoryRepository
-- CategoryServiceImpl → uses → ExpenseRepository
-- ExpenseServiceImpl → uses → Validator<Expense>
-- CategoryServiceImpl → uses → Validator<Category>
-- ExpenseValidator → validates → Expense
-- CategoryValidator → validates → Category
-- Validator → throws → ValidationException
-
+### High-level layers
+- **Application layer:** Creates and wires concrete objects.
+- **Presentation layer:** Activities, adapters, and UI event handling.
+- **Business layer:** Application rules, validation, filtering, sorting, budget calculations.
+- **Persistence layer:** Repository interfaces plus fake and SQLite implementations.
+- **Models:** Shared data objects passed across layers.
 
 ---
 
-### 4. Persistence Layer (Storage)
-Responsible for storing and retrieving data, this layer abstracts the storage mechanism, allowing flexibility to swap databases in the future.
+## Package structure
 
-In Iteration 1, a stub implementation (FakeExpenseRepository) was used. In Iteration 2, a full SQLite persistence layer has been implemented under the real package. With an addition of FakeCategoryRepository that was included to reflect/mirror the behaviour of the SqlCategoryRepository.
-
-**Components:**
-
-1. **fake**
-- **FakeExpenseRepository:** In-memory implementation of ExpenseRepository. It uses a static list to persist data during runtime and utilizes DefaultContent for sample data.
-- **FakeCategoryRepository:** In-memory implementation of CategoryRepository.
-
-Behavior: These components store data in memory during runtime and reset to default data whenever the app restarts.
-
-2. **real (SQLite Implementation)**
-- **AppDbHelper:** SQLite database helper responsible for creating the database and managing schema versions.
-
-- **DbContract:** Defines the formal schema (table names and column names) for the database.
-
-- **SqlExpenseRepository:** SQLite implementation of ExpenseRepository. It handles:
-    1. Inserting, updating, and deleting expenses.
-    1. Retrieving expenses (all or by specific ID).
-    1. Syncing expense categories when a category name is updated.
-
-- **SqlCategoryRepository:** SQLite implementation of CategoryRepository. It handles:
-
-  1. CRUD operations for categories.
-  1. Retrieving categories by name.
-    
-
-3. **Core Interfaces & Exceptions**: 
-- **ExpenseRepository:** Interface defining the contract for expense data operations (Add, Delete, Update, Get, Category Sync).
-- **CategoryRepository:** Interface defining the contract for category management (Add, Delete, Update, Find).
-- **DefaultContent:** Centralized class that populates repositories with initial sample data (e.g., "Uber", "Rent", "Spotify") if they are empty.
-- **PersistenceException:** A custom RuntimeException thrown when database operations fail.
-
-
-**Interactions:**
-
-- `ExpenseServiceImpl` → calls → `ExpenseRepository`
-- `CategoryServiceImpl` → calls → `CategoryRepository`
-- `CategoryServiceImpl` → calls → ExpenseRepository` (for checking category usage)
-- `FakeExpenseRepository` — implements → `ExpenseRepository`
-- `FakeCategoryRepository` — implements → `CategoryRepository`
-- `SqlExpenseRepository` — implements → `ExpenseRepository`
-- `SqlCategoryRepository` — implements → `CategoryRepository`
-- `SqlExpenseRepository` / `SqlCategoryRepository` → uses → `AppDbHelper`
-
-
-**Additional Business & Validation Logic**:
-To ensure data integrity before it reaches the persistence layer, the following interactions occur:
-
-- `ExpenseServiceImpl` → uses → `Validator<Expense>`
-- `CategoryServiceImpl` → uses → `Validator<Category>`
-- `ExpenseValidator` → validates → `Expense`
-- `CategoryValidator` → validates → `Category`
-- `Validator` → throws → ValidationException (if rules are breached)
-
-
----
-### 5. Models (Data Objects)
-Models define the **structure of the data** used across the application.  
-
-- **Expense:** Represents a single expense with the following fields:
-  - `ID` – Unique identifier
-  - `name` – Expense title
-  - `amount` – Monetary value
-  - `category` – Type of expense (e.g., Food, Travel, Bills)
-  - `date` – Date of the expense
-  - `notes` - Optional field for fuller description of expense
-
-- **Category:** Represents an expense category used to organize expenses with the following fields:
-  - `ID` – Unique identifier
-  - `name` – Category name (e.g., Food, Travel, Bills)
-  - `budget` - It is a future feature that we will implement in iteration 3. 
-
-
-**Model Usage:**
-The models are used across all layers:
-
-- **Presentation layer** – displaying expenses and categories
-- **Business layer** – validation and logic
-- **Persistence layer** – database storage 
+```text
+com.bugbytes.moneytalks
+├── application
+│   └── MoneyTalksApp
+├── presentation
+│   ├── ExpenseListActivity
+│   ├── AddAndEditExpense
+│   ├── ManageCategoriesActivity
+│   ├── BudgetActivity
+│   ├── SettingsActivity
+│   ├── ExpenseAdapter
+│   ├── CategoryAdapter
+│   ├── BudgetAdapter
+│   └── SimpleItemSelectedListener
+├── business
+│   ├── services
+│   │   ├── ExpenseService / ExpenseServiceImpl
+│   │   ├── CategoryService / CategoryServiceImpl
+│   │   └── BudgetService / BudgetServiceImpl
+│   └── validation
+│       ├── ExpenseValidator
+│       ├── CategoryValidator
+│       ├── Validator
+│       └── ValidationException
+├── persistence
+│   ├── ExpenseRepository
+│   ├── CategoryRepository
+│   ├── DefaultContent
+│   ├── fake
+│   │   ├── FakeExpenseRepository
+│   │   └── FakeCategoryRepository
+│   └── real
+│       ├── AppDbHelper
+│       ├── DbContract
+│       ├── SqlExpenseRepository
+│       └── SqlCategoryRepository
+└── models
+    ├── Expense
+    ├── Category
+    └── BudgetSummary
+```
 
 ---
 
-For a **clearer view of the 3-tier architecture** and how the components interact, see the diagram below:
+## 1. Application layer
+This layer acts as the app's **composition root**. `MoneyTalksApp` is responsible for creating concrete implementations and exposing ready-to-use services to the presentation layer.
 
-![3-Tier Architecture Diagram](Docs/Architecture/ArchitectureDiagram.png)
+### Responsibilities
+- Loads the saved theme mode from `SharedPreferences` at app startup.
+- Chooses the persistence implementation:
+  - `SqlExpenseRepository` and `SqlCategoryRepository` when SQLite is enabled.
+  - `FakeExpenseRepository` and `FakeCategoryRepository` when the in-memory option is used.
+- Populates initial sample data through `DefaultContent` only when **both** repositories are empty.
+- Creates validators and business services.
+- Exposes service getters for use by activities.
 
+### Wiring
+- `ExpenseRepository` -> `ExpenseServiceImpl`
+- `CategoryRepository` + `ExpenseRepository` + `CategoryValidator` -> `CategoryServiceImpl`
+- `ExpenseValidator` -> `ExpenseServiceImpl`
+- `CategoryService` + `ExpenseService` -> `BudgetServiceImpl`
 
+### Why this matters
+The UI never constructs repositories directly. The business layer depends on repository **interfaces**, so the app can switch between fake and real persistence with minimal impact on the rest of the code.
+
+---
+
+## 2. Presentation layer
+The presentation layer contains Android activities and adapters. It handles user interaction, screen navigation, and rendering data returned by the business layer.
+
+### Activities
+- **`ExpenseListActivity`**
+  - Main expense screen.
+  - Displays all expenses in a `RecyclerView`.
+  - Supports sorting by date and filtering by category.
+  - Navigates to add/edit, budget, and settings screens.
+
+- **`AddAndEditExpense`**
+  - Form screen for creating or updating an expense.
+  - Collects name, amount, category, date, and note.
+  - Can add a category inline through a dialog.
+  - After saving, asks `BudgetService` for the selected category's monthly summary and shows an over-budget warning when needed.
+
+- **`ManageCategoriesActivity`**
+  - Displays categories in a list.
+  - Supports add, edit, and delete operations.
+
+- **`BudgetActivity`**
+  - Displays monthly budget summaries for all categories.
+  - Lets the user switch year and month.
+  - Allows editing a category's budget.
+
+- **`SettingsActivity`**
+  - Navigates to category management and budget screens.
+  - Saves light/dark theme preference using `SharedPreferences`.
+
+### Adapters / UI helpers
+- **`ExpenseAdapter`**: Binds `Expense` data to expense rows and handles edit/delete UI events.
+- **`CategoryAdapter`**: Binds `Category` data and includes an extra add-category row.
+- **`BudgetAdapter`**: Binds `BudgetSummary` data and highlights over-budget spending.
+- **`SimpleItemSelectedListener`**: Simplifies spinner selection callbacks in the budget screen.
+
+### Presentation-layer dependencies
+- `ExpenseListActivity` -> `ExpenseService`
+- `AddAndEditExpense` -> `ExpenseService`, `CategoryService`, `BudgetService`
+- `ManageCategoriesActivity` -> `CategoryService`
+- `BudgetActivity` -> `BudgetService`
+- `SettingsActivity` -> Android settings/navigation APIs
+
+---
+
+## 3. Business layer
+The business layer contains the app's rules and processing logic. It is independent of Android UI widgets and focuses on validation, use-case logic, and data transformation.
+
+### 3.1 Services
+
+#### `ExpenseService` / `ExpenseServiceImpl`
+Handles expense-related use cases:
+- Add a new expense.
+- Update an existing expense.
+- Delete an expense.
+- Retrieve all expenses.
+- Sort expenses by date.
+- Filter expenses by category and then sort them.
+- Retrieve an expense by ID.
+- Provide string-based add/update helpers for presentation-layer form input.
+
+`ExpenseServiceImpl` validates expenses before saving and delegates storage to `ExpenseRepository`.
+
+#### `CategoryService` / `CategoryServiceImpl`
+Handles category-related use cases:
+- Add, update, delete, and retrieve categories.
+- Prevent deletion of a category that is still used by expenses.
+- Propagate category renames to the expense data.
+- Calculate monthly spending for a category.
+- Check whether a category has exceeded its budget in a target month.
+
+`CategoryServiceImpl` depends on both `CategoryRepository` and `ExpenseRepository` because category operations can affect expense records.
+
+#### `BudgetService` / `BudgetServiceImpl`
+Handles budget-summary use cases:
+- Build monthly summaries for all categories.
+- Build a summary for one category.
+- Update the budget amount for a category.
+
+`BudgetServiceImpl` does not talk directly to repositories. Instead, it composes existing business services:
+- Reads categories from `CategoryService`
+- Reads expenses from `ExpenseService`
+- Updates budgets through `CategoryService`
+
+This keeps budget logic at the business-service level instead of duplicating persistence access.
+
+### 3.2 Validation
+- **`ExpenseValidator`** checks:
+  - non-null expense object
+  - non-empty name
+  - name is not only digits
+  - name length between 2 and 50
+  - amount greater than zero
+  - non-empty category
+  - non-null date
+  - date not in the future
+  - note length at most 500
+
+- **`CategoryValidator`** checks:
+  - non-empty category name
+  - no duplicate category names (case-insensitive)
+  - name is not only digits
+  - budget is not null
+  - budget is not negative
+
+- **`ValidationException`** is the domain-level exception used when business rules are violated.
+- **`Validator<T>`** is the shared validation interface.
+
+### Business-layer dependency summary
+- `ExpenseServiceImpl` -> `ExpenseRepository`, `ExpenseValidator`
+- `CategoryServiceImpl` -> `CategoryRepository`, `ExpenseRepository`, `CategoryValidator`
+- `BudgetServiceImpl` -> `CategoryService`, `ExpenseService`
+
+---
+
+## 4. Persistence layer
+The persistence layer abstracts storage behind repository interfaces.
+
+### 4.1 Repository interfaces
+- **`ExpenseRepository`**
+  - add/delete/update expenses
+  - get all expenses
+  - get expense by ID
+  - check emptiness
+  - check whether a category is used by any expense
+  - update expense category references after a category rename
+
+- **`CategoryRepository`**
+  - add/delete/update categories
+  - get all categories
+  - find a category by name
+  - check emptiness
+
+These interfaces isolate the business layer from the concrete storage mechanism.
+
+### 4.2 Fake repositories
+Used for in-memory runtime storage:
+- **`FakeExpenseRepository`**
+  - stores expenses in a static list
+  - generates IDs in memory
+  - supports CRUD and category synchronization
+
+- **`FakeCategoryRepository`**
+  - stores categories in memory
+  - supports CRUD lookups by name
+
+These are useful for testing and for keeping the business layer decoupled from SQLite.
+
+### 4.3 Real SQLite repositories
+Used for persistent device storage:
+- **`AppDbHelper`**
+  - creates and upgrades the SQLite database
+  - creates `expenses` and `categories` tables
+
+- **`DbContract`**
+  - defines table and column names for both tables
+
+- **`SqlExpenseRepository`**
+  - stores `Expense` rows in SQLite
+  - converts between DB rows and `Expense` objects
+  - supports category usage checks and bulk category rename updates
+
+- **`SqlCategoryRepository`**
+  - stores `Category` rows in SQLite
+  - persists category budgets as well as names
+  - retrieves category records by name or as a full list
+
+### 4.4 Default content seeding
+`DefaultContent` inserts starter categories and starter expenses, but only when **both** repositories are empty. This avoids partial reseeding problems.
+
+---
+
+## 5. Models
+These classes are shared data objects used across multiple layers.
+
+### `Expense`
+Represents one expense.
+- `id`
+- `name`
+- `amount`
+- `category`
+- `date`
+- `note`
+
+### `Category`
+Represents one expense category.
+- `id`
+- `name`
+- `budget`
+
+### `BudgetSummary`
+Represents the calculated monthly budget state for one category.
+- `categoryName`
+- `budget`
+- `spentThisMonth`
+- derived helpers such as `isOverBudget()` and `getOverAmount()`
+
+---
+
+## 6. Main data flows
+
+### Add expense flow
+1. User enters data in `AddAndEditExpense`.
+2. Screen sends data to `ExpenseService`.
+3. `ExpenseValidator` validates the expense.
+4. `ExpenseRepository` saves the expense.
+5. `BudgetService` computes the updated category summary.
+6. UI shows an over-budget dialog if spending exceeds the category budget.
+
+### Edit category flow
+1. User edits a category in `ManageCategoriesActivity` or updates a budget in `BudgetActivity`.
+2. Request goes to `CategoryService` or `BudgetService`.
+3. `CategoryServiceImpl` updates the category record.
+4. If the category name changed, `ExpenseRepository.updateExpenseCategory(...)` syncs related expenses.
+
+### Delete category flow
+1. User requests deletion in `ManageCategoriesActivity`.
+2. `CategoryServiceImpl` checks whether any expense still uses that category.
+3. If linked expenses exist, deletion is rejected.
+4. Otherwise, `CategoryRepository` removes the category.
+
+---
+
+## 7. Architectural rules and dependency direction
+MoneyTalks follows these dependency rules:
+- Presentation depends on business services, not repositories.
+- Business depends on repository interfaces, not concrete SQLite classes.
+- Persistence implements the interfaces required by business.
+- The application layer is the only place that knows the concrete wiring.
+- Models move between layers as plain data objects.
+
+In short, the dependency direction is:
+
+```text
+Presentation -> Business -> Persistence
+                ^
+                |
+           Application wiring
+```
+
+---
+
+## 8. Notes on the current design
+- The app now includes a real **budget feature**, so category budgets are no longer just a future placeholder.
+- Theme mode is stored locally with `SharedPreferences`, which complements the main repository-based data persistence.
+- The architecture supports both fake and SQLite storage without changing presentation code.
+- Budget logic is implemented as a separate business service built on top of the existing category and expense services.
+
+---
+
+## Summary
+MoneyTalks uses a layered architecture that keeps UI, business rules, and storage concerns separated. `MoneyTalksApp` wires the system together, repositories hide the storage details, validators protect domain rules, and the budget feature is implemented as a higher-level business service built from the category and expense services.
