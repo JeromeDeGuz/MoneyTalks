@@ -85,7 +85,8 @@ public class ExpenseServiceImplTest
 
     //testAddExpenseValidSuccess: It confirms that a valid expense is validated and added to the repository. Takes in nothing.
     @Test
-    public void testAddExpenseValidSuccess() throws ValidationException {
+    public void testAddExpenseValidSuccess() throws ValidationException
+    {
         Expense e = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
 
         service.addExpense(e);
@@ -96,7 +97,8 @@ public class ExpenseServiceImplTest
 
     //testAddExpenseInvalidThrowsException: It ensures that validation errors prevent the expense from being saved. Takes in nothing.
     @Test
-    public void testAddExpenseInvalidThrowsException() throws ValidationException {
+    public void testAddExpenseInvalidThrowsException() throws ValidationException
+    {
         Expense e = new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "");
         doThrow(new ValidationException("Too short")).when(validator).validate(e);
 
@@ -106,7 +108,8 @@ public class ExpenseServiceImplTest
 
     //testUpdateExpenseSuccess: It verifies that updating an expense validates it and returns true on success. Takes in nothing.
     @Test
-    public void testUpdateExpenseSuccess() throws ValidationException {
+    public void testUpdateExpenseSuccess() throws ValidationException
+    {
         Expense e = new Expense(1, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(true);
 
@@ -118,14 +121,16 @@ public class ExpenseServiceImplTest
 
     //testUpdateExpenseNullReturnsFalse: It ensures updating a null expense returns false without interactions. Takes in nothing.
     @Test
-    public void testUpdateExpenseNullReturnsFalse() throws ValidationException {
+    public void testUpdateExpenseNullReturnsFalse() throws ValidationException
+    {
         assertFalse(service.updateExpense(null));
         verifyNoInteractions(repo, validator);
     }
 
     //testUpdateExpenseNotFoundReturnsFalse: It checks if updating a non-existent expense returns false. Takes in nothing.
     @Test
-    public void testUpdateExpenseNotFoundReturnsFalse() throws ValidationException {
+    public void testUpdateExpenseNotFoundReturnsFalse() throws ValidationException
+    {
         Expense e = new Expense(99, "Fake", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(repo.updateExpense(e)).thenReturn(false);
 
@@ -226,7 +231,8 @@ public class ExpenseServiceImplTest
     // ---------------- string-based addExpense ----------------
 
     @Test
-    public void testAddExpense_StringBased_Valid_Success() throws ValidationException {
+    public void testAddExpense_StringBased_Valid_Success() throws ValidationException
+    {
         Expense parsed = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(validator.validateAndParse("Lunch", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);
 
@@ -238,7 +244,8 @@ public class ExpenseServiceImplTest
 // ---------------- string-based updateExpense ----------------
 
     @Test
-    public void testUpdateExpense_StringBased_Valid_Success() throws ValidationException {
+    public void testUpdateExpense_StringBased_Valid_Success() throws ValidationException
+    {
         Expense parsed = new Expense(0, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(validator.validateAndParse("Dinner", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);
         when(repo.updateExpense(any(Expense.class))).thenReturn(true);

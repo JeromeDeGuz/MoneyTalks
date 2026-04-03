@@ -57,7 +57,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         BudgetSummary budgetSummary = budgetSummaries.get(position);
 
         // Resolve theme text color once
-        int[] attrs = { android.R.attr.textColorPrimary };
+        int[] attrs = {android.R.attr.textColorPrimary};
         android.content.res.TypedArray ta = holder.itemView.getContext().obtainStyledAttributes(attrs);
         int themeTextColor = ta.getColor(0, Color.BLACK);
         ta.recycle();

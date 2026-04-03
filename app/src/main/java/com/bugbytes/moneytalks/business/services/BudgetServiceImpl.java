@@ -21,7 +21,7 @@ public class BudgetServiceImpl implements BudgetService
         this.expenseService = expenseService;
     }
 
-    //getMonthlyBudgetSummary: Returns the budget overview for all categories in the selected year and month.
+    //getMonthlyBudgetSummary: Returns the budget overview for all categories in the selected year and month. Takes in @param year and month.
     @Override
     public List<BudgetSummary> getMonthlyBudgetSummary(int year, int month)
     {
@@ -53,7 +53,7 @@ public class BudgetServiceImpl implements BudgetService
         return summaries;
     }
 
-    //getCategoryBudgetSummary: Returns the budget summary for one category in the selected year and month. Takes in @param categoryName and year and month.
+    //getCategoryBudgetSummary: Returns the budget summary for one category in the selected year and month. Takes in @param categoryName, year, and month.
     @Override
     public BudgetSummary getCategoryBudgetSummary(String categoryName, int year, int month)
     {
@@ -70,7 +70,7 @@ public class BudgetServiceImpl implements BudgetService
         return new BudgetSummary(categoryName, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
-    //updateCategoryBudget: Updates only the budget amount for the specified category. Takes in @param categoryName and newBudget.
+    //updateCategoryBudget: Updates only the budget amount for the specified category. Takes in @param categoryName and newBudget. @throws IllegalArgumentException if category is not found.
     @Override
     public void updateCategoryBudget(String categoryName, BigDecimal newBudget)
     {

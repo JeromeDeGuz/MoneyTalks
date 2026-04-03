@@ -23,7 +23,8 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-public class BudgetServiceImplTest {
+public class BudgetServiceImplTest
+{
 
     private BudgetServiceImpl budgetService;
 
@@ -34,14 +35,16 @@ public class BudgetServiceImplTest {
     private ExpenseService expenseService;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp()
+    {
         budgetService = new BudgetServiceImpl(categoryService, expenseService);
     }
 
     // ---------------- getMonthlyBudgetSummary ----------------
 
     @Test
-    public void getMonthlyBudgetSummary_NoCategories_ReturnsEmptyList() {
+    public void getMonthlyBudgetSummary_NoCategories_ReturnsEmptyList()
+    {
         when(categoryService.getAllCategories()).thenReturn(Collections.emptyList());
         when(expenseService.getAllExpenses()).thenReturn(Collections.emptyList());
 
@@ -51,7 +54,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getMonthlyBudgetSummary_NoExpenses_ReturnsZeroSpent() {
+    public void getMonthlyBudgetSummary_NoExpenses_ReturnsZeroSpent()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
         );
@@ -66,7 +70,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getMonthlyBudgetSummary_CorrectMonth_SumsExpenses() {
+    public void getMonthlyBudgetSummary_CorrectMonth_SumsExpenses()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
         );
@@ -81,7 +86,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getMonthlyBudgetSummary_DifferentMonth_ExcludesExpenses() {
+    public void getMonthlyBudgetSummary_DifferentMonth_ExcludesExpenses()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
         );
@@ -95,7 +101,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getMonthlyBudgetSummary_MultipleCategories_SumsSeparately() {
+    public void getMonthlyBudgetSummary_MultipleCategories_SumsSeparately()
+    {
         when(categoryService.getAllCategories()).thenReturn(Arrays.asList(
                 new Category(1, "Food", new BigDecimal("200.00")),
                 new Category(2, "Transport", new BigDecimal("100.00"))
@@ -111,7 +118,8 @@ public class BudgetServiceImplTest {
 
         BudgetSummary foodSummary = null;
         BudgetSummary transportSummary = null;
-        for (BudgetSummary s : result) {
+        for (BudgetSummary s : result)
+        {
             if (s.getCategoryName().equals("Food")) foodSummary = s;
             else if (s.getCategoryName().equals("Transport")) transportSummary = s;
         }
@@ -125,7 +133,8 @@ public class BudgetServiceImplTest {
     // ---------------- getCategoryBudgetSummary ----------------
 
     @Test
-    public void getCategoryBudgetSummary_Found_ReturnsCorrectSummary() {
+    public void getCategoryBudgetSummary_Found_ReturnsCorrectSummary()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("500.00")))
         );
@@ -142,7 +151,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getCategoryBudgetSummary_NotFound_ReturnsZeroSummary() {
+    public void getCategoryBudgetSummary_NotFound_ReturnsZeroSummary()
+    {
         when(categoryService.getAllCategories()).thenReturn(Collections.emptyList());
         when(expenseService.getAllExpenses()).thenReturn(Collections.emptyList());
 
@@ -157,7 +167,8 @@ public class BudgetServiceImplTest {
     // ---------------- isOverBudget / getOverAmount ----------------
 
     @Test
-    public void getCategoryBudgetSummary_OverBudget_DetectedCorrectly() {
+    public void getCategoryBudgetSummary_OverBudget_DetectedCorrectly()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Shopping", new BigDecimal("50.00")))
         );
@@ -173,7 +184,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void getCategoryBudgetSummary_UnderBudget_NotOverBudget() {
+    public void getCategoryBudgetSummary_UnderBudget_NotOverBudget()
+    {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
         );
@@ -190,7 +202,8 @@ public class BudgetServiceImplTest {
     // ---------------- updateCategoryBudget ----------------
 
     @Test
-    public void updateCategoryBudget_CategoryExists_CallsUpdateCategory() throws Exception {
+    public void updateCategoryBudget_CategoryExists_CallsUpdateCategory() throws Exception
+    {
         Category existing = new Category(1, "Food", new BigDecimal("100.00"));
         when(categoryService.getCategory("Food")).thenReturn(existing);
 
@@ -203,7 +216,8 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void updateCategoryBudget_CategoryNotFound_ThrowsException() throws Exception {
+    public void updateCategoryBudget_CategoryNotFound_ThrowsException() throws Exception
+    {
         when(categoryService.getCategory("Ghost")).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class,

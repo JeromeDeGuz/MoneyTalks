@@ -80,7 +80,8 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     //setupBottomNavigation: Configures the custom bottom nav bar.
     private void setupBottomNavigation()
     {
-        findViewById(R.id.nav_home).setOnClickListener(v -> {
+        findViewById(R.id.nav_home).setOnClickListener(v ->
+        {
             // already home, do nothing
         });
 

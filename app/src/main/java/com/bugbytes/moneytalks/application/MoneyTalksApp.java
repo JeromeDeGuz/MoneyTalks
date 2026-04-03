@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.application;
 
 //Android Application class import
+
 import android.app.Application;
 
 //Business layer imports: services and validators
@@ -25,6 +26,7 @@ import com.bugbytes.moneytalks.persistence.CategoryRepository;
 import com.bugbytes.moneytalks.persistence.real.SqlCategoryRepository;
 
 import android.content.SharedPreferences;
+
 import androidx.appcompat.app.AppCompatDelegate;
 
 //This class is created once when the app starts and acts as a central place to initialize al shared services and repositories.

@@ -142,12 +142,14 @@
             android:orientation="vertical"
             android:gravity="center"
             android:background="?attr/selectableItemBackground">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_today"
                 android:contentDescription="Home"
                 app:tint="@color/fab_icon_purple" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -164,12 +166,14 @@
             android:orientation="vertical"
             android:gravity="center"
             android:background="?attr/selectableItemBackground">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_agenda"
                 android:contentDescription="Budget"
                 app:tint="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,12 +190,14 @@
             android:orientation="vertical"
             android:gravity="center"
             android:background="?attr/selectableItemBackground">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_preferences"
                 android:contentDescription="Settings"
                 app:tint="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

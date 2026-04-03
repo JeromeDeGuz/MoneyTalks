@@ -18,6 +18,7 @@ public class CategoryServiceImpl implements CategoryService
     private final ExpenseRepository expenseRepo;
     private final CategoryValidator validator;
 
+    //CategoryServiceImpl: Constructor to initialize repositories and validator. Takes in @param categoryRepo, validator, and expenseRepo.
     public CategoryServiceImpl(CategoryRepository categoryRepo, CategoryValidator validator, ExpenseRepository expenseRepo)
     {
         this.categoryRepo = Objects.requireNonNull(categoryRepo, "Category Repository cannot be null");
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService
         this.expenseRepo = Objects.requireNonNull(expenseRepo, "Expense Repository cannot be null");
     }
 
-    //addCategory: It validates and adds a new category. Takes in @param category.
+    //addCategory: It validates and adds a new category. Takes in @param category. @throws ValidationException if category is null or invalid.
     @Override
     public void addCategory(Category category) throws ValidationException
     {
@@ -33,55 +34,54 @@ public class CategoryServiceImpl implements CategoryService
         try
         {
             Objects.requireNonNull(category, "Cannot add a null category");
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e)
+        {
             throw new ValidationException("Cannot add a null category");
         }
-
 
         validator.validate(category);
         categoryRepo.addCategory(category);
     }
 
-    //getAllCategories: Returns list of all categories. Takes in nothing and returns @return List<Category>.
+    //getAllCategories: Returns a list of all categories. Returns @return List<Category>.
     @Override
     public List<Category> getAllCategories()
     {
         return categoryRepo.getAllCategories();
     }
 
-    //updateCategory: It updates category data and syncs with expenses. Takes in @param oldCategory and newCategory.
+    //updateCategory: It updates category data and syncs with expenses. Takes in @param oldCategory and newCategory. @throws ValidationException if null.
     @Override
     public void updateCategory(Category oldCategory, Category newCategory) throws ValidationException
     {
-
-        try{
+        try
+        {
             Objects.requireNonNull(oldCategory, "Old category cannot be null");
             Objects.requireNonNull(newCategory, "New category cannot be null");
-        } catch (NullPointerException e)
+        }
+        catch (NullPointerException e)
         {
             throw new ValidationException("Old or new category cannot be null");
         }
-
-
 
         //Per feedback: Ensure business logic handles synchronization between layers
         expenseRepo.updateExpenseCategory(oldCategory, newCategory);
         categoryRepo.updateCategory(oldCategory, newCategory);
     }
 
-    //deleteCategory: It removes category if no expenses are linked. Takes in @param category.
+    //deleteCategory: It removes category if no expenses are linked. Takes in @param category. @throws ValidationException if expenses exist.
     @Override
     public void deleteCategory(Category category) throws ValidationException
     {
-
         try
         {
             Objects.requireNonNull(category, "Category to delete cannot be null");
-        } catch (NullPointerException e)
+        }
+        catch (NullPointerException e)
         {
             throw new ValidationException("Category to delete cannot be null");
         }
-
 
         //Logic check: prevent deletion if expenses are still linked (richer error handling)
         if (expenseRepo.categoryExists(category))
@@ -92,7 +92,7 @@ public class CategoryServiceImpl implements CategoryService
         categoryRepo.deleteCategory(category);
     }
 
-    //getCategory: Search for specific category based on string name. Takes in @param categoryName and @return Category.
+    //getCategory: Search for specific category based on string name. Takes in @param categoryName. Returns @return Category object.
     @Override
     public Category getCategory(String categoryName)
     {
@@ -103,6 +103,7 @@ public class CategoryServiceImpl implements CategoryService
         return categoryRepo.getCategoryByName(categoryName);
     }
 
+    //getMonthSpent: Calculates total spending for a category in a given month. Takes in @param categoryName and targetDate. Returns @return BigDecimal.
     @Override
     public BigDecimal getMonthSpent(String categoryName, LocalDate targetDate)
     {
@@ -110,11 +111,11 @@ public class CategoryServiceImpl implements CategoryService
         {
             Objects.requireNonNull(categoryName, "Category name cannot be null");
             Objects.requireNonNull(targetDate, "Target date cannot be null");
-        } catch (NullPointerException e)
+        }
+        catch (NullPointerException e)
         {
             return BigDecimal.ZERO;
         }
-
 
         BigDecimal total = BigDecimal.ZERO;
 
@@ -137,6 +138,7 @@ public class CategoryServiceImpl implements CategoryService
         return total;
     }
 
+    //hasExceededBudget: Checks if monthly spending exceeds category budget. Takes in @param categoryName and targetDate. Returns @return boolean.
     @Override
     public boolean hasExceededBudget(String categoryName, LocalDate targetDate)
     {
@@ -149,5 +151,4 @@ public class CategoryServiceImpl implements CategoryService
         BigDecimal spent = getMonthSpent(categoryName, targetDate);
         return spent.compareTo(category.getBudget()) > 0;
     }
-
 }

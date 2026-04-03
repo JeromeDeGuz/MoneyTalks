@@ -101,25 +101,34 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException {
-        if (dateStr == null || dateStr.isEmpty()) {
+    public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException
+    {
+        if (dateStr == null || dateStr.isEmpty())
+        {
             throw new ValidationException("Date is required.");
         }
-        if (amountStr == null || amountStr.isEmpty()) {
+        if (amountStr == null || amountStr.isEmpty())
+        {
             throw new ValidationException("Amount is required.");
         }
 
         BigDecimal amount;
-        try {
+        try
+        {
             amount = new BigDecimal(amountStr);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e)
+        {
             throw new ValidationException("Amount is not a valid number.");
         }
 
         LocalDate date;
-        try {
+        try
+        {
             date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        } catch (DateTimeParseException e) {
+        }
+        catch (DateTimeParseException e)
+        {
             throw new ValidationException("Date format must be dd-MM-yyyy.");
         }
 

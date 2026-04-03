@@ -10,7 +10,7 @@ public class FakeCategoryRepository implements CategoryRepository
 {
     private final List<Category> categories = new ArrayList<>();
 
-      //addCategory: It adds a new category object to the in-memory list. Takes in @param category.
+    //addCategory: It adds a new category object to the in-memory list. Takes in @param category.
     @Override
     public void addCategory(Category category)
     {
