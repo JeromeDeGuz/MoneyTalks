@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-//ExpenseAdapter: Manages the display and user interaction for the list of expenses in a RecyclerView.
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder>
 {
     private List<Expense> expenses;
@@ -36,14 +35,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         this.listener = listener;
     }
 
-    //setExpenses: It updates the internal dataset and notifies the observer of the change. Takes in @param newExpenses.
+    //setExpenses: It updates the internal dataset and refreshes the RecyclerView UI. Takes in @param newExpenses.
     public void setExpenses(List<Expense> newExpenses)
     {
         this.expenses = newExpenses;
         notifyDataSetChanged();
     }
 
-    //onCreateViewHolder: It inflates the row layout and creates a new ViewHolder instance. Takes in @param parent and viewType and @return ViewHolder.
+    //onCreateViewHolder: It inflates the row layout and creates a new ViewHolder instance. Takes in @param parent and viewType. Returns @return ViewHolder.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -107,7 +106,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         }
     }
 
-    //getItemCount: It returns the total number of items in the expense list. Takes in nothing and @return size of list.
+    //getItemCount: It returns the total number of items in the expense list. Returns @return int size of list.
     @Override
     public int getItemCount()
     {

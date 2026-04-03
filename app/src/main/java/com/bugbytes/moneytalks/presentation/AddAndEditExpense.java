@@ -68,9 +68,20 @@ public class AddAndEditExpense extends AppCompatActivity
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
         loadCategories(app);
 
-        etDate.setOnClickListener(v -> showDatePicker());
-        btnCancel.setOnClickListener(v -> finish());
-        btnAddCategory.setOnClickListener(v -> showAddCategoryDialog(app));
+        etDate.setOnClickListener(v ->
+        {
+            showDatePicker();
+        });
+
+        btnCancel.setOnClickListener(v ->
+        {
+            finish();
+        });
+
+        btnAddCategory.setOnClickListener(v ->
+        {
+            showAddCategoryDialog(app);
+        });
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_EXPENSE))
@@ -93,7 +104,10 @@ public class AddAndEditExpense extends AppCompatActivity
             btnSave.setText("Save");
         }
 
-        btnSave.setOnClickListener(v -> saveOrUpdateExpense());
+        btnSave.setOnClickListener(v ->
+        {
+            saveOrUpdateExpense();
+        });
     }
 
     //loadCategories: It retrieves category data and populates the adapter. Takes in @param app.
@@ -122,7 +136,10 @@ public class AddAndEditExpense extends AppCompatActivity
         builder.setView(input);
 
         builder.setPositiveButton("Add", null);
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton("Cancel", (dialog, which) ->
+        {
+            dialog.cancel();
+        });
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -159,7 +176,7 @@ public class AddAndEditExpense extends AppCompatActivity
         autoCompleteCategory.setText(e.getCategory(), false);
     }
 
-    //showDatePicker: It displays a calendar dialog to select an expense date. Takes in nothing.
+    //showDatePicker: It displays a calendar dialog to select an expense date. Returns nothing.
     private void showDatePicker()
     {
         Calendar calendar = Calendar.getInstance();
@@ -176,7 +193,7 @@ public class AddAndEditExpense extends AppCompatActivity
         datePicker.show();
     }
 
-    //saveOrUpdateExpense: It gathers input and delegates saving logic to the service layer. Takes in nothing.
+    //saveOrUpdateExpense: It gathers input and delegates saving logic to the service layer. Returns nothing.
     private void saveOrUpdateExpense()
     {
         final String name = etExpenseName.getText().toString().trim();
@@ -187,7 +204,6 @@ public class AddAndEditExpense extends AppCompatActivity
 
         try
         {
-            //Minimal UI-level validation
             if (dateStr.isEmpty() || amountStr.isEmpty())
             {
                 throw new ValidationException("Date and Amount are required.");
@@ -236,7 +252,7 @@ public class AddAndEditExpense extends AppCompatActivity
         }
     }
 
-    //showOverBudgetDialog: It displays an over-budget warning and closes the screen only after the user presses OK. Takes in @param summary.
+    //showOverBudgetDialog: It displays an over-budget warning and closes the screen. Takes in @param summary.
     private void showOverBudgetDialog(BudgetSummary summary)
     {
         String message = "Category: " + summary.getCategoryName()

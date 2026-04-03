@@ -18,17 +18,17 @@ public class SimpleItemSelectedListener implements AdapterView.OnItemSelectedLis
         this.callback = callback;
     }
 
-    //onItemSelected: It forwards the selected position to the callback. Takes in @param parent and view and position and id.
+    //onItemSelected: It forwards the selected position to the callback. Takes in @param parent, view, position, and id. Returns nothing.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         callback.onItemSelected(position);
     }
 
-    //onNothingSelected: It does nothing when no item is selected. Takes in @param parent.
+    //onNothingSelected: Mandatory override that performs no action. Takes in @param parent. Returns nothing.
     @Override
     public void onNothingSelected(AdapterView<?> parent)
     {
-        //Do nothing
+        // Do nothing
     }
 }

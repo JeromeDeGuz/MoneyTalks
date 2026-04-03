@@ -38,6 +38,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     private String selectedCategory = "All";
     private boolean isNewestFirst = true;
 
+    //onCreate: Initializes the activity, sets up the Edge-to-Edge layout, and configures UI listeners. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,7 +78,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    //setupBottomNavigation: Configures the custom bottom nav bar.
+    //setupBottomNavigation: Configures the custom bottom navigation bar listeners. Returns nothing.
     private void setupBottomNavigation()
     {
         findViewById(R.id.nav_home).setOnClickListener(v ->
@@ -86,17 +87,24 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
 
         findViewById(R.id.nav_budget).setOnClickListener(v ->
-                startActivity(new Intent(this, BudgetActivity.class)));
+        {
+            startActivity(new Intent(this, BudgetActivity.class));
+        });
 
         findViewById(R.id.nav_settings).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
+        {
+            startActivity(new Intent(this, SettingsActivity.class));
+        });
     }
 
-    //setupSortButton: It configures the sorting button and its popup menu for date-based ordering.
+    //setupSortButton: Configures the sorting button and its popup menu for date-based ordering. Returns nothing.
     private void setupSortButton()
     {
         btnSort = findViewById(R.id.btnSort);
-        if (btnSort == null) return;
+        if (btnSort == null)
+        {
+            return;
+        }
 
         btnSort.setOnClickListener(v ->
         {
@@ -136,11 +144,14 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
-    //setupFilterButton: It configures the category filter button and dynamically builds its popup menu.
+    //setupFilterButton: Configures the category filter button and dynamically builds its popup menu. Returns nothing.
     private void setupFilterButton()
     {
         btnFilter = findViewById(R.id.btnFilter);
-        if (btnFilter == null) return;
+        if (btnFilter == null)
+        {
+            return;
+        }
 
         btnFilter.setText("Filtering by Category (All)");
 
@@ -155,14 +166,20 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
 
             List<String> categories = new ArrayList<>();
             categories.add("All");
-            for (Category c : dbCategories) categories.add(c.getName());
+            for (Category c : dbCategories)
+            {
+                categories.add(c.getName());
+            }
 
             for (int i = 0; i < categories.size(); i++)
             {
                 String c = categories.get(i);
                 MenuItem mi = menu.add(GROUP_FILTER, 200 + i, i, c);
                 mi.setCheckable(true);
-                if (c.equals(selectedCategory)) mi.setChecked(true);
+                if (c.equals(selectedCategory))
+                {
+                    mi.setChecked(true);
+                }
             }
 
             menu.setGroupCheckable(GROUP_FILTER, true, true);
@@ -180,6 +197,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         });
     }
 
+    //onResume: Reloads the expense list whenever the activity is resumed. Returns nothing.
     @Override
     protected void onResume()
     {
@@ -187,6 +205,7 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         loadExpenses();
     }
 
+    //onDeleteClick: Handles the deletion of an expense through the adapter listener. Takes in @param expense and position.
     @Override
     public void onDeleteClick(Expense expense, int position)
     {
@@ -202,9 +221,13 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
         }
     }
 
+    //loadExpenses: Fetches filtered and sorted data from the service and updates the adapter. Returns nothing.
     private void loadExpenses()
     {
         final List<Expense> data = expenseService.getExpensesByCategorySortedByDate(selectedCategory, isNewestFirst);
-        if (adapter != null) adapter.setExpenses(data);
+        if (adapter != null)
+        {
+            adapter.setExpenses(data);
+        }
     }
 }

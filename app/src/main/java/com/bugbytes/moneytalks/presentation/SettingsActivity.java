@@ -63,10 +63,13 @@ public class SettingsActivity extends AppCompatActivity
         int savedMode = prefs.getInt(KEY_THEME, AppCompatDelegate.MODE_NIGHT_NO);
         updateActiveIndicator(cardLightMode, cardDarkMode, savedMode);
 
-        btnBackSettings.setOnClickListener(v -> finish());
+        btnBackSettings.setOnClickListener(v ->
+        {
+            finish();
+        });
     }
 
-    // saveTheme: Saves the theme preference only, does not apply it. Takes in @param mode.
+    //saveTheme: Saves the theme preference to SharedPreferences. Takes in @param mode. Returns nothing.
     private void saveTheme(int mode)
     {
         getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -75,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity
                 .apply();
     }
 
-    // updateActiveIndicator: Highlights the active card with a purple border. Takes in @param cardLight, cardDark, currentMode.
+    //updateActiveIndicator: Highlights the active card with a border based on current mode. Takes in @param cardLight, cardDark, and currentMode.
     private void updateActiveIndicator(
             com.google.android.material.card.MaterialCardView cardLight,
             com.google.android.material.card.MaterialCardView cardDark,

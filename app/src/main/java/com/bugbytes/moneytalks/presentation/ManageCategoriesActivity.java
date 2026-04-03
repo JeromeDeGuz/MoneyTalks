@@ -20,7 +20,6 @@ import com.bugbytes.moneytalks.models.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ManageCategoriesActivity extends AppCompatActivity
         implements CategoryAdapter.OnCategoryEventListener
 {
@@ -44,10 +43,13 @@ public class ManageCategoriesActivity extends AppCompatActivity
         rvCategories.setAdapter(adapter);
 
         Button btnBackManageCategories = findViewById(R.id.btnBackManageCategories);
-        btnBackManageCategories.setOnClickListener(v -> finish());
+        btnBackManageCategories.setOnClickListener(v ->
+        {
+            finish();
+        });
     }
 
-    //onResume: It triggers a data refresh whenever the activity is brought to the foreground. Takes in nothing.
+    //onResume: It triggers a data refresh whenever the activity is brought to the foreground. Returns nothing.
     @Override
     protected void onResume()
     {
@@ -55,21 +57,21 @@ public class ManageCategoriesActivity extends AppCompatActivity
         loadCategories();
     }
 
-    //loadCategories: It fetches the latest categories from the service and updates the adapter. Takes in nothing.
+    //loadCategories: It fetches the latest categories from the service and updates the adapter. Returns nothing.
     private void loadCategories()
     {
         List<Category> categories = categoryService.getAllCategories();
         adapter.setCategories(categories);
     }
 
-    //onAddClick: It handles the callback from the adapter when the user wants to add a category. Takes in nothing.
+    //onAddClick: It handles the callback from the adapter when the user wants to add a category. Returns nothing.
     @Override
     public void onAddClick()
     {
         showAddCategoryDialog();
     }
 
-    //showAddCategoryDialog: It displays an AlertDialog to capture a new category name and saves it via the service. Takes in nothing.
+    //showAddCategoryDialog: It displays an AlertDialog to capture a new category name and saves it. Returns nothing.
     private void showAddCategoryDialog()
     {
         LinearLayout layout = new LinearLayout(this);

@@ -40,7 +40,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         notifyDataSetChanged();
     }
 
-    //onCreateViewHolder: It inflates the layout for a single budget row. Takes in @param parent and viewType and @return BudgetViewHolder.
+    //onCreateViewHolder: It inflates the layout for a single budget row. Takes in @param parent and viewType. Returns @return BudgetViewHolder.
     @NonNull
     @Override
     public BudgetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -81,10 +81,13 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
             holder.tvSpentThisMonth.setTypeface(holder.tvSpentThisMonth.getTypeface(), Typeface.NORMAL);
         }
 
-        holder.btnEditBudget.setOnClickListener(v -> listener.onEditBudgetClick(budgetSummary));
+        holder.btnEditBudget.setOnClickListener(v ->
+        {
+            listener.onEditBudgetClick(budgetSummary);
+        });
     }
 
-    //getItemCount: It returns the total number of budget summary rows. Takes in nothing and @return int count.
+    //getItemCount: It returns the total number of budget summary rows. Returns @return int count.
     @Override
     public int getItemCount()
     {

@@ -45,7 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    //getItemViewType: It determines if an item is a regular category or the 'Add' button. Takes in @param position and @return view type int.
+    //getItemViewType: It determines if an item is a regular category or the 'Add' button. Takes in @param position. Returns @return int view type.
     @Override
     public int getItemViewType(int position)
     {
@@ -56,14 +56,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return VIEW_TYPE_CATEGORY;
     }
 
-    //getItemCount: It returns the total number of items including the extra 'Add' item. Takes in nothing and @return total count.
+    //getItemCount: It returns the total number of items including the extra 'Add' item. Returns @return int total count.
     @Override
     public int getItemCount()
     {
         return categories == null ? 1 : categories.size() + 1;
     }
 
-    //onCreateViewHolder: It inflates the correct layout based on the view type. Takes in @param parent and viewType and @return ViewHolder.
+    //onCreateViewHolder: It inflates the correct layout based on the view type. Takes in @param parent and viewType. Returns @return RecyclerView.ViewHolder.
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -86,7 +86,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     {
         if (getItemViewType(position) == VIEW_TYPE_ADD)
         {
-            holder.itemView.setOnClickListener(v -> listener.onAddClick());
+            holder.itemView.setOnClickListener(v ->
+            {
+                listener.onAddClick();
+            });
             return;
         }
 
@@ -94,8 +97,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CategoryViewHolder categoryHolder = (CategoryViewHolder) holder;
 
         categoryHolder.tvCategoryName.setText(category.getName());
-        categoryHolder.btnEditCategory.setOnClickListener(v -> listener.onEditClick(category));
-        categoryHolder.btnDeleteCategory.setOnClickListener(v -> listener.onDeleteClick(category));
+
+        categoryHolder.btnEditCategory.setOnClickListener(v ->
+        {
+            listener.onEditClick(category);
+        });
+
+        categoryHolder.btnDeleteCategory.setOnClickListener(v ->
+        {
+            listener.onDeleteClick(category);
+        });
     }
 
     //CategoryViewHolder: Inner class to hold references to category item UI components. Takes in @param itemView.

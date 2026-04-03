@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.bugbytes.moneytalks.business.services.BudgetService;
 import com.bugbytes.moneytalks.models.BudgetSummary;
 
 import java.math.BigDecimal;
+import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class BudgetActivity extends AppCompatActivity
     private int selectedYear;
     private int selectedMonth;
 
-    //onCreate: Sets up the activity layout, initializes the budget service, and prepares the RecyclerView and controls. @param savedInstanceState Stores the previous activity state if available.
+    //onCreate: Sets up the activity layout, initializes services, and prepares UI components. Takes in @param savedInstanceState.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -58,12 +60,15 @@ public class BudgetActivity extends AppCompatActivity
         rvBudgetList.setAdapter(adapter);
 
         Button btnBackBudget = findViewById(R.id.btnBackBudget);
-        btnBackBudget.setOnClickListener(v -> finish());
+        btnBackBudget.setOnClickListener(v ->
+        {
+            finish();
+        });
 
         setupYearMonthSpinners();
     }
 
-    //onResume: Reloads the budget summaries whenever the activity becomes visible again.
+    //onResume: Reloads the budget summaries whenever the activity becomes visible again. Returns nothing.
     @Override
     protected void onResume()
     {
@@ -71,7 +76,7 @@ public class BudgetActivity extends AppCompatActivity
         loadBudgetSummaries();
     }
 
-    //setupYearMonthSpinners: Creates and initializes the year and month spinners, then updates the selected values when the user changes them.
+    //setupYearMonthSpinners: Initializes year and month spinners with names and dynamic data. Returns nothing.
     private void setupYearMonthSpinners()
     {
         LocalDate today = LocalDate.now();
@@ -84,10 +89,12 @@ public class BudgetActivity extends AppCompatActivity
             years.add(year);
         }
 
+        // Fix: Month numbers ki jagah names use kiye hain
+        String[] monthNames = new DateFormatSymbols().getMonths();
         List<String> months = new ArrayList<>();
-        for (int month = 1; month <= 12; month++)
+        for (int i = 0; i < 12; i++)
         {
-            months.add(String.valueOf(month));
+            months.add(monthNames[i]);
         }
 
         ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years)
@@ -148,7 +155,7 @@ public class BudgetActivity extends AppCompatActivity
         }));
     }
 
-    //resolveThemeColor: Returns the color value for the given theme attribute. @param attr The theme color attribute to resolve.
+    //resolveThemeColor: Returns the color value for the given theme attribute. Takes in @param attr. Returns @return int color.
     private int resolveThemeColor(int attr)
     {
         TypedValue typedValue = new TypedValue();
@@ -156,7 +163,7 @@ public class BudgetActivity extends AppCompatActivity
         return typedValue.data;
     }
 
-    //loadBudgetSummaries: Retrieves the budget summaries for the selected year and month, then displays them in the RecyclerView.
+    //loadBudgetSummaries: Retrieves the budget summaries for the selected year and month. Returns nothing.
     private void loadBudgetSummaries()
     {
         try
@@ -170,7 +177,7 @@ public class BudgetActivity extends AppCompatActivity
         }
     }
 
-    //showEditBudgetDialog: Opens a dialog for editing the selected category budget and saves the new value. @param budgetSummary The budget summary selected by the user.
+    //showEditBudgetDialog: Opens a dialog for editing the selected category budget. Takes in @param budgetSummary.
     private void showEditBudgetDialog(BudgetSummary budgetSummary)
     {
         final EditText budgetInput = new EditText(this);
@@ -178,9 +185,18 @@ public class BudgetActivity extends AppCompatActivity
         budgetInput.setSelection(budgetInput.getText().length());
         budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
+        // Styling: Adding margins to the EditText inside the dialog
+        FrameLayout container = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        budgetInput.setLayoutParams(params);
+        container.addView(budgetInput);
+
         new AlertDialog.Builder(this)
-                .setTitle("Edit Budget")
-                .setView(budgetInput)
+                .setTitle("Edit Budget for " + budgetSummary.getCategoryName())
+                .setView(container)
                 .setPositiveButton("Save", (dialog, which) ->
                 {
                     String budgetText = budgetInput.getText().toString().trim();
