@@ -19,7 +19,7 @@ public class DefaultContent
     {
         if (expenseRepo.isEmpty() && categoryRepo.isEmpty())
         {
-//            populateCategories(categoryRepo);
+            populateCategories(categoryRepo);
             populateExpenses(expenseRepo);
         }
     }
@@ -45,15 +45,15 @@ public class DefaultContent
         }
     }
 
-    //populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
-//    public void populateCategories(CategoryRepository categoryRepo)
-//    {
-//        categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("Food", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("Shopping", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("Housing", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("Car", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("Subscriptions", new BigDecimal(500)));
-//        categoryRepo.addCategory(new Category("School", new BigDecimal(500)));
-//    }
+//    populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
+    public void populateCategories(CategoryRepository categoryRepo)
+    {
+        categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("Food", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("Shopping", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("Housing", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("Car", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("Subscriptions", new BigDecimal(500)));
+        categoryRepo.addCategory(new Category("School", new BigDecimal(500)));
+    }
 }

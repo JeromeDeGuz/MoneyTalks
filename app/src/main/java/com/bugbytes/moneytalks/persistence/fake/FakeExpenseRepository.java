@@ -12,11 +12,6 @@ public class FakeExpenseRepository implements ExpenseRepository
     private static final List<Expense> expenses = new ArrayList<>();
     private static long autoIncrementId = 100;
 
-    //FakeExpenseRepository: Constructor for the fake repository. Takes in nothing.
-    public FakeExpenseRepository()
-    {
-    }
-
     //addExpense: It adds a new expense with a generated ID. Takes in @param expense.
     @Override
     public void addExpense(Expense expense)

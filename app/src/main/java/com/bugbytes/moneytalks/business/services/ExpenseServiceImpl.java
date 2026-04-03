@@ -26,10 +26,13 @@ public class ExpenseServiceImpl implements ExpenseService
 
     //addExpense: It validates and adds a new expense to the repository. Takes in @param expense.
     @Override
-    public void addExpense(Expense expense) throws ValidationException {
-        try {
+    public void addExpense(Expense expense) throws ValidationException
+    {
+        try
+        {
             Objects.requireNonNull(expense, "Expense cannot be null");
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             throw new ValidationException("Expense cannot be null");
         }
         //Delegate validation to the validator interface

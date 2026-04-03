@@ -27,9 +27,11 @@ public class CategoryServiceImpl implements CategoryService
 
     //addCategory: It validates and adds a new category. Takes in @param category.
     @Override
-    public void addCategory(Category category) throws ValidationException {
+    public void addCategory(Category category) throws ValidationException
+    {
         //Ensure inputs aren't null before proceeding to business logic
-        try{
+        try
+        {
             Objects.requireNonNull(category, "Cannot add a null category");
         } catch (NullPointerException e) {
             throw new ValidationException("Cannot add a null category");
@@ -55,7 +57,8 @@ public class CategoryServiceImpl implements CategoryService
         try{
             Objects.requireNonNull(oldCategory, "Old category cannot be null");
             Objects.requireNonNull(newCategory, "New category cannot be null");
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             throw new ValidationException("Old or new category cannot be null");
         }
 
@@ -68,11 +71,14 @@ public class CategoryServiceImpl implements CategoryService
 
     //deleteCategory: It removes category if no expenses are linked. Takes in @param category.
     @Override
-    public void deleteCategory(Category category) throws ValidationException {
+    public void deleteCategory(Category category) throws ValidationException
+    {
 
-        try {
+        try
+        {
             Objects.requireNonNull(category, "Category to delete cannot be null");
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             throw new ValidationException("Category to delete cannot be null");
         }
 
@@ -100,10 +106,12 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public BigDecimal getMonthSpent(String categoryName, LocalDate targetDate)
     {
-        try {
+        try
+        {
             Objects.requireNonNull(categoryName, "Category name cannot be null");
             Objects.requireNonNull(targetDate, "Target date cannot be null");
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             return BigDecimal.ZERO;
         }
 

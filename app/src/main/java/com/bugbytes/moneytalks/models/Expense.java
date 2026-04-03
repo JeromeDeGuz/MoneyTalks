@@ -1,6 +1,5 @@
 package com.bugbytes.moneytalks.models;
 
-import com.bugbytes.moneytalks.business.validation.ValidationException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
