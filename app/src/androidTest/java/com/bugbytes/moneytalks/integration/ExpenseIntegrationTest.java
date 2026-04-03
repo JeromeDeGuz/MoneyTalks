@@ -57,7 +57,8 @@ public class ExpenseIntegrationTest
 
     //addUpdateDeleteFlowWorksAcrossLogicAndSqlite: It verifies the full CRUD lifecycle through the service and database layers. Takes in nothing.
     @Test
-    public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite() throws ValidationException {
+    public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite() throws ValidationException
+    {
         final String originalName = "Expense IT " + System.currentTimeMillis();
         final String updatedName = "Expense IT Updated " + System.currentTimeMillis();
 

@@ -1,6 +1,7 @@
 package com.bugbytes.moneytalks.persistence;
 
 import com.bugbytes.moneytalks.models.Category;
+
 import java.util.List;
 
 public interface CategoryRepository

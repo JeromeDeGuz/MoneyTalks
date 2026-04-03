@@ -22,9 +22,11 @@ We’re Bug Bytes, the team behind MoneyTalks:
 - [Iteration 0 Materials](Docs/Iteration-0%20material/)
 - [Iteration 1 Materials](Docs/Iteration-1%20material/)
 - [Iteration 2 Materials](Docs/Iteration-2%20material/)
+- [Iteration 3 Materials](Docs/Iteration-3%20material/)
 - [Architecture Overview](Docs/Architecture/Architecture.md)
 - [Architecture Diagram](Docs/Architecture/ArchitectureDiagram.png)
 - [Coding Standards](Docs/Coding_Standards.pdf)
+
 
 ## 🏗 Architecture
 MoneyTalks follows a 3-tier architecture to keep the code organized and easier to maintain.
@@ -65,7 +67,7 @@ Useful Gradle commands:
 ./gradlew jacocoTestReport
 ```
 
-## 🛠 Dependencies
+## 🛠️ Dependencies
 The following are the main tools and libraries required to build and run MoneyTalks.
 
 ### SDK & Tools
@@ -73,27 +75,33 @@ The following are the main tools and libraries required to build and run MoneyTa
 - **Compile SDK:** 34
 - **Target SDK:** 34
 - **Java:** JDK 17
-- **Gradle:** 8.8
-- **Build Features:** ViewBinding enabled, Proguard rules included for release
+- **Gradle:** 8.7
+- **Android Gradle Plugin:** 8.5.2
+- **Build Features:** ViewBinding enabled
+- **Release Build:** ProGuard rules included for release builds (`isMinifyEnabled = false`)
 
 ### AndroidX Libraries
-- **Core:** `androidx.core:core-ktx`
-- **AppCompat:** `androidx.appcompat:appcompat`
-- **Material Components:** `com.google.android.material:material`
-- **ConstraintLayout:** `androidx.constraintlayout:constraintlayout`
-- **Navigation:** `androidx.navigation:navigation-fragment-ktx`, `androidx.navigation:navigation-ui-ktx`
-- **Activity KTX:** `androidx.activity:activity-ktx`
+- **Core:** `androidx.core:core:1.13.1`
+- **AppCompat:** `androidx.appcompat:appcompat:1.7.0`
+- **Material Components:** `com.google.android.material:material:1.12.0`
+- **ConstraintLayout:** `androidx.constraintlayout:constraintlayout:2.2.0`
+- **Navigation:** `androidx.navigation:navigation-fragment:2.8.5`, `androidx.navigation:navigation-ui:2.8.5`
+- **Activity:** `androidx.activity:activity:1.8.0`
 
 ### Unit Testing
-- **JUnit 5**
-- **Mockito**
-- **JUnit Platform Launcher**
+- **JUnit Jupiter API:** `org.junit.jupiter:junit-jupiter-api:5.10.2`
+- **JUnit Jupiter Engine:** `org.junit.jupiter:junit-jupiter-engine:5.10.2`
+- **JUnit Platform Launcher:** `org.junit.platform:junit-platform-launcher:1.10.2`
+- **Mockito Core:** `org.mockito:mockito-core:5.23.0`
+- **Mockito JUnit Jupiter:** `org.mockito:mockito-junit-jupiter:5.23.0`
 
 ### Android Instrumented Testing
-- **AndroidX JUnit**
-- **Espresso Core**
-- **Espresso Contrib**
-- **AndroidX Test Core, Runner, and Rules**
+- **AndroidX JUnit:** `androidx.test.ext:junit:1.2.1`
+- **Espresso Core:** `androidx.test.espresso:espresso-core:3.6.1`
+- **Espresso Contrib:** `androidx.test.espresso:espresso-contrib:3.6.1`
+- **AndroidX Test Core:** `androidx.test:core:1.6.1`
+- **AndroidX Test Runner:** `androidx.test:runner:1.6.2`
+- **AndroidX Test Rules:** `androidx.test:rules:1.6.1`
 
 ## 🚀 How to Run
 1. Clone the repository:

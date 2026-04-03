@@ -55,7 +55,8 @@ public class FilterSortIntegrationTest
 
     //filterByCategoryReturnsOnlyMatchingExpensesFromSqlite: It verifies that the filtering logic correctly narrows down results from the database. Takes in nothing.
     @Test
-    public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite() throws ValidationException {
+    public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite() throws ValidationException
+    {
         final long timestamp = System.currentTimeMillis();
         final String targetCategory = "FilterCat" + timestamp;
         final String otherCategory = "OtherCat" + timestamp;
@@ -98,7 +99,8 @@ public class FilterSortIntegrationTest
 
     //sortByDateReturnsNewestFirstAndOldestFirstFromSqlite: It confirms that data retrieved from SQLite follows the requested date ordering. Takes in nothing.
     @Test
-    public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite() throws ValidationException {
+    public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite() throws ValidationException
+    {
         final long timestamp = System.currentTimeMillis();
         final String category = "SortCat" + timestamp;
 

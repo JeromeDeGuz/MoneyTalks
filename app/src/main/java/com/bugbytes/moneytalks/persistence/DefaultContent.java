@@ -45,7 +45,7 @@ public class DefaultContent
         }
     }
 
-//    populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
+    //    populateCategories: It adds default category types to the repository. Takes in @param categoryRepo.
     public void populateCategories(CategoryRepository categoryRepo)
     {
         categoryRepo.addCategory(new Category("Transport", new BigDecimal(500)));

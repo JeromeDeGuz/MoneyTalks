@@ -31,15 +31,35 @@ public class Category implements Serializable
         this.budget = budget;
     }
 
-    public int getId() { return id; }
-    public String getName() { return this.name; }
-    public BigDecimal getBudget() { return this.budget; }
+    public int getId()
+    {
+        return id;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public String getName()
+    {
+        return this.name;
+    }
 
-    
-    public void setBudget(BigDecimal budget) { this.budget = budget; }
+    public BigDecimal getBudget()
+    {
+        return this.budget;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+
+    public void setBudget(BigDecimal budget)
+    {
+        this.budget = budget;
+    }
 
     @Override
-    public String toString() { return name; }
+    public String toString()
+    {
+        return name;
+    }
 }

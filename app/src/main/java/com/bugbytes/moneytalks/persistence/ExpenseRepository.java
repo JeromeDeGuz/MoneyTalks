@@ -11,7 +11,7 @@ public interface ExpenseRepository
     void addExpense(Expense expense);
 
     //deleteExpense: It removes an expense record from the system. Takes in @param expense and @return boolean result.
-     boolean deleteExpense(Expense expense);
+    boolean deleteExpense(Expense expense);
 
     //getAllExpenses: It retrieves the full list of stored expenses. Takes in nothing and @return List of expenses.
     List<Expense> getAllExpenses();

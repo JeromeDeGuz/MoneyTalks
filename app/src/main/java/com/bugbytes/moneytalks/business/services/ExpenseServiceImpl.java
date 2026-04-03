@@ -13,36 +13,36 @@ import java.util.Objects;
 public class ExpenseServiceImpl implements ExpenseService
 {
     private final ExpenseRepository repository;
-    //private final Validator<Expense> validator;
     private final ExpenseValidator validator;
 
-    //Constructor for dependency injection. Takes in @param repository and validator.
+    //ExpenseServiceImpl: Constructor for dependency injection. Takes in @param repository and validator.
     public ExpenseServiceImpl(ExpenseRepository repository, ExpenseValidator validator)
     {
         this.repository = Objects.requireNonNull(repository, "Repository cannot be null");
         this.validator = Objects.requireNonNull(validator, "Validator cannot be null");
     }
 
-
-    //addExpense: It validates and adds a new expense to the repository. Takes in @param expense.
+    //addExpense: It validates and adds a new expense to the repository. Takes in @param expense. @throws ValidationException if data is invalid.
     @Override
     public void addExpense(Expense expense) throws ValidationException
     {
         try
         {
             Objects.requireNonNull(expense, "Expense cannot be null");
-        } catch (NullPointerException e)
+        }
+        catch (NullPointerException e)
         {
             throw new ValidationException("Expense cannot be null");
         }
-        //Delegate validation to the validator interface
+
+        //Delegate validation to the validator
         validator.validate(expense);
 
         //If validation passes, save to repository
         repository.addExpense(expense);
     }
 
-    //getAllExpenses: It retrieves all stored expenses. Takes in nothing and @return List of expenses.
+    //getAllExpenses: It retrieves all stored expenses. Returns @return List of expenses.
     @Override
     public List<Expense> getAllExpenses()
     {
@@ -54,21 +54,22 @@ public class ExpenseServiceImpl implements ExpenseService
         return result;
     }
 
-    //deleteExpense: It removes an expense from the system. Takes in @param expense and @return boolean result.
+    //deleteExpense: It removes an expense from the system. Takes in @param expense. Returns @return boolean result.
     @Override
     public boolean deleteExpense(Expense expense)
     {
         if (expense == null)
         {
-           return false;
+            return false;
         }
 
         return repository.deleteExpense(expense);
     }
 
-    //updateExpense: It validates and updates an existing expense. Takes in @param expense and @return boolean result.
+    //updateExpense: It validates and updates an existing expense. Takes in @param expense. Returns @return boolean result. @throws ValidationException if validation fails.
     @Override
-    public boolean updateExpense(Expense expense) throws ValidationException {
+    public boolean updateExpense(Expense expense) throws ValidationException
+    {
         if (expense == null)
         {
             return false;
@@ -77,7 +78,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return repository.updateExpense(expense);
     }
 
-    //getExpensesSortedByDate: It fetches expenses sorted by their date. Takes in @param newestFirst and @return Sorted list of expenses.
+    //getExpensesSortedByDate: It fetches expenses sorted by their date. Takes in @param newestFirst. Returns @return Sorted list of expenses.
     @Override
     public List<Expense> getExpensesSortedByDate(boolean newestFirst)
     {
@@ -86,7 +87,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return newList;
     }
 
-    //getExpensesByCategorySortedByDate: It filters by category then sorts by date. Takes in @param categoryName and newestFirst and @return Filtered sorted list.
+    //getExpensesByCategorySortedByDate: It filters by category then sorts by date. Takes in @param categoryName and newestFirst. Returns @return Filtered sorted list.
     @Override
     public List<Expense> getExpensesByCategorySortedByDate(String categoryName, boolean newestFirst)
     {
@@ -96,10 +97,11 @@ public class ExpenseServiceImpl implements ExpenseService
         if (categoryName != null && !categoryName.equalsIgnoreCase("All"))
         {
             newList.removeIf(e ->
-                    e == null
-                            || e.getCategory() == null
-                            || !categoryName.equals(e.getCategory())
-            );
+            {
+                return e == null
+                        || e.getCategory() == null
+                        || !categoryName.equals(e.getCategory());
+            });
         }
 
         //2) Sort
@@ -108,7 +110,7 @@ public class ExpenseServiceImpl implements ExpenseService
         return newList;
     }
 
-    //getExpenseById: It retrieves a single expense record using its ID. Takes in @param id and @return Expense object.
+    //getExpenseById: It retrieves a single expense record using its ID. Takes in @param id. Returns @return Expense object.
     @Override
     public Expense getExpenseById(long id)
     {
@@ -131,14 +133,18 @@ public class ExpenseServiceImpl implements ExpenseService
         });
     }
 
+    //addExpense: Helper method for string-based inputs. Takes in @param name, amountStr, category, dateStr, and notes. @throws ValidationException if logic fails.
     @Override
-    public void addExpense(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException {
-        Expense expense =validator.validateAndParse(name, amountStr, category, dateStr, notes);
+    public void addExpense(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException
+    {
+        Expense expense = validator.validateAndParse(name, amountStr, category, dateStr, notes);
         addExpense(expense);
     }
 
+    //updateExpense: Helper to update expense using string-based inputs and an ID. Takes in @param id, name, amountStr, category, dateStr, and notes. @throws ValidationException if validation fails.
     @Override
-    public boolean updateExpense(long id, String name, String amountStr, String category, String dateStr, String notes) throws ValidationException {
+    public boolean updateExpense(long id, String name, String amountStr, String category, String dateStr, String notes) throws ValidationException
+    {
         Expense expense = validator.validateAndParse(name, amountStr, category, dateStr, notes);
         Expense updatedExpense = new Expense(
                 id,
@@ -151,5 +157,4 @@ public class ExpenseServiceImpl implements ExpenseService
 
         return updateExpense(updatedExpense);
     }
-
 }
