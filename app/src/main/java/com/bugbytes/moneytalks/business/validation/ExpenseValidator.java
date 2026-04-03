@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 
 public class ExpenseValidator implements Validator<Expense>
 {
-    //one big method that contains all the single validation checks
+    //validate: One big method that runs all individual business rule checks for an expense. Takes in @param expense. @throws ValidationException if any rule is violated.
     @Override
     public void validate(Expense expense) throws ValidationException
     {
@@ -28,7 +28,7 @@ public class ExpenseValidator implements Validator<Expense>
         checkNoteisValidLength(expense);
     }
 
-    //validates null or empty name
+    //checkNameisNotNullorEmpty: Validates that the expense name is provided and not just whitespace. Takes in @param expense. @throws ValidationException if name is empty.
     private void checkNameisNotNullorEmpty(Expense expense) throws ValidationException
     {
         if (expense.getName() == null || expense.getName().trim().isEmpty())
@@ -37,7 +37,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates name isnt all digits
+    //checkNameisNotNumbers: Validates that the expense name is not composed entirely of digits. Takes in @param expense. @throws ValidationException if name is only numbers.
     private void checkNameisNotNumbers(Expense expense) throws ValidationException
     {
         if (expense.getName().trim().matches("^\\d+$"))
@@ -46,7 +46,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates name within bounds
+    //checkNameisValidLength: Validates that the name length is within the allowed bounds (2-50 characters). Takes in @param expense. @throws ValidationException if length is invalid.
     private void checkNameisValidLength(Expense expense) throws ValidationException
     {
         String name = expense.getName().trim();
@@ -56,7 +56,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates the amount is positive and not null
+    //checkAmountisValid: Validates that the amount is non-null and greater than zero. Takes in @param expense. @throws ValidationException if amount is invalid.
     private void checkAmountisValid(Expense expense) throws ValidationException
     {
         if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0)
@@ -65,7 +65,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates a category is not null or empty
+    //checkCategoryisNotNullorEmpty: Validates that a category has been selected for the expense. Takes in @param expense. @throws ValidationException if category is missing.
     private void checkCategoryisNotNullorEmpty(Expense expense) throws ValidationException
     {
         if (expense.getCategory() == null || expense.getCategory().trim().isEmpty())
@@ -74,7 +74,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates date not null
+    //checkDateisNotNull: Validates that a date is associated with the expense. Takes in @param expense. @throws ValidationException if date is null.
     private void checkDateisNotNull(Expense expense) throws ValidationException
     {
         if (expense.getDate() == null)
@@ -83,7 +83,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates that the date is not in the future
+    //checkDateisNotFuture: Validates that the expense date is not set in the future. Takes in @param expense. @throws ValidationException if date is after current day.
     private void checkDateisNotFuture(Expense expense) throws ValidationException
     {
         if (expense.getDate() != null && expense.getDate().isAfter(LocalDate.now()))
@@ -92,7 +92,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
-    //validates note length not out of bounds
+    //checkNoteisValidLength: Validates that the notes do not exceed the 500 character limit. Takes in @param expense. @throws ValidationException if note is too long.
     private void checkNoteisValidLength(Expense expense) throws ValidationException
     {
         if (expense.getNote() != null && expense.getNote().length() > 500)
@@ -101,6 +101,7 @@ public class ExpenseValidator implements Validator<Expense>
         }
     }
 
+    //validateAndParse: Helper to convert UI strings into a validated Expense object. Takes in @param name, amountStr, category, dateStr, and notes. Returns @return Expense. @throws ValidationException if parsing or logic fails.
     public Expense validateAndParse(String name, String amountStr, String category, String dateStr, String notes) throws ValidationException
     {
         if (dateStr == null || dateStr.isEmpty())
@@ -139,4 +140,3 @@ public class ExpenseValidator implements Validator<Expense>
         return expense;
     }
 }
-
