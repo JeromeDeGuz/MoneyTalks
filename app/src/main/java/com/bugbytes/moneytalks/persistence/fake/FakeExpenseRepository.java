@@ -29,7 +29,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         autoIncrementId++; //increment id for next expense
     }
 
-    //deleteExpense: It removes an expense by matching its ID. Takes in @param expense and @return boolean result.
+    //deleteExpense: It removes an expense by matching its ID. Takes in @param expense. Returns @return boolean result.
     @Override
     public boolean deleteExpense(Expense expense)
     {
@@ -45,7 +45,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         return false;
     }
 
-    //updateExpense: It replaces an existing expense record. Takes in @param expense and @return boolean result.
+    //updateExpense: It replaces an existing expense record. Takes in @param expense. Returns @return boolean result.
     @Override
     public boolean updateExpense(Expense expense)
     {
@@ -60,7 +60,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         return false;
     }
 
-    //getAllExpenses: It retrieves the full list of expenses. Takes in nothing and @return List of expenses.
+    //getAllExpenses: It retrieves the full list of expenses. Returns @return List of expenses.
     @Override
     public List<Expense> getAllExpenses()
     {
@@ -68,7 +68,7 @@ public class FakeExpenseRepository implements ExpenseRepository
         return new ArrayList<>(expenses);
     }
 
-    //getExpenseById: It fetches a single expense by its unique ID. Takes in @param id and @return Expense object.
+    //getExpenseById: It fetches a single expense by its unique ID. Takes in @param id. Returns @return Expense object.
     @Override
     public Expense getExpenseById(long id)
     {
@@ -82,14 +82,14 @@ public class FakeExpenseRepository implements ExpenseRepository
         return null;
     }
 
-    //isEmpty: It checks if the repository is empty. Takes in nothing and @return boolean result.
+    //isEmpty: It checks if the repository is empty. Returns @return boolean result.
     @Override
     public boolean isEmpty()
     {
         return expenses.isEmpty();
     }
 
-    //categoryExists: It checks if a category name is currently used by any expense. Takes in @param category and @return boolean result.
+    //categoryExists: It checks if a category name is currently used by any expense. Takes in @param category. Returns @return boolean result.
     @Override
     public boolean categoryExists(Category category)
     {

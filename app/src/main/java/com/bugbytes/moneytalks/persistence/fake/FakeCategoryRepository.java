@@ -17,7 +17,7 @@ public class FakeCategoryRepository implements CategoryRepository
         categories.add(category);
     }
 
-    //getAllCategories: It returns a copy of the list containing all categories. Takes in nothing and @return List of categories.
+    //getAllCategories: It returns a copy of the list containing all categories. Returns @return List of categories.
     @Override
     public List<Category> getAllCategories()
     {
@@ -44,7 +44,7 @@ public class FakeCategoryRepository implements CategoryRepository
         categories.remove(category);
     }
 
-    //getCategoryByName: It searches for a category with a matching name string. Takes in @param name and @return Category object.
+    //getCategoryByName: It searches for a category with a matching name string. Takes in @param name. Returns @return Category object.
     @Override
     public Category getCategoryByName(String name)
     {
@@ -58,7 +58,7 @@ public class FakeCategoryRepository implements CategoryRepository
         return null;
     }
 
-    //isEmpty: It checks if the category list is currently empty. Takes in nothing and @return boolean result.
+    //isEmpty: It checks if the category list is currently empty. Returns @return boolean result.
     @Override
     public boolean isEmpty()
     {
