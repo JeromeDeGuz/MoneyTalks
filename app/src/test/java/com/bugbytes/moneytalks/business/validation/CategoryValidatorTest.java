@@ -29,35 +29,35 @@ public class CategoryValidatorTest
     @Mock
     private ExpenseRepository expenseRepo;
 
-    //setUp: It initializes the validator with the mocked repository before each test. Takes in nothing.
+    //setUp: Initializes the validator with the mocked repository before each test. Returns nothing.
     @BeforeEach
     public void setUp()
     {
         validator = new CategoryValidator(categoryRepo);
     }
 
-    //validateNullCategoryThrowsException: It ensures that a null category object triggers a validation exception. Takes in nothing.
+    //validateNullCategoryThrowsException: Ensures that a null category object triggers a validation exception. Returns nothing.
     @Test
     public void validateNullCategoryThrowsException()
     {
         assertThrows(ValidationException.class, () -> validator.validate(null));
     }
 
-    //validateEmptyNameThrowsException: It verifies that a category with an empty string name is rejected. Takes in nothing.
+    //validateEmptyNameThrowsException: Verifies that a category with an empty string name is rejected. Returns nothing.
     @Test
     public void validateEmptyNameThrowsException()
     {
         assertThrows(ValidationException.class, () -> validator.validate(new Category("")));
     }
 
-    //validateWhitespaceNameThrowsException: It confirms that names consisting only of spaces are treated as invalid. Takes in nothing.
+    //validateWhitespaceNameThrowsException: Confirms that names consisting only of spaces are treated as invalid. Returns nothing.
     @Test
     public void validateWhitespaceNameThrowsException()
     {
         assertThrows(ValidationException.class, () -> validator.validate(new Category("   ")));
     }
 
-    //validateDuplicateNameExactMatchThrowsException: It prevents adding a category that matches an existing name exactly. Takes in nothing.
+    //validateDuplicateNameExactMatchThrowsException: Prevents adding a category that matches an existing name exactly. Returns nothing.
     @Test
     public void validateDuplicateNameExactMatchThrowsException()
     {
@@ -67,7 +67,7 @@ public class CategoryValidatorTest
         assertThrows(ValidationException.class, () -> validator.validate(new Category("Food")));
     }
 
-    //validateDuplicateNameCaseInsensitiveThrowsException: It ensures that duplicate checks are case-insensitive. Takes in nothing.
+    //validateDuplicateNameCaseInsensitiveThrowsException: Ensures that duplicate checks are case-insensitive. Returns nothing.
     @Test
     public void validateDuplicateNameCaseInsensitiveThrowsException()
     {
@@ -77,7 +77,7 @@ public class CategoryValidatorTest
         assertThrows(ValidationException.class, () -> validator.validate(new Category("food")));
     }
 
-    //validateUniqueNameWithExistingCategoriesPasses: It confirms that a new, unique name passes validation successfully. Takes in nothing.
+    //validateUniqueNameWithExistingCategoriesPasses: Confirms that a new, unique name passes validation successfully. Returns nothing.
     @Test
     public void validateUniqueNameWithExistingCategoriesPasses()
     {
@@ -87,7 +87,7 @@ public class CategoryValidatorTest
         assertDoesNotThrow(() -> validator.validate(new Category("Shopping")));
     }
 
-    //validateEmptyRepoPasses: It verifies that any valid category name is accepted if the repository is empty. Takes in nothing.
+    //validateEmptyRepoPasses: Verifies that any valid category name is accepted if the repository is empty. Returns nothing.
     @Test
     public void validateEmptyRepoPasses()
     {
@@ -96,7 +96,7 @@ public class CategoryValidatorTest
         assertDoesNotThrow(() -> validator.validate(new Category("NewCategory")));
     }
 
-    //validateNumericOnlyNameThrowsException: It checks that category names cannot consist solely of numbers. Takes in nothing.
+    //validateNumericOnlyNameThrowsException: Checks that category names cannot consist solely of numbers. Returns nothing.
     @Test
     public void validateNumericOnlyNameThrowsException()
     {
@@ -105,7 +105,7 @@ public class CategoryValidatorTest
         assertThrows(ValidationException.class, () -> validator.validate(new Category("12345")));
     }
 
-    //validateAlphanumericNamePasses: It confirms that names containing both letters and numbers are valid. Takes in nothing.
+    //validateAlphanumericNamePasses: Confirms that names containing both letters and numbers are valid. Returns nothing.
     @Test
     public void validateAlphanumericNamePasses()
     {
@@ -114,7 +114,7 @@ public class CategoryValidatorTest
         assertDoesNotThrow(() -> validator.validate(new Category("Food123")));
     }
 
-    //validateDeleteCategoryInUseThrowsException: It ensures categories linked to expenses cannot be deleted. Takes in nothing.
+    //validateDeleteCategoryInUseThrowsException: Ensures categories linked to expenses cannot be deleted. Returns nothing.
     @Test
     public void validateDeleteCategoryInUseThrowsException()
     {
@@ -124,7 +124,7 @@ public class CategoryValidatorTest
         assertThrows(ValidationException.class, () -> validator.validateDelete(inUse, expenseRepo));
     }
 
-    //validateDeleteCategoryNotInUsePasses: It confirms that unused categories can be safely deleted. Takes in nothing.
+    //validateDeleteCategoryNotInUsePasses: Confirms that unused categories can be safely deleted. Returns nothing.
     @Test
     public void validateDeleteCategoryNotInUsePasses()
     {

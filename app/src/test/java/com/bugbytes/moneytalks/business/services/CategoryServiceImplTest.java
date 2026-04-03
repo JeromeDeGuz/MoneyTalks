@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceImplTest
 {
-
     private CategoryServiceImpl service;
 
     @Mock
@@ -35,41 +34,43 @@ public class CategoryServiceImplTest
     @Mock
     private CategoryValidator validator;
 
+    //setUp: Prepares the service with mocked dependencies before each test. Returns nothing.
     @BeforeEach
     public void setUp()
     {
         service = new CategoryServiceImpl(categoryRepo, validator, expenseRepo);
     }
 
-    // ---------------- Constructor ----------------
-
+    //testConstructorNullRepositoryThrowsException: Verifies exception when category repository is null. Returns nothing.
     @Test
     public void testConstructorNullRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(null, validator, expenseRepo));
     }
 
+    //testConstructorNullValidatorThrowsException: Verifies exception when validator is null. Returns nothing.
     @Test
     public void testConstructorNullValidatorThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(categoryRepo, null, expenseRepo));
     }
 
+    //testConstructorNullExpenseRepositoryThrowsException: Verifies exception when expense repository is null. Returns nothing.
     @Test
     public void testConstructorNullExpenseRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new CategoryServiceImpl(categoryRepo, validator, null));
     }
 
-    // ---------------- addCategory ----------------
-
+    //testAddCategoryNullCategoryThrowsValidationException: Verifies exception for adding a null category. Returns nothing.
     @Test
-    public void testAddCategory_NullCategory_ThrowsValidationException()
+    public void testAddCategoryNullCategoryThrowsValidationException()
     {
         assertThrows(ValidationException.class, () -> service.addCategory(null));
         verify(categoryRepo, never()).addCategory(any());
     }
 
+    //testAddCategoryValidSuccess: Verifies successful category addition. Returns nothing.
     @Test
     public void testAddCategoryValidSuccess() throws ValidationException
     {
@@ -79,6 +80,7 @@ public class CategoryServiceImplTest
         verify(categoryRepo).addCategory(category);
     }
 
+    //testAddCategoryInvalidThrowsException: Verifies exception for invalid category data. Returns nothing.
     @Test
     public void testAddCategoryInvalidThrowsException() throws ValidationException
     {
@@ -88,6 +90,7 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).addCategory(any());
     }
 
+    //testAddCategoryDuplicateThrowsException: Verifies exception when a duplicate category is added. Returns nothing.
     @Test
     public void testAddCategoryDuplicateThrowsException() throws ValidationException
     {
@@ -97,8 +100,7 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).addCategory(any());
     }
 
-    // ---------------- getAllCategories ----------------
-
+    //testGetAllCategoriesSuccess: Verifies retrieval of all categories. Returns nothing.
     @Test
     public void testGetAllCategoriesSuccess()
     {
@@ -109,24 +111,25 @@ public class CategoryServiceImplTest
         verify(categoryRepo).getAllCategories();
     }
 
-    // ---------------- updateCategory ----------------
-
+    //testUpdateCategoryNullOldCategoryThrowsValidationException: Verifies exception when old category is null. Returns nothing.
     @Test
-    public void testUpdateCategory_NullOldCategory_ThrowsValidationException()
+    public void testUpdateCategoryNullOldCategoryThrowsValidationException()
     {
         assertThrows(ValidationException.class,
                 () -> service.updateCategory(null, new Category("New")));
         verify(categoryRepo, never()).updateCategory(any(), any());
     }
 
+    //testUpdateCategoryNullNewCategoryThrowsValidationException: Verifies exception when new category is null. Returns nothing.
     @Test
-    public void testUpdateCategory_NullNewCategory_ThrowsValidationException()
+    public void testUpdateCategoryNullNewCategoryThrowsValidationException()
     {
         assertThrows(ValidationException.class,
                 () -> service.updateCategory(new Category("Old"), null));
         verify(categoryRepo, never()).updateCategory(any(), any());
     }
 
+    //testUpdateCategorySuccess: Verifies successful category update. Returns nothing.
     @Test
     public void testUpdateCategorySuccess() throws ValidationException
     {
@@ -137,15 +140,15 @@ public class CategoryServiceImplTest
         verify(categoryRepo).updateCategory(oldCategory, newCategory);
     }
 
-    // ---------------- deleteCategory ----------------
-
+    //testDeleteCategoryNullCategoryThrowsValidationException: Verifies exception when deleting a null category. Returns nothing.
     @Test
-    public void testDeleteCategory_NullCategory_ThrowsValidationException()
+    public void testDeleteCategoryNullCategoryThrowsValidationException()
     {
         assertThrows(ValidationException.class, () -> service.deleteCategory(null));
         verify(categoryRepo, never()).deleteCategory(any());
     }
 
+    //testDeleteCategorySuccess: Verifies successful category deletion. Returns nothing.
     @Test
     public void testDeleteCategorySuccess() throws ValidationException
     {
@@ -155,6 +158,7 @@ public class CategoryServiceImplTest
         verify(categoryRepo).deleteCategory(category);
     }
 
+    //testDeleteCategoryUsedInExpenseThrowsException: Verifies deletion failure if category is in use. Returns nothing.
     @Test
     public void testDeleteCategoryUsedInExpenseThrowsException()
     {
@@ -164,29 +168,31 @@ public class CategoryServiceImplTest
         verify(categoryRepo, never()).deleteCategory(any());
     }
 
-    // ---------------- getCategory ----------------
-
+    //testGetCategoryNullNameReturnsNull: Verifies null return for null category name. Returns nothing.
     @Test
-    public void testGetCategory_NullName_ReturnsNull()
+    public void testGetCategoryNullNameReturnsNull()
     {
         assertNull(service.getCategory(null));
         verify(categoryRepo, never()).getCategoryByName(any());
     }
 
+    //testGetCategoryEmptyNameReturnsNull: Verifies null return for empty category name. Returns nothing.
     @Test
-    public void testGetCategory_EmptyName_ReturnsNull()
+    public void testGetCategoryEmptyNameReturnsNull()
     {
         assertNull(service.getCategory(""));
         verify(categoryRepo, never()).getCategoryByName(any());
     }
 
+    //testGetCategoryWhitespaceNameReturnsNull: Verifies null return for whitespace category name. Returns nothing.
     @Test
-    public void testGetCategory_WhitespaceName_ReturnsNull()
+    public void testGetCategoryWhitespaceNameReturnsNull()
     {
         assertNull(service.getCategory("   "));
         verify(categoryRepo, never()).getCategoryByName(any());
     }
 
+    //testGetCategoryFound: Verifies retrieval of an existing category. Returns nothing.
     @Test
     public void testGetCategoryFound()
     {
@@ -197,6 +203,7 @@ public class CategoryServiceImplTest
         assertEquals("Travel", result.getName());
     }
 
+    //testGetCategoryNotFoundReturnsNull: Verifies null return for non-existent category. Returns nothing.
     @Test
     public void testGetCategoryNotFoundReturnsNull()
     {
@@ -204,29 +211,31 @@ public class CategoryServiceImplTest
         assertNull(service.getCategory("Unknown"));
     }
 
-    // ---------------- getMonthSpent ----------------
-
+    //testGetMonthSpentNullCategoryNameReturnsZero: Verifies zero spent for null category. Returns nothing.
     @Test
-    public void testGetMonthSpent_NullCategoryName_ReturnsZero()
+    public void testGetMonthSpentNullCategoryNameReturnsZero()
     {
         assertEquals(BigDecimal.ZERO, service.getMonthSpent(null, LocalDate.now()));
     }
 
+    //testGetMonthSpentNullDateReturnsZero: Verifies zero spent for null date. Returns nothing.
     @Test
-    public void testGetMonthSpent_NullDate_ReturnsZero()
+    public void testGetMonthSpentNullDateReturnsZero()
     {
         assertEquals(BigDecimal.ZERO, service.getMonthSpent("Food", null));
     }
 
+    //testGetMonthSpentNoMatchingExpensesReturnsZero: Verifies zero spent when no expenses match. Returns nothing.
     @Test
-    public void testGetMonthSpent_NoMatchingExpenses_ReturnsZero()
+    public void testGetMonthSpentNoMatchingExpensesReturnsZero()
     {
         when(expenseRepo.getAllExpenses()).thenReturn(Collections.emptyList());
         assertEquals(BigDecimal.ZERO, service.getMonthSpent("Food", LocalDate.of(2026, 3, 1)));
     }
 
+    //testGetMonthSpentMatchingExpensesSumsCorrectly: Verifies correct summation of monthly expenses. Returns nothing.
     @Test
-    public void testGetMonthSpent_MatchingExpenses_SumsCorrectly()
+    public void testGetMonthSpentMatchingExpensesSumsCorrectly()
     {
         Expense e1 = new Expense(1, "Lunch", new BigDecimal("25.00"), "Food", LocalDate.of(2026, 3, 10), "");
         Expense e2 = new Expense(2, "Dinner", new BigDecimal("35.50"), "Food", LocalDate.of(2026, 3, 15), "");
@@ -237,8 +246,9 @@ public class CategoryServiceImplTest
         assertEquals(new BigDecimal("60.50"), result);
     }
 
+    //testGetMonthSpentDifferentMonthReturnsZero: Verifies expenses from other months are excluded. Returns nothing.
     @Test
-    public void testGetMonthSpent_DifferentMonth_ReturnsZero()
+    public void testGetMonthSpentDifferentMonthReturnsZero()
     {
         Expense e = new Expense(1, "Lunch", new BigDecimal("25.00"), "Food", LocalDate.of(2026, 2, 10), "");
         when(expenseRepo.getAllExpenses()).thenReturn(Arrays.asList(e));
@@ -247,8 +257,9 @@ public class CategoryServiceImplTest
         assertEquals(BigDecimal.ZERO, result);
     }
 
+    //testGetMonthSpentExpenseWithNullCategorySkipped: Verifies expenses with null categories are ignored. Returns nothing.
     @Test
-    public void testGetMonthSpent_ExpenseWithNullCategory_Skipped()
+    public void testGetMonthSpentExpenseWithNullCategorySkipped()
     {
         Expense e = new Expense(1, "Unknown", new BigDecimal("10.00"), null, LocalDate.of(2026, 3, 1), "");
         when(expenseRepo.getAllExpenses()).thenReturn(Arrays.asList(e));
@@ -257,17 +268,17 @@ public class CategoryServiceImplTest
         assertEquals(BigDecimal.ZERO, result);
     }
 
-    // ---------------- hasExceededBudget ----------------
-
+    //testHasExceededBudgetCategoryNotFoundReturnsFalse: Verifies budget check returns false if category is missing. Returns nothing.
     @Test
-    public void testHasExceededBudget_CategoryNotFound_ReturnsFalse()
+    public void testHasExceededBudgetCategoryNotFoundReturnsFalse()
     {
         when(categoryRepo.getCategoryByName("Ghost")).thenReturn(null);
         assertFalse(service.hasExceededBudget("Ghost", LocalDate.now()));
     }
 
+    //testHasExceededBudgetUnderBudgetReturnsFalse: Verifies false when expenses are within budget. Returns nothing.
     @Test
-    public void testHasExceededBudget_UnderBudget_ReturnsFalse()
+    public void testHasExceededBudgetUnderBudgetReturnsFalse()
     {
         Category cat = new Category(1, "Food", new BigDecimal("200.00"));
         when(categoryRepo.getCategoryByName("Food")).thenReturn(cat);
@@ -278,8 +289,9 @@ public class CategoryServiceImplTest
         assertFalse(service.hasExceededBudget("Food", LocalDate.of(2026, 3, 1)));
     }
 
+    //testHasExceededBudgetOverBudgetReturnsTrue: Verifies true when expenses exceed budget. Returns nothing.
     @Test
-    public void testHasExceededBudget_OverBudget_ReturnsTrue()
+    public void testHasExceededBudgetOverBudgetReturnsTrue()
     {
         Category cat = new Category(1, "Food", new BigDecimal("30.00"));
         when(categoryRepo.getCategoryByName("Food")).thenReturn(cat);
@@ -290,8 +302,9 @@ public class CategoryServiceImplTest
         assertTrue(service.hasExceededBudget("Food", LocalDate.of(2026, 3, 1)));
     }
 
+    //testHasExceededBudgetNullNameReturnsFalse: Verifies budget check returns false for null name. Returns nothing.
     @Test
-    public void testHasExceededBudget_NullName_ReturnsFalse()
+    public void testHasExceededBudgetNullNameReturnsFalse()
     {
         assertFalse(service.hasExceededBudget(null, LocalDate.now()));
     }

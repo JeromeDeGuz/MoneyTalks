@@ -21,8 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import static org.mockito.ArgumentMatchers.any;
-
 @ExtendWith(MockitoExtension.class)
 public class ExpenseServiceImplTest
 {
@@ -34,28 +32,28 @@ public class ExpenseServiceImplTest
     @Mock
     private ExpenseValidator validator;
 
-    //setUp: It initializes the service and mocks before each test execution. Takes in nothing.
+    //setUp: Initializes the service and mocks before each test execution. Returns nothing.
     @BeforeEach
     public void setUp()
     {
         service = new ExpenseServiceImpl(repo, validator);
     }
 
-    //testConstructorNullRepositoryThrowsException: It verifies that a null repository triggers a NullPointerException. Takes in nothing.
+    //testConstructorNullRepositoryThrowsException: Verifies that a null repository triggers a NullPointerException. Returns nothing.
     @Test
     public void testConstructorNullRepositoryThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(null, validator));
     }
 
-    //testConstructorNullValidatorThrowsException: It ensures the service fails if the validator is missing. Takes in nothing.
+    //testConstructorNullValidatorThrowsException: Ensures the service fails if the validator is missing. Returns nothing.
     @Test
     public void testConstructorNullValidatorThrowsException()
     {
         assertThrows(NullPointerException.class, () -> new ExpenseServiceImpl(repo, null));
     }
 
-    //testGetAllExpensesRepoReturnsNullReturnsEmptyList: It checks if the service returns an empty list when the repo returns null. Takes in nothing.
+    //testGetAllExpensesRepoReturnsNullReturnsEmptyList: Checks if the service returns an empty list when the repo returns null. Returns nothing.
     @Test
     public void testGetAllExpensesRepoReturnsNullReturnsEmptyList()
     {
@@ -68,7 +66,7 @@ public class ExpenseServiceImplTest
         verify(repo).getAllExpenses();
     }
 
-    //testGetAllExpensesSuccess: It verifies that all expenses are correctly retrieved from the repository. Takes in nothing.
+    //testGetAllExpensesSuccess: Verifies that all expenses are correctly retrieved from the repository. Returns nothing.
     @Test
     public void testGetAllExpensesSuccess()
     {
@@ -83,7 +81,7 @@ public class ExpenseServiceImplTest
         assertEquals("Item", result.get(0).getName());
     }
 
-    //testAddExpenseValidSuccess: It confirms that a valid expense is validated and added to the repository. Takes in nothing.
+    //testAddExpenseValidSuccess: Confirms that a valid expense is validated and added to the repository. Returns nothing.
     @Test
     public void testAddExpenseValidSuccess() throws ValidationException
     {
@@ -95,7 +93,7 @@ public class ExpenseServiceImplTest
         verify(repo).addExpense(e);
     }
 
-    //testAddExpenseInvalidThrowsException: It ensures that validation errors prevent the expense from being saved. Takes in nothing.
+    //testAddExpenseInvalidThrowsException: Ensures that validation errors prevent the expense from being saved. Returns nothing.
     @Test
     public void testAddExpenseInvalidThrowsException() throws ValidationException
     {
@@ -106,7 +104,7 @@ public class ExpenseServiceImplTest
         verify(repo, never()).addExpense(any());
     }
 
-    //testUpdateExpenseSuccess: It verifies that updating an expense validates it and returns true on success. Takes in nothing.
+    //testUpdateExpenseSuccess: Verifies that updating an expense validates it and returns true on success. Returns nothing.
     @Test
     public void testUpdateExpenseSuccess() throws ValidationException
     {
@@ -119,7 +117,7 @@ public class ExpenseServiceImplTest
         verify(repo).updateExpense(e);
     }
 
-    //testUpdateExpenseNullReturnsFalse: It ensures updating a null expense returns false without interactions. Takes in nothing.
+    //testUpdateExpenseNullReturnsFalse: Ensures updating a null expense returns false without interactions. Returns nothing.
     @Test
     public void testUpdateExpenseNullReturnsFalse() throws ValidationException
     {
@@ -127,7 +125,7 @@ public class ExpenseServiceImplTest
         verifyNoInteractions(repo, validator);
     }
 
-    //testUpdateExpenseNotFoundReturnsFalse: It checks if updating a non-existent expense returns false. Takes in nothing.
+    //testUpdateExpenseNotFoundReturnsFalse: Checks if updating a non-existent expense returns false. Returns nothing.
     @Test
     public void testUpdateExpenseNotFoundReturnsFalse() throws ValidationException
     {
@@ -137,7 +135,7 @@ public class ExpenseServiceImplTest
         assertFalse(service.updateExpense(e));
     }
 
-    //testDeleteExpenseSuccess: It verifies that a valid expense is deleted successfully from the repository. Takes in nothing.
+    //testDeleteExpenseSuccess: Verifies that a valid expense is deleted successfully from the repository. Returns nothing.
     @Test
     public void testDeleteExpenseSuccess()
     {
@@ -148,7 +146,7 @@ public class ExpenseServiceImplTest
         verify(repo).deleteExpense(e);
     }
 
-    //testDeleteExpenseNullReturnsFalse: It ensures that deleting a null expense returns false without repository interaction. Takes in nothing.
+    //testDeleteExpenseNullReturnsFalse: Ensures that deleting a null expense returns false without repository interaction. Returns nothing.
     @Test
     public void testDeleteExpenseNullReturnsFalse()
     {
@@ -156,7 +154,7 @@ public class ExpenseServiceImplTest
         verifyNoInteractions(repo);
     }
 
-    //testSortingNewestFirst: It confirms the logic for sorting expenses from newest to oldest. Takes in nothing.
+    //testSortingNewestFirst: Confirms the logic for sorting expenses from newest to oldest. Returns nothing.
     @Test
     public void testSortingNewestFirst()
     {
@@ -173,7 +171,7 @@ public class ExpenseServiceImplTest
         assertEquals("Old", result.get(2).getName());
     }
 
-    //testFilteringByCategory: It verifies that the list is correctly filtered based on a specific category name. Takes in nothing.
+    //testFilteringByCategory: Verifies that the list is correctly filtered based on a specific category name. Returns nothing.
     @Test
     public void testFilteringByCategory()
     {
@@ -188,7 +186,7 @@ public class ExpenseServiceImplTest
         assertEquals("Pizza", result.get(0).getName());
     }
 
-    //testFilteringSpecialCategories: It checks if "All" or null category inputs return the full list. Takes in nothing.
+    //testFilteringSpecialCategories: Checks if "All" or null category inputs return the full list. Returns nothing.
     @Test
     public void testFilteringSpecialCategories()
     {
@@ -199,7 +197,7 @@ public class ExpenseServiceImplTest
         assertEquals(1, service.getExpensesByCategorySortedByDate(null, true).size());
     }
 
-    //testFilteringLambdaDefensiveBranches: It verifies that the filter logic safely handles null expenses or null categories. Takes in nothing.
+    //testFilteringLambdaDefensiveBranches: Verifies that the filter logic safely handles null expenses or null categories. Returns nothing.
     @Test
     public void testFilteringLambdaDefensiveBranches()
     {
@@ -217,7 +215,7 @@ public class ExpenseServiceImplTest
         assertEquals("Right", result.get(0).getName());
     }
 
-    //testGetExpenseById: It confirms that a specific expense can be retrieved by its ID. Takes in nothing.
+    //testGetExpenseById: Confirms that a specific expense can be retrieved by its ID. Returns nothing.
     @Test
     public void testGetExpenseById()
     {
@@ -228,10 +226,9 @@ public class ExpenseServiceImplTest
         assertNull(service.getExpenseById(99));
     }
 
-    // ---------------- string-based addExpense ----------------
-
+    //testAddExpenseStringBasedValidSuccess: Verifies that string inputs are correctly parsed and saved as an expense. Returns nothing.
     @Test
-    public void testAddExpense_StringBased_Valid_Success() throws ValidationException
+    public void testAddExpenseStringBasedValidSuccess() throws ValidationException
     {
         Expense parsed = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(validator.validateAndParse("Lunch", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);
@@ -241,10 +238,9 @@ public class ExpenseServiceImplTest
         verify(repo).addExpense(parsed);
     }
 
-// ---------------- string-based updateExpense ----------------
-
+    //testUpdateExpenseStringBasedValidSuccess: Verifies that string-based updates are correctly parsed and saved. Returns nothing.
     @Test
-    public void testUpdateExpense_StringBased_Valid_Success() throws ValidationException
+    public void testUpdateExpenseStringBasedValidSuccess() throws ValidationException
     {
         Expense parsed = new Expense(0, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
         when(validator.validateAndParse("Dinner", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);

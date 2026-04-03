@@ -25,7 +25,6 @@ import static org.mockito.ArgumentMatchers.eq;
 @ExtendWith(MockitoExtension.class)
 public class BudgetServiceImplTest
 {
-
     private BudgetServiceImpl budgetService;
 
     @Mock
@@ -34,16 +33,16 @@ public class BudgetServiceImplTest
     @Mock
     private ExpenseService expenseService;
 
+    //setup: Prepares the service with mocked dependencies before each test. Returns nothing.
     @BeforeEach
     public void setUp()
     {
         budgetService = new BudgetServiceImpl(categoryService, expenseService);
     }
 
-    // ---------------- getMonthlyBudgetSummary ----------------
-
+    //getMonthlyBudgetSummaryNoCategoriesReturnsEmptyList: Verifies summary is empty when no categories exist. Returns nothing.
     @Test
-    public void getMonthlyBudgetSummary_NoCategories_ReturnsEmptyList()
+    public void getMonthlyBudgetSummaryNoCategoriesReturnsEmptyList()
     {
         when(categoryService.getAllCategories()).thenReturn(Collections.emptyList());
         when(expenseService.getAllExpenses()).thenReturn(Collections.emptyList());
@@ -53,8 +52,9 @@ public class BudgetServiceImplTest
         assertTrue(result.isEmpty());
     }
 
+    //getMonthlyBudgetSummaryNoExpensesReturnsZeroSpent: Verifies spent amount is zero when no expenses exist. Returns nothing.
     @Test
-    public void getMonthlyBudgetSummary_NoExpenses_ReturnsZeroSpent()
+    public void getMonthlyBudgetSummaryNoExpensesReturnsZeroSpent()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
@@ -69,8 +69,9 @@ public class BudgetServiceImplTest
         assertEquals(BigDecimal.ZERO, result.get(0).getSpentThisMonth());
     }
 
+    //getMonthlyBudgetSummaryCorrectMonthSumsExpenses: Verifies expenses are summed correctly for the target month. Returns nothing.
     @Test
-    public void getMonthlyBudgetSummary_CorrectMonth_SumsExpenses()
+    public void getMonthlyBudgetSummaryCorrectMonthSumsExpenses()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
@@ -85,8 +86,9 @@ public class BudgetServiceImplTest
         assertEquals(new BigDecimal("60.50"), result.get(0).getSpentThisMonth());
     }
 
+    //getMonthlyBudgetSummaryDifferentMonthExcludesExpenses: Verifies expenses from other months are ignored. Returns nothing.
     @Test
-    public void getMonthlyBudgetSummary_DifferentMonth_ExcludesExpenses()
+    public void getMonthlyBudgetSummaryDifferentMonthExcludesExpenses()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
@@ -100,8 +102,9 @@ public class BudgetServiceImplTest
         assertEquals(BigDecimal.ZERO, result.get(0).getSpentThisMonth());
     }
 
+    //getMonthlyBudgetSummaryMultipleCategoriesSumsSeparately: Verifies totals are calculated per category. Returns nothing.
     @Test
-    public void getMonthlyBudgetSummary_MultipleCategories_SumsSeparately()
+    public void getMonthlyBudgetSummaryMultipleCategoriesSumsSeparately()
     {
         when(categoryService.getAllCategories()).thenReturn(Arrays.asList(
                 new Category(1, "Food", new BigDecimal("200.00")),
@@ -120,8 +123,14 @@ public class BudgetServiceImplTest
         BudgetSummary transportSummary = null;
         for (BudgetSummary s : result)
         {
-            if (s.getCategoryName().equals("Food")) foodSummary = s;
-            else if (s.getCategoryName().equals("Transport")) transportSummary = s;
+            if (s.getCategoryName().equals("Food"))
+            {
+                foodSummary = s;
+            }
+            else if (s.getCategoryName().equals("Transport"))
+            {
+                transportSummary = s;
+            }
         }
 
         assertNotNull(foodSummary);
@@ -130,10 +139,9 @@ public class BudgetServiceImplTest
         assertEquals(new BigDecimal("15.00"), transportSummary.getSpentThisMonth());
     }
 
-    // ---------------- getCategoryBudgetSummary ----------------
-
+    //getCategoryBudgetSummaryFoundReturnsCorrectSummary: Verifies summary for a specific existing category. Returns nothing.
     @Test
-    public void getCategoryBudgetSummary_Found_ReturnsCorrectSummary()
+    public void getCategoryBudgetSummaryFoundReturnsCorrectSummary()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("500.00")))
@@ -150,8 +158,9 @@ public class BudgetServiceImplTest
         assertEquals(new BigDecimal("80.00"), result.getSpentThisMonth());
     }
 
+    //getCategoryBudgetSummaryNotFoundReturnsZeroSummary: Verifies zero values when category is not found. Returns nothing.
     @Test
-    public void getCategoryBudgetSummary_NotFound_ReturnsZeroSummary()
+    public void getCategoryBudgetSummaryNotFoundReturnsZeroSummary()
     {
         when(categoryService.getAllCategories()).thenReturn(Collections.emptyList());
         when(expenseService.getAllExpenses()).thenReturn(Collections.emptyList());
@@ -164,10 +173,9 @@ public class BudgetServiceImplTest
         assertEquals(BigDecimal.ZERO, result.getSpentThisMonth());
     }
 
-    // ---------------- isOverBudget / getOverAmount ----------------
-
+    //getCategoryBudgetSummaryOverBudgetDetectedCorrectly: Verifies over budget flag and amount. Returns nothing.
     @Test
-    public void getCategoryBudgetSummary_OverBudget_DetectedCorrectly()
+    public void getCategoryBudgetSummaryOverBudgetDetectedCorrectly()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Shopping", new BigDecimal("50.00")))
@@ -183,8 +191,9 @@ public class BudgetServiceImplTest
         assertEquals(new BigDecimal("15.00"), result.getOverAmount());
     }
 
+    //getCategoryBudgetSummaryUnderBudgetNotOverBudget: Verifies under budget status. Returns nothing.
     @Test
-    public void getCategoryBudgetSummary_UnderBudget_NotOverBudget()
+    public void getCategoryBudgetSummaryUnderBudgetNotOverBudget()
     {
         when(categoryService.getAllCategories()).thenReturn(
                 Arrays.asList(new Category(1, "Food", new BigDecimal("200.00")))
@@ -199,10 +208,9 @@ public class BudgetServiceImplTest
         assertEquals(BigDecimal.ZERO, result.getOverAmount());
     }
 
-    // ---------------- updateCategoryBudget ----------------
-
+    //updateCategoryBudgetCategoryExistsCallsUpdateCategory: Verifies category update call when category exists. Returns nothing.
     @Test
-    public void updateCategoryBudget_CategoryExists_CallsUpdateCategory() throws Exception
+    public void updateCategoryBudgetCategoryExistsCallsUpdateCategory() throws Exception
     {
         Category existing = new Category(1, "Food", new BigDecimal("100.00"));
         when(categoryService.getCategory("Food")).thenReturn(existing);
@@ -215,8 +223,9 @@ public class BudgetServiceImplTest
         );
     }
 
+    //updateCategoryBudgetCategoryNotFoundThrowsException: Verifies exception is thrown for missing category. Returns nothing.
     @Test
-    public void updateCategoryBudget_CategoryNotFound_ThrowsException() throws Exception
+    public void updateCategoryBudgetCategoryNotFoundThrowsException() throws Exception
     {
         when(categoryService.getCategory("Ghost")).thenReturn(null);
 
