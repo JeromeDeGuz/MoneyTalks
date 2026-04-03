@@ -8,32 +8,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryModelTest
 {
-
+    //constructorNameOnlyDefaultsBudgetToZero: Verifies that creating a category with only a name sets the budget to zero. Returns nothing.
     @Test
-    public void constructor_NameOnly_DefaultsBudgetToZero()
+    public void constructorNameOnlyDefaultsBudgetToZero()
     {
         Category c = new Category("Food");
         assertEquals("Food", c.getName());
         assertEquals(BigDecimal.ZERO, c.getBudget());
     }
 
+    //constructorNameAndBudgetSetsBoth: Verifies that both name and budget are correctly assigned during construction. Returns nothing.
     @Test
-    public void constructor_NameAndBudget_SetsBoth()
+    public void constructorNameAndBudgetSetsBoth()
     {
         Category c = new Category("Food", new BigDecimal("100.00"));
         assertEquals("Food", c.getName());
         assertEquals(new BigDecimal("100.00"), c.getBudget());
     }
 
+    //constructorNameAndNullBudgetDefaultsToZero: Ensures that passing a null budget results in a default value of zero. Returns nothing.
     @Test
-    public void constructor_NameAndNullBudget_DefaultsToZero()
+    public void constructorNameAndNullBudgetDefaultsToZero()
     {
         Category c = new Category("Food", null);
         assertEquals(BigDecimal.ZERO, c.getBudget());
     }
 
+    //constructorIdNameBudgetSetsAll: Verifies that ID, name, and budget are all correctly initialized. Returns nothing.
     @Test
-    public void constructor_IdNameBudget_SetsAll()
+    public void constructorIdNameBudgetSetsAll()
     {
         Category c = new Category(1, "Food", new BigDecimal("50.00"));
         assertEquals(1, c.getId());
@@ -41,24 +44,27 @@ public class CategoryModelTest
         assertEquals(new BigDecimal("50.00"), c.getBudget());
     }
 
+    //setNameUpdatesName: Confirms that the category name can be updated via the setter method. Returns nothing.
     @Test
-    public void setName_UpdatesName()
+    public void setNameUpdatesName()
     {
         Category c = new Category("Food");
         c.setName("Transport");
         assertEquals("Transport", c.getName());
     }
 
+    //setBudgetUpdatesBudget: Confirms that the budget amount can be updated via the setter method. Returns nothing.
     @Test
-    public void setBudget_UpdatesBudget()
+    public void setBudgetUpdatesBudget()
     {
         Category c = new Category("Food");
         c.setBudget(new BigDecimal("200.00"));
         assertEquals(new BigDecimal("200.00"), c.getBudget());
     }
 
+    //toStringReturnsName: Verifies that the toString method returns the category name string. Returns nothing.
     @Test
-    public void toString_ReturnsName()
+    public void toStringReturnsName()
     {
         Category c = new Category("Food");
         assertEquals("Food", c.toString());
