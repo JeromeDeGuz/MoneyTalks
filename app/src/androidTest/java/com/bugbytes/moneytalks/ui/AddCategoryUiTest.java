@@ -24,9 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class ManageCategoriesUiTest
+public class AddCategoryUiTest
 {
-    //addCategoryFromUiShowsNewCategoryInRecyclerView: It opens category management from settings, adds a category, and verifies that it appears in the list.
     @Test
     public void addCategoryFromUiShowsNewCategoryInRecyclerView()
     {
@@ -37,15 +36,10 @@ public class ManageCategoriesUiTest
             onView(withId(R.id.btnCategorySettings)).perform(click());
 
             onView(withId(R.id.rvCategories)).perform(
-                    RecyclerViewActions.actionOnItem(
-                            hasDescendant(withText("+ Add Category")),
-                            click()
-                    )
+                    RecyclerViewActions.actionOnItem(hasDescendant(withText("+ Add Category")), click())
             );
 
-            onView(isAssignableFrom(EditText.class))
-                    .perform(replaceText(categoryName), closeSoftKeyboard());
-
+            onView(isAssignableFrom(EditText.class)).perform(replaceText(categoryName), closeSoftKeyboard());
             onView(withText("Save")).perform(click());
 
             onView(withText(categoryName)).check(matches(isDisplayed()));

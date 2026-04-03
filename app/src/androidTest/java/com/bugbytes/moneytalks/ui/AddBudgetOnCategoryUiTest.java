@@ -35,23 +35,21 @@ import org.junit.runner.RunWith;
 import java.math.BigDecimal;
 
 @RunWith(AndroidJUnit4.class)
-public class BudgetUiTest
+public class AddBudgetOnCategoryUiTest
 {
     private String categoryName;
 
-    //setup: It inserts one unique category before the budget UI test so the edit target row is deterministic.
     @Before
     public void setup() throws ValidationException
     {
-        categoryName = "UiBudgetCategory" + System.currentTimeMillis();
+        categoryName = "BudgetCategory" + System.currentTimeMillis();
 
         MoneyTalksApp app = ApplicationProvider.getApplicationContext();
-        app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("10.00")));
+        app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("0.00")));
     }
 
-    //editBudgetFromUiUpdatesBudgetAmountInList: It opens the budget screen, edits a category budget, and verifies that the new amount is shown.
     @Test
-    public void editBudgetFromUiUpdatesBudgetAmountInList()
+    public void addBudget_onCategory_updatesBudgetValue()
     {
         try (ActivityScenario<BudgetActivity> ignored = ActivityScenario.launch(BudgetActivity.class))
         {
@@ -62,22 +60,17 @@ public class BudgetUiTest
                     )
             );
 
-            onView(isAssignableFrom(EditText.class))
-                    .perform(replaceText("123.45"), closeSoftKeyboard());
-
+            onView(isAssignableFrom(EditText.class)).perform(replaceText("250.00"), closeSoftKeyboard());
             onView(withText("Save")).perform(click());
 
             onView(withId(R.id.rvBudgetList)).perform(
-                    RecyclerViewActions.scrollTo(
-                            hasDescendant(withText(categoryName))
-                    )
+                    RecyclerViewActions.scrollTo(hasDescendant(withText(categoryName)))
             );
 
-            onView(withText("123.45")).check(matches(isDisplayed()));
+            onView(withText("250.00")).check(matches(isDisplayed()));
         }
     }
 
-    //clickChildViewWithId: It clicks a child view inside a RecyclerView row. Takes in @param viewId.
     private static ViewAction clickChildViewWithId(int viewId)
     {
         return new ViewAction()
@@ -91,7 +84,7 @@ public class BudgetUiTest
             @Override
             public String getDescription()
             {
-                return "Click on a child view with the given id.";
+                return "Click child view";
             }
 
             @Override

@@ -33,7 +33,6 @@ public class AddExpenseUiTest
     private String categoryName;
     private String expenseName;
 
-    //setup: It prepares a unique category so the added expense can use a deterministic category name.
     @Before
     public void setup() throws ValidationException
     {
@@ -45,7 +44,6 @@ public class AddExpenseUiTest
         app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("500.00")));
     }
 
-    //addExpenseFromUiShowsSavedExpenseInList: It adds a new expense through the UI and verifies that it appears in the expense list.
     @Test
     public void addExpenseFromUiShowsSavedExpenseInList()
     {
@@ -53,27 +51,15 @@ public class AddExpenseUiTest
         {
             onView(withId(R.id.btnAddExpense)).perform(click());
 
-            onView(withId(R.id.etExpenseName))
-                    .perform(replaceText(expenseName), closeSoftKeyboard());
-
-            onView(withId(R.id.etAmount))
-                    .perform(replaceText("12.34"), closeSoftKeyboard());
-
-            onView(withId(R.id.autoCompleteCategory))
-                    .perform(click(), replaceText(categoryName), closeSoftKeyboard());
-
-            onView(withId(R.id.etDate))
-                    .perform(replaceText("10-03-2026"), closeSoftKeyboard());
-
-            onView(withId(R.id.etNotes))
-                    .perform(replaceText("UI add test note"), closeSoftKeyboard());
-
+            onView(withId(R.id.etExpenseName)).perform(replaceText(expenseName), closeSoftKeyboard());
+            onView(withId(R.id.etAmount)).perform(replaceText("12.34"), closeSoftKeyboard());
+            onView(withId(R.id.autoCompleteCategory)).perform(click(), replaceText(categoryName), closeSoftKeyboard());
+            onView(withId(R.id.etDate)).perform(replaceText("10-03-2026"), closeSoftKeyboard());
+            onView(withId(R.id.etNotes)).perform(replaceText("UI add test note"), closeSoftKeyboard());
             onView(withId(R.id.btnSave)).perform(click());
 
             onView(withId(R.id.rvExpenses)).perform(
-                    RecyclerViewActions.scrollTo(
-                            hasDescendant(withText(expenseName))
-                    )
+                    RecyclerViewActions.scrollTo(hasDescendant(withText(expenseName)))
             );
 
             onView(withText(expenseName)).check(matches(isDisplayed()));
