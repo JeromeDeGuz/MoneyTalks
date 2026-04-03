@@ -11,12 +11,6 @@ This project follows a shared team agreement that defines expectations for colla
 
 [View the Team Agreement](Docs/Iteration-0%20material/work-agreement-template.docx)
 
-## 🐞 Team Members
-We’re Bug Bytes, the team behind MoneyTalks:
-- Ali, Zia
-- De Guzman, Jerome
-- Ekeh, Chukwuemeka Benedict-Mary
-- Lo, Yu-Ting
 
 ## 📂 Project Materials
 - [Iteration 0 Materials](Docs/Iteration-0%20material/)
@@ -124,3 +118,10 @@ git clone https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks
 
 ## 🔒 Privacy
 MoneyTalks is designed as an offline-first app. It does not require account creation or bank connections, and user data stays on the device.
+
+## 🐞 Team Members
+We’re Bug Bytes, the team behind MoneyTalks:
+- Ali, Zia
+- De Guzman, Jerome
+- Ekeh, Chukwuemeka Benedict-Mary
+- Lo, Yu-Ting
