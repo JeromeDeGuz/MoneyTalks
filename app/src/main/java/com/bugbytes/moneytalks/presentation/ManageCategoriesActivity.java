@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.LinearLayout;
-import java.math.BigDecimal;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,49 +76,36 @@ public class ManageCategoriesActivity extends AppCompatActivity
         layout.setOrientation(LinearLayout.VERTICAL);
 
         final EditText nameInput = new EditText(this);
-        nameInput.setHint(getString(R.string.hint_category));
+        nameInput.setHint("Enter category name");
         nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        final EditText budgetInput = new EditText(this);
-        budgetInput.setHint(getString(R.string.label_amount));
-        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
         layout.addView(nameInput);
-        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_add_category_title))
+                .setTitle("Add Category")
                 .setView(layout)
-                .setPositiveButton(getString(R.string.dialog_add), (dialog, which) ->
+                .setPositiveButton("Save", (dialog, which) ->
                 {
                     String name = nameInput.getText().toString().trim();
-                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (name.isEmpty())
                     {
-                        Toast.makeText(this, getString(R.string.error_name_empty), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (budgetText.isEmpty())
-                    {
-                        Toast.makeText(this, getString(R.string.error_budget_empty), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     try
                     {
-                        BigDecimal budget = new BigDecimal(budgetText);
-                        categoryService.addCategory(new Category(name, budget));
-                        Toast.makeText(this, getString(R.string.msg_category_added), Toast.LENGTH_SHORT).show();
+                        categoryService.addCategory(new Category(name));
+                        Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, getString(R.string.error_add_failed), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to add category", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(getString(R.string.dialog_cancel), null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -135,46 +121,33 @@ public class ManageCategoriesActivity extends AppCompatActivity
         nameInput.setSelection(category.getName().length());
         nameInput.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        final EditText budgetInput = new EditText(this);
-        budgetInput.setText(category.getBudget().toPlainString());
-        budgetInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
         layout.addView(nameInput);
-        layout.addView(budgetInput);
 
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_edit_expense))
+                .setTitle("Edit Category")
                 .setView(layout)
-                .setPositiveButton(getString(R.string.btn_update), (dialog, which) ->
+                .setPositiveButton("Save", (dialog, which) ->
                 {
                     String newName = nameInput.getText().toString().trim();
-                    String budgetText = budgetInput.getText().toString().trim();
 
                     if (newName.isEmpty())
                     {
-                        Toast.makeText(this, getString(R.string.error_name_empty), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (budgetText.isEmpty())
-                    {
-                        Toast.makeText(this, getString(R.string.error_budget_empty), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     try
                     {
-                        BigDecimal budget = new BigDecimal(budgetText);
-                        categoryService.updateCategory(category, new Category(newName, budget));
-                        Toast.makeText(this, getString(R.string.msg_category_updated), Toast.LENGTH_SHORT).show();
+                        categoryService.updateCategory(category, new Category(newName));
+                        Toast.makeText(this, "Category updated", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, getString(R.string.error_update_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -183,22 +156,22 @@ public class ManageCategoriesActivity extends AppCompatActivity
     public void onDeleteClick(Category category)
     {
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.delete))
+                .setTitle("Delete Category")
                 .setMessage("Are you sure you want to delete \"" + category.getName() + "\"?")
-                .setPositiveButton(getString(R.string.delete), (dialog, which) ->
+                .setPositiveButton("Delete", (dialog, which) ->
                 {
                     try
                     {
                         categoryService.deleteCategory(category);
-                        Toast.makeText(this, getString(R.string.msg_category_deleted), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Category deleted", Toast.LENGTH_SHORT).show();
                         loadCategories();
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(this, getString(R.string.error_delete_failed), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to delete category", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 }

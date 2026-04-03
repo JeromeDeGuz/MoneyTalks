@@ -2,7 +2,6 @@ package com.bugbytes.moneytalks.persistence.fake;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.persistence.CategoryRepository;
-import com.bugbytes.moneytalks.persistence.DefaultContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +10,7 @@ public class FakeCategoryRepository implements CategoryRepository
 {
     private final List<Category> categories = new ArrayList<>();
 
-    //FakeCategoryRepository: Constructor that populates initial data using DefaultContent. Takes in nothing.
-    public FakeCategoryRepository()
-    {
-        DefaultContent defaultContent = new DefaultContent();
-        defaultContent.populateCategories(this);
-    }
-
-    //addCategory: It adds a new category object to the in-memory list. Takes in @param category.
+      //addCategory: It adds a new category object to the in-memory list. Takes in @param category.
     @Override
     public void addCategory(Category category)
     {

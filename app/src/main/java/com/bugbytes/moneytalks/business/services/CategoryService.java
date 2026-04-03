@@ -2,9 +2,10 @@ package com.bugbytes.moneytalks.business.services;
 
 import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
-import java.util.List;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public interface CategoryService
 {
@@ -24,5 +25,6 @@ public interface CategoryService
     List<Category> getAllCategories();
 
     BigDecimal getMonthSpent(String categoryName, LocalDate targetDate);
+
     boolean hasExceededBudget(String categoryName, LocalDate targetDate);
 }

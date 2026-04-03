@@ -1,7 +1,6 @@
 package com.bugbytes.moneytalks.business.validation;
 
 import com.bugbytes.moneytalks.models.Expense;
-
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -9,145 +8,158 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//Tests all branches in ExpenseValidator. No persistence dependencies, pure business logic only.
-public class ExpenseValidatorTest
-{
+public class ExpenseValidatorTest {
+
     private final ExpenseValidator validator = new ExpenseValidator();
 
-    //validateNullExpenseThrowsException: It ensures that passing a null expense object triggers a validation exception. Takes in nothing.
+    // ---------------- validate() ----------------
+
     @Test
-    public void validateNullExpenseThrowsException()
-    {
+    public void validate_NullExpense_ThrowsException() {
         assertThrows(ValidationException.class, () -> validator.validate(null));
     }
 
-    //validateNullNameThrowsException: It verifies that an expense with a null name is rejected. Takes in nothing.
     @Test
-    public void validateNullNameThrowsException()
-    {
+    public void validate_NullName_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, null, BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateEmptyNameThrowsException: It confirms that empty string names are invalid for expenses. Takes in nothing.
     @Test
-    public void validateEmptyNameThrowsException()
-    {
+    public void validate_EmptyName_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "", BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateWhitespaceNameThrowsException: It ensures that names consisting only of spaces are treated as invalid. Takes in nothing.
     @Test
-    public void validateWhitespaceNameThrowsException()
-    {
+    public void validate_WhitespaceName_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "   ", BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateNumericOnlyNameThrowsException: It prevents expense names from being strictly numeric. Takes in nothing.
     @Test
-    public void validateNumericOnlyNameThrowsException()
-    {
+    public void validate_NumericOnlyName_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "12345", BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateNameTooShortThrowsException: It verifies that names below the minimum length requirement are rejected. Takes in nothing.
     @Test
-    public void validateNameTooShortThrowsException()
-    {
+    public void validate_NameTooShort_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "A", BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateNameTooLongThrowsException: It ensures that expense names cannot exceed the maximum character limit. Takes in nothing.
     @Test
-    public void validateNameTooLongThrowsException()
-    {
-        String longName = "A".repeat(51);
+    public void validate_NameTooLong_ThrowsException() {
         assertThrows(ValidationException.class, () ->
-                validator.validate(new Expense(0, longName, BigDecimal.TEN, "Food", LocalDate.now(), "")));
+                validator.validate(new Expense(0, "A".repeat(51), BigDecimal.TEN, "Food", LocalDate.now(), "")));
     }
 
-    //validateNullAmountThrowsException: It checks that an expense must have an associated amount. Takes in nothing.
     @Test
-    public void validateNullAmountThrowsException()
-    {
+    public void validate_NullAmount_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", null, "Food", LocalDate.now(), "")));
     }
 
-    //validateZeroAmountThrowsException: It confirms that zero-value expenses are not allowed. Takes in nothing.
     @Test
-    public void validateZeroAmountThrowsException()
-    {
+    public void validate_ZeroAmount_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.ZERO, "Food", LocalDate.now(), "")));
     }
 
-    //validateNegativeAmountThrowsException: It prevents negative amounts from being saved as expenses. Takes in nothing.
     @Test
-    public void validateNegativeAmountThrowsException()
-    {
+    public void validate_NegativeAmount_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", new BigDecimal("-1"), "Food", LocalDate.now(), "")));
     }
 
-    //validateNullCategoryThrowsException: It verifies that every expense must belong to a category. Takes in nothing.
     @Test
-    public void validateNullCategoryThrowsException()
-    {
+    public void validate_NullCategory_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, null, LocalDate.now(), "")));
     }
 
-    //validateEmptyCategoryThrowsException: It ensures that empty category strings are rejected. Takes in nothing.
     @Test
-    public void validateEmptyCategoryThrowsException()
-    {
+    public void validate_EmptyCategory_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "", LocalDate.now(), "")));
     }
 
-    //validateNullDateThrowsException: It checks that an expense must have a valid date. Takes in nothing.
     @Test
-    public void validateNullDateThrowsException()
-    {
+    public void validate_NullDate_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "Food", null, "")));
     }
 
-    //validateFutureDateThrowsException: It prevents expenses from being recorded with a future date. Takes in nothing.
     @Test
-    public void validateFutureDateThrowsException()
-    {
+    public void validate_FutureDate_ThrowsException() {
         assertThrows(ValidationException.class, () ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now().plusDays(1), "")));
     }
 
-    //validateNoteTooLongThrowsException: It ensures that optional notes do not exceed the character limit. Takes in nothing.
     @Test
-    public void validateNoteTooLongThrowsException()
-    {
-        String longNote = "N".repeat(501);
+    public void validate_NoteTooLong_ThrowsException() {
         assertThrows(ValidationException.class, () ->
-                validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), longNote)));
+                validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "N".repeat(501))));
     }
 
-    //validateNullNoteDoesNotThrow: It confirms that a null note is acceptable for an expense. Takes in nothing.
     @Test
-    public void validateNullNoteDoesNotThrow()
-    {
+    public void validate_NullNote_DoesNotThrow() {
         assertDoesNotThrow(() ->
                 validator.validate(new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), null)));
     }
 
-    //validateValidExpenseDoesNotThrow: It verifies that a fully compliant expense object passes all validation checks. Takes in nothing.
     @Test
-    public void validateValidExpenseDoesNotThrow()
-    {
+    public void validate_ValidExpense_DoesNotThrow() {
         assertDoesNotThrow(() ->
-                validator.validate(new Expense(0, "Lunch", new BigDecimal("12.50"), "Food", LocalDate.now(), "Optional note")));
+                validator.validate(new Expense(0, "Lunch", new BigDecimal("12.50"), "Food", LocalDate.now(), "note")));
+    }
+
+    // ---------------- validateAndParse() ----------------
+
+    @Test
+    public void validateAndParse_NullDate_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", "10.00", "Food", null, ""));
+    }
+
+    @Test
+    public void validateAndParse_EmptyDate_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", "10.00", "Food", "", ""));
+    }
+
+    @Test
+    public void validateAndParse_NullAmount_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", null, "Food", "10-03-2026", ""));
+    }
+
+    @Test
+    public void validateAndParse_EmptyAmount_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", "", "Food", "10-03-2026", ""));
+    }
+
+    @Test
+    public void validateAndParse_InvalidAmountFormat_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", "abc", "Food", "10-03-2026", ""));
+    }
+
+    @Test
+    public void validateAndParse_InvalidDateFormat_ThrowsException() {
+        assertThrows(ValidationException.class, () ->
+                validator.validateAndParse("Lunch", "10.00", "Food", "2026-03-10", ""));
+    }
+
+    @Test
+    public void validateAndParse_ValidInputs_ReturnsExpense() throws ValidationException {
+        Expense result = validator.validateAndParse("Lunch", "10.00", "Food", "10-03-2026", "note");
+        assertNotNull(result);
+        assertEquals("Lunch", result.getName());
+        assertEquals(new BigDecimal("10.00"), result.getAmount());
+        assertEquals("Food", result.getCategory());
+        assertEquals("note", result.getNote());
     }
 }

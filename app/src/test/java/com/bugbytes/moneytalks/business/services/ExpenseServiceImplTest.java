@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import static org.mockito.ArgumentMatchers.any;
+
 @ExtendWith(MockitoExtension.class)
 public class ExpenseServiceImplTest
 {
@@ -219,5 +221,28 @@ public class ExpenseServiceImplTest
 
         assertNotNull(service.getExpenseById(1));
         assertNull(service.getExpenseById(99));
+    }
+
+    // ---------------- string-based addExpense ----------------
+
+    @Test
+    public void testAddExpense_StringBased_Valid_Success() throws ValidationException {
+        Expense parsed = new Expense(0, "Lunch", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        when(validator.validateAndParse("Lunch", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);
+
+        service.addExpense("Lunch", "10.00", "Food", "10-03-2026", "");
+
+        verify(repo).addExpense(parsed);
+    }
+
+// ---------------- string-based updateExpense ----------------
+
+    @Test
+    public void testUpdateExpense_StringBased_Valid_Success() throws ValidationException {
+        Expense parsed = new Expense(0, "Dinner", BigDecimal.TEN, "Food", LocalDate.now(), "");
+        when(validator.validateAndParse("Dinner", "10.00", "Food", "10-03-2026", "")).thenReturn(parsed);
+        when(repo.updateExpense(any(Expense.class))).thenReturn(true);
+
+        assertTrue(service.updateExpense(1L, "Dinner", "10.00", "Food", "10-03-2026", ""));
     }
 }

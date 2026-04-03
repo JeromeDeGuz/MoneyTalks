@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.models.Expense;
-import com.bugbytes.moneytalks.persistence.DefaultContent;
 import com.bugbytes.moneytalks.persistence.ExpenseRepository;
 
 import java.math.BigDecimal;
@@ -23,13 +22,6 @@ public class SqlExpenseRepository implements ExpenseRepository
     public SqlExpenseRepository(Context context)
     {
         this.dbHelper = new AppDbHelper(context);
-
-        //Safety Guard: Only populate if the DB is empty to prevent primary key conflicts on restart
-        if (isEmpty())
-        {
-            DefaultContent defaultContent = new DefaultContent();
-            defaultContent.populateExpenses(this);
-        }
     }
 
     //addExpense: It inserts a new expense record into the SQLite database. Takes in @param expense.
