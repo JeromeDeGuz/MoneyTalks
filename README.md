@@ -26,6 +26,7 @@ We’re Bug Bytes, the team behind MoneyTalks:
 - [Architecture Overview](Docs/Architecture/Architecture.md)
 - [Architecture Diagram](Docs/Architecture/ArchitectureDiagram.png)
 - [Coding Standards](Docs/Coding_Standards.pdf)
+- [Retrospective](Docs/Iteration-3%20material/Retrospective.pdf)
 
 
 ## 🏗 Architecture
@@ -75,8 +76,8 @@ The following are the main tools and libraries required to build and run MoneyTa
 - **Compile SDK:** 34
 - **Target SDK:** 34
 - **Java:** JDK 17
-- **Gradle:** 8.7
-- **Android Gradle Plugin:** 8.5.2
+- **Gradle:** 8.13
+- **Android Gradle Plugin:** 8.13.2
 - **Build Features:** ViewBinding enabled
 - **Release Build:** ProGuard rules included for release builds (`isMinifyEnabled = false`)
 
