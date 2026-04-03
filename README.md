@@ -63,3 +63,61 @@ Useful Gradle commands:
 ./gradlew testDebugUnitTest
 ./gradlew connectedDebugAndroidTest
 ./gradlew jacocoTestReport
+```
+
+## 🛠️ Dependencies
+The following are the main tools and libraries required to build and run MoneyTalks.
+
+### SDK & Tools
+- **Android SDK:** Minimum 26 (Android 8.0)
+- **Compile SDK:** 34
+- **Target SDK:** 34
+- **Java:** JDK 17
+- **Gradle:** 8.13
+- **Android Gradle Plugin:** 8.13.2
+- **Build Features:** ViewBinding enabled
+- **Release Build:** ProGuard rules included for release builds (`isMinifyEnabled = false`)
+
+### AndroidX Libraries
+- **Core:** `androidx.core:core:1.13.1`
+- **AppCompat:** `androidx.appcompat:appcompat:1.7.0`
+- **Material Components:** `com.google.android.material:material:1.12.0`
+- **ConstraintLayout:** `androidx.constraintlayout:constraintlayout:2.2.0`
+- **Navigation:** `androidx.navigation:navigation-fragment:2.8.5`, `androidx.navigation:navigation-ui:2.8.5`
+- **Activity:** `androidx.activity:activity:1.8.0`
+
+### Unit Testing
+- **JUnit Jupiter API:** `org.junit.jupiter:junit-jupiter-api:5.10.2`
+- **JUnit Jupiter Engine:** `org.junit.jupiter:junit-jupiter-engine:5.10.2`
+- **JUnit Platform Launcher:** `org.junit.platform:junit-platform-launcher:1.10.2`
+- **Mockito Core:** `org.mockito:mockito-core:5.23.0`
+- **Mockito JUnit Jupiter:** `org.mockito:mockito-junit-jupiter:5.23.0`
+
+### Android Instrumented Testing
+- **AndroidX JUnit:** `androidx.test.ext:junit:1.2.1`
+- **Espresso Core:** `androidx.test.espresso:espresso-core:3.6.1`
+- **Espresso Contrib:** `androidx.test.espresso:espresso-contrib:3.6.1`
+- **AndroidX Test Core:** `androidx.test:core:1.6.1`
+- **AndroidX Test Runner:** `androidx.test:runner:1.6.2`
+- **AndroidX Test Rules:** `androidx.test:rules:1.6.1`
+
+## 🚀 How to Run
+1. Clone the repository:
+
+```bash
+git clone https://code.cs.umanitoba.ca/comp3350-winter2026/a02-g04-moneytalks
+```
+
+2. Open the project in Android Studio.
+3. Sync the Gradle files.
+4. Build and run the app on an emulator or Android device.
+
+## 🧭 Main Screens
+- **ExpenseListActivity**: Main screen for viewing, filtering, and sorting expenses
+- **AddAndEditExpense**: Screen for adding or editing an expense
+- **ManageCategoriesActivity**: Screen for category management
+- **BudgetActivity**: Screen for viewing and updating category budgets
+- **SettingsActivity**: Screen for theme settings
+
+## 🔒 Privacy
+MoneyTalks is designed as an offline-first app. It does not require account creation or bank connections, and user data stays on the device.
