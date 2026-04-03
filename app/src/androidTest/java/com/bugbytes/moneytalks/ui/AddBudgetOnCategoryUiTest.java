@@ -41,6 +41,7 @@ public class AddBudgetOnCategoryUiTest
 {
     private String categoryName;
 
+    //setup: Prepares the test category in the application context before UI interaction. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -50,12 +51,12 @@ public class AddBudgetOnCategoryUiTest
         app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("0.00")));
     }
 
+    //addBudgetOnCategoryUpdatesBudgetValue: Verifies that editing a budget in the UI correctly updates the value. Returns nothing.
     @Test
-    public void addBudget_onCategory_updatesBudgetValue()
+    public void addBudgetOnCategoryUpdatesBudgetValue()
     {
         try (ActivityScenario<BudgetActivity> ignored = ActivityScenario.launch(BudgetActivity.class))
         {
-
             onView(withId(R.id.rvBudgetList)).perform(
                     RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(categoryName)),
@@ -63,12 +64,10 @@ public class AddBudgetOnCategoryUiTest
                     )
             );
 
-
             onView(isAssignableFrom(EditText.class))
                     .perform(replaceText("250.00"), closeSoftKeyboard());
 
             onView(withText("Save")).perform(click());
-
 
             onView(withId(R.id.rvBudgetList)).perform(
                     RecyclerViewActions.scrollTo(
@@ -76,12 +75,12 @@ public class AddBudgetOnCategoryUiTest
                     )
             );
 
-
             onView(withId(R.id.rvBudgetList))
                     .check(matches(hasDescendant(withBudgetRow(categoryName, "250.00"))));
         }
     }
 
+    //clickChildViewWithId: Custom ViewAction to interact with a specific button inside a RecyclerView row. Returns @return ViewAction.
     private static ViewAction clickChildViewWithId(int viewId)
     {
         return new ViewAction()
@@ -111,7 +110,7 @@ public class AddBudgetOnCategoryUiTest
         };
     }
 
-
+    //withBudgetRow: Custom Matcher to verify that a row contains both the correct category and budget amount. Returns @return Matcher.
     private static Matcher<View> withBudgetRow(String categoryName, String budgetAmount)
     {
         return new TypeSafeMatcher<View>()

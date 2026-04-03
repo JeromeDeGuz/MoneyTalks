@@ -37,6 +37,7 @@ public class EditExpenseUiTest
     private String originalName;
     private String updatedName;
 
+    //setup: Prepares a test category and expense in the application context before UI interaction. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -57,24 +58,31 @@ public class EditExpenseUiTest
         ));
     }
 
+    //editExpenseFromUiUpdatesRowInList: Verifies that editing an existing expense via UI correctly updates the list row. Returns nothing.
     @Test
     public void editExpenseFromUiUpdatesRowInList()
     {
         try (ActivityScenario<ExpenseListActivity> ignored = ActivityScenario.launch(ExpenseListActivity.class))
         {
+            // Click on the existing expense to edit
             onView(withId(R.id.rvExpenses)).perform(
                     RecyclerViewActions.actionOnItem(hasDescendant(withText(originalName)), click())
             );
 
+            // Update expense details
             onView(withId(R.id.etExpenseName)).perform(replaceText(updatedName), closeSoftKeyboard());
             onView(withId(R.id.etAmount)).perform(replaceText("88.90"), closeSoftKeyboard());
             onView(withId(R.id.etNotes)).perform(replaceText("after edit"), closeSoftKeyboard());
+
+            // Save changes
             onView(withId(R.id.btnSave)).perform(click());
 
+            // Scroll to find the updated expense
             onView(withId(R.id.rvExpenses)).perform(
                     RecyclerViewActions.scrollTo(hasDescendant(withText(updatedName)))
             );
 
+            // Assert that the updated name is displayed and the original name is gone
             onView(withText(updatedName)).check(matches(isDisplayed()));
             onView(withText(originalName)).check(doesNotExist());
         }

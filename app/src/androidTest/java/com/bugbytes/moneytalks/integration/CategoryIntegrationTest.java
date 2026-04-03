@@ -30,9 +30,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Integration tests for Category flows ensuring Business logic and SQLite layers interact correctly.
- */
 @RunWith(AndroidJUnit4.class)
 public class CategoryIntegrationTest
 {
@@ -44,7 +41,7 @@ public class CategoryIntegrationTest
     private CategoryService categoryService;
     private ExpenseService expenseService;
 
-    //setup: It prepares the test environment by resetting the database and initializing services. Takes in nothing.
+    //setup: It prepares the test environment by resetting the database and initializing services. Returns nothing.
     @Before
     public void setup()
     {
@@ -66,14 +63,14 @@ public class CategoryIntegrationTest
         );
     }
 
-    //tearDown: It cleans up the database after each test to ensure isolation. Takes in nothing.
+    //tearDown: It cleans up the database after each test to ensure isolation. Returns nothing.
     @After
     public void tearDown()
     {
         context.deleteDatabase(TEST_DB_NAME);
     }
 
-    //addUpdateFlowWorksAcrossLogicAndSqlite: It verifies that adding and updating a category correctly reflects in the database. Takes in nothing.
+    //addUpdateFlowWorksAcrossLogicAndSqlite: Verifies that adding and updating a category correctly reflects in the database. Returns nothing.
     @Test
     public void addUpdateFlowWorksAcrossLogicAndSqlite() throws ValidationException
     {
@@ -121,7 +118,7 @@ public class CategoryIntegrationTest
         assertEquals(updatedCategoryName, reloadedExpense.getCategory());
     }
 
-    //deleteUnusedCategoryRemovesItFromSqlite: It confirms that deleting a category through the service removes the record from SQLite. Takes in nothing.
+    //deleteUnusedCategoryRemovesItFromSqlite: Confirms that deleting a category removes the record from SQLite. Returns nothing.
     @Test
     public void deleteUnusedCategoryRemovesItFromSqlite() throws ValidationException
     {
@@ -138,7 +135,7 @@ public class CategoryIntegrationTest
         assertNull(deletedCategory);
     }
 
-    //findExpenseByName: It searches through a list of expenses for a specific name match. Takes in @param expenses, @param targetName.
+    //findExpenseByName: Searches through a list of expenses for a specific name match. Takes in @param expenses and targetName. Returns @return Expense.
     private Expense findExpenseByName(List<Expense> expenses, String targetName)
     {
         for (Expense expense : expenses)

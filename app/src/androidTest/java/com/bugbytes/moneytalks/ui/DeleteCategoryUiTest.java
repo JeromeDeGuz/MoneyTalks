@@ -33,6 +33,7 @@ public class DeleteCategoryUiTest
 {
     private String categoryName;
 
+    //setup: Prepares a test category in the application context before UI interaction. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -42,11 +43,13 @@ public class DeleteCategoryUiTest
         app.getCategoryService().addCategory(new Category(categoryName));
     }
 
+    //deleteCategoryFromUiRemovesRow: Verifies that deleting a category via UI correctly removes the row from the list. Returns nothing.
     @Test
     public void deleteCategoryFromUiRemovesRow()
     {
         try (ActivityScenario<ManageCategoriesActivity> ignored = ActivityScenario.launch(ManageCategoriesActivity.class))
         {
+            // Find the category row and click the delete button
             onView(withId(R.id.rvCategories)).perform(
                     RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(categoryName)),
@@ -54,11 +57,15 @@ public class DeleteCategoryUiTest
                     )
             );
 
+            // Confirm deletion in the dialog
             onView(withText("Delete")).perform(click());
+
+            // Assert that the category no longer exists in the UI
             onView(withText(categoryName)).check(doesNotExist());
         }
     }
 
+    //clickChildViewWithId: Custom ViewAction to interact with a specific button inside a RecyclerView row. Returns @return ViewAction.
     private static ViewAction clickChildViewWithId(int viewId)
     {
         return new ViewAction()
@@ -72,7 +79,7 @@ public class DeleteCategoryUiTest
             @Override
             public String getDescription()
             {
-                return "Click child view";
+                return "Click child view with id " + viewId;
             }
 
             @Override

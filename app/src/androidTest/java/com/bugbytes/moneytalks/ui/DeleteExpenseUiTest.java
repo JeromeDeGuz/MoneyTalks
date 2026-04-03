@@ -38,6 +38,7 @@ public class DeleteExpenseUiTest
     private String categoryName;
     private String expenseName;
 
+    //setup: Prepares a test category and expense in the application context before UI interaction. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -57,11 +58,13 @@ public class DeleteExpenseUiTest
         ));
     }
 
+    //deleteExpenseFromUiRemovesRow: Verifies that deleting an expense via the UI correctly removes the row from the list. Returns nothing.
     @Test
     public void deleteExpenseFromUiRemovesRow()
     {
         try (ActivityScenario<ExpenseListActivity> ignored = ActivityScenario.launch(ExpenseListActivity.class))
         {
+            // Find the expense row and click its delete button
             onView(withId(R.id.rvExpenses)).perform(
                     RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(expenseName)),
@@ -69,10 +72,12 @@ public class DeleteExpenseUiTest
                     )
             );
 
+            // Assert that the expense row no longer exists
             onView(withText(expenseName)).check(doesNotExist());
         }
     }
 
+    //clickChildViewWithId: Custom ViewAction to interact with a specific button inside a RecyclerView row. Returns @return ViewAction.
     private static ViewAction clickChildViewWithId(int viewId)
     {
         return new ViewAction()
@@ -86,7 +91,7 @@ public class DeleteExpenseUiTest
             @Override
             public String getDescription()
             {
-                return "Click child view";
+                return "Click child view with id " + viewId;
             }
 
             @Override

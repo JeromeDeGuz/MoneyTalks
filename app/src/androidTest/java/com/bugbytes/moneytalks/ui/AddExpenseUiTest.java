@@ -33,6 +33,7 @@ public class AddExpenseUiTest
     private String categoryName;
     private String expenseName;
 
+    //setup: Prepares a test category in the application context before UI interaction. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -44,24 +45,31 @@ public class AddExpenseUiTest
         app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("500.00")));
     }
 
+    //addExpenseFromUiShowsSavedExpenseInList: Verifies that adding an expense via UI correctly displays it in the RecyclerView. Returns nothing.
     @Test
     public void addExpenseFromUiShowsSavedExpenseInList()
     {
         try (ActivityScenario<ExpenseListActivity> ignored = ActivityScenario.launch(ExpenseListActivity.class))
         {
+            //Open the add expense screen
             onView(withId(R.id.btnAddExpense)).perform(click());
 
+            //Fill in the expense details
             onView(withId(R.id.etExpenseName)).perform(replaceText(expenseName), closeSoftKeyboard());
             onView(withId(R.id.etAmount)).perform(replaceText("12.34"), closeSoftKeyboard());
             onView(withId(R.id.autoCompleteCategory)).perform(click(), replaceText(categoryName), closeSoftKeyboard());
             onView(withId(R.id.etDate)).perform(replaceText("10-03-2026"), closeSoftKeyboard());
             onView(withId(R.id.etNotes)).perform(replaceText("UI add test note"), closeSoftKeyboard());
+
+            //Save the expense
             onView(withId(R.id.btnSave)).perform(click());
 
+            //Scroll to find the newly added expense
             onView(withId(R.id.rvExpenses)).perform(
                     RecyclerViewActions.scrollTo(hasDescendant(withText(expenseName)))
             );
 
+            //Assert that the expense is displayed on screen
             onView(withText(expenseName)).check(matches(isDisplayed()));
         }
     }

@@ -35,7 +35,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-//Integration tests for budget features ensuring business logic works correctly with SQLite persistence.
 @RunWith(AndroidJUnit4.class)
 public class BudgetIntegrationTest
 {
@@ -49,7 +48,7 @@ public class BudgetIntegrationTest
     private ExpenseService expenseService;
     private BudgetService budgetService;
 
-    //setup: It prepares the Android context, resets the database, and initializes the real SQLite-backed services. Takes in nothing.
+    //setup: It prepares the Android context, resets the database, and initializes the real SQLite-backed services. Returns nothing.
     @Before
     public void setup()
     {
@@ -73,14 +72,14 @@ public class BudgetIntegrationTest
         budgetService = new BudgetServiceImpl(categoryService, expenseService);
     }
 
-    //tearDown: It deletes the test database after each test to keep the environment clean. Takes in nothing.
+    //tearDown: It deletes the test database after each test to keep the environment clean. Returns nothing.
     @After
     public void tearDown()
     {
         context.deleteDatabase(TEST_DB_NAME);
     }
 
-    //getMonthlyBudgetSummaryReturnsCorrectSpentAmountsFromSqlite: It verifies that monthly summaries combine real category and expense data from SQLite. Takes in nothing.
+    //getMonthlyBudgetSummaryReturnsCorrectSpentAmountsFromSqlite: Verifies that monthly summaries combine real data from SQLite. Returns nothing.
     @Test
     public void getMonthlyBudgetSummaryReturnsCorrectSpentAmountsFromSqlite() throws ValidationException
     {
@@ -118,7 +117,7 @@ public class BudgetIntegrationTest
                 "Bus fare"
         ));
 
-        //Different month, so it should not be counted in March summary
+        // Different month, so it should not be counted in March summary
         expenseService.addExpense(new Expense(
                 0,
                 "Old Food " + timestamp,
@@ -155,7 +154,7 @@ public class BudgetIntegrationTest
         assertEquals(new BigDecimal("15.00"), transportSummary.getSpentThisMonth());
     }
 
-    //getCategoryBudgetSummaryReturnsOnlyRequestedCategoryFromSqlite: It verifies that one category summary is returned with the correct budget and spent total from SQLite. Takes in nothing.
+    //getCategoryBudgetSummaryReturnsOnlyRequestedCategoryFromSqlite: Verifies single category summary with correct totals. Returns nothing.
     @Test
     public void getCategoryBudgetSummaryReturnsOnlyRequestedCategoryFromSqlite() throws ValidationException
     {
@@ -190,7 +189,7 @@ public class BudgetIntegrationTest
         assertEquals(new BigDecimal("100.00"), summary.getSpentThisMonth());
     }
 
-    //updateCategoryBudgetPersistsNewBudgetToSqlite: It verifies that updating a category budget through the budget service persists the new amount in SQLite. Takes in nothing.
+    //updateCategoryBudgetPersistsNewBudgetToSqlite: Verifies budget updates persist in SQLite through the service. Returns nothing.
     @Test
     public void updateCategoryBudgetPersistsNewBudgetToSqlite() throws ValidationException
     {
@@ -207,7 +206,7 @@ public class BudgetIntegrationTest
         assertEquals(new BigDecimal("75.00"), updatedCategory.getBudget());
     }
 
-    //getCategoryBudgetSummaryDetectsOverBudgetFromSqlite: It verifies that over-budget status and over amount are calculated correctly using SQLite-backed data. Takes in nothing.
+    //getCategoryBudgetSummaryDetectsOverBudgetFromSqlite: Verifies over-budget calculations using real persistence. Returns nothing.
     @Test
     public void getCategoryBudgetSummaryDetectsOverBudgetFromSqlite() throws ValidationException
     {

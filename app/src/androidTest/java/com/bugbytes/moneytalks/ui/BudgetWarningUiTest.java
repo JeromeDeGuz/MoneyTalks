@@ -33,6 +33,7 @@ public class BudgetWarningUiTest
     private String categoryName;
     private String expenseName;
 
+    //setup: Prepares a category with a low budget to trigger the warning during tests. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -44,12 +45,14 @@ public class BudgetWarningUiTest
         app.getCategoryService().addCategory(new Category(categoryName, new BigDecimal("10.00")));
     }
 
+    //saveExpenseOverBudgetShowsWarningDialog: Verifies that saving an expense exceeding the budget triggers a warning dialog. Returns nothing.
     @Test
-    public void saveExpense_overBudget_showsWarningDialog()
+    public void saveExpenseOverBudgetShowsWarningDialog()
     {
         try (ActivityScenario<AddAndEditExpense> scenario =
                      ActivityScenario.launch(AddAndEditExpense.class))
         {
+            //Input expense details that exceed the $10.00 budget
             onView(withId(R.id.etExpenseName))
                     .perform(replaceText(expenseName), closeSoftKeyboard());
 
@@ -65,12 +68,14 @@ public class BudgetWarningUiTest
             onView(withId(R.id.etNotes))
                     .perform(replaceText("budget warning test"), closeSoftKeyboard());
 
+            //Click save and check for the "Over Budget" dialog
             onView(withId(R.id.btnSave)).perform(click());
 
             onView(withText("Over Budget"))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
 
+            //Verify specific dialog content
             onView(withText(containsString("Category: " + categoryName)))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
@@ -87,6 +92,7 @@ public class BudgetWarningUiTest
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
 
+            //Dismiss the dialog
             onView(withText("OK"))
                     .inRoot(isDialog())
                     .perform(click());

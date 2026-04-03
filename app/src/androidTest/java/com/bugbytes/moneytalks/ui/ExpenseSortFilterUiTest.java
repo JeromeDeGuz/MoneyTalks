@@ -40,6 +40,7 @@ public class ExpenseSortFilterUiTest
     private String newestExpense;
     private String oldestExpense;
 
+    //setup: Prepares test categories and expenses. Returns nothing.
     @Before
     public void setup() throws ValidationException
     {
@@ -67,6 +68,7 @@ public class ExpenseSortFilterUiTest
         ));
     }
 
+    //filterAndSortWorkFromUi: Verifies filtering and sorting functionality. Returns nothing.
     @Test
     public void filterAndSortWorkFromUi()
     {
@@ -88,6 +90,7 @@ public class ExpenseSortFilterUiTest
         }
     }
 
+    //atPosition: Checks RecyclerView item at specific position. Returns @return Matcher.
     private static Matcher<View> atPosition(int position, Matcher<View> itemMatcher)
     {
         return new TypeSafeMatcher<>()

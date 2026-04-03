@@ -24,7 +24,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-//Integration tests for Expense flows ensuring Business logic and SQLite layers interact correctly.
 @RunWith(AndroidJUnit4.class)
 public class ExpenseIntegrationTest
 {
@@ -34,7 +33,7 @@ public class ExpenseIntegrationTest
     private ExpenseRepository repo;
     private ExpenseService service;
 
-    //setup: It initializes the test context and resets the real database. Takes in nothing.
+    //setup: Initializes the test context and resets the real database. Returns nothing.
     @Before
     public void setup()
     {
@@ -47,7 +46,7 @@ public class ExpenseIntegrationTest
         service = new ExpenseServiceImpl(repo, new ExpenseValidator());
     }
 
-    //tearDown: It cleans up the database after each test execution. Takes in nothing.
+    //tearDown: Cleans up the database after each test execution. Returns nothing.
     @After
     public void tearDown()
     {
@@ -55,7 +54,7 @@ public class ExpenseIntegrationTest
         context.deleteDatabase(TEST_DB_NAME);
     }
 
-    //addUpdateDeleteFlowWorksAcrossLogicAndSqlite: It verifies the full CRUD lifecycle through the service and database layers. Takes in nothing.
+    //addUpdateDeleteFlowWorksAcrossLogicAndSqlite: Verifies the full CRUD lifecycle through service and database layers. Returns nothing.
     @Test
     public void addUpdateDeleteFlowWorksAcrossLogicAndSqlite() throws ValidationException
     {
@@ -116,7 +115,7 @@ public class ExpenseIntegrationTest
         assertEquals(countBefore, service.getAllExpenses().size());
     }
 
-    //findExpenseByName: It searches for a specific expense in a list by its name. Takes in @param expenses, @param targetName.
+    //findExpenseByName: Searches for a specific expense in a list by its name. Takes in @param expenses and targetName. Returns @return Expense.
     private Expense findExpenseByName(List<Expense> expenses, String targetName)
     {
         for (Expense expense : expenses)

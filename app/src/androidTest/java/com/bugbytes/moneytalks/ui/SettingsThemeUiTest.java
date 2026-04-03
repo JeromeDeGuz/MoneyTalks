@@ -25,6 +25,7 @@ public class SettingsThemeUiTest
     private static final String PREFS_NAME = "moneytalks_prefs";
     private static final String KEY_THEME = "theme_mode";
 
+    //setup: Clears SharedPreferences and resets night mode before each test. Returns nothing.
     @Before
     public void setup()
     {
@@ -38,6 +39,7 @@ public class SettingsThemeUiTest
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
+    //tearDown: Resets preferences and night mode after each test. Returns nothing.
     @After
     public void tearDown()
     {
@@ -51,8 +53,9 @@ public class SettingsThemeUiTest
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
+    //clickDarkModeSavesDarkThemeAndHighlightsDarkCard: Verifies dark mode selection logic and UI highlighting. Returns nothing.
     @Test
-    public void clickDarkMode_savesDarkTheme_andHighlightsDarkCard()
+    public void clickDarkModeSavesDarkThemeAndHighlightsDarkCard()
     {
         try (ActivityScenario<SettingsActivity> scenario =
                      ActivityScenario.launch(SettingsActivity.class))
@@ -87,8 +90,9 @@ public class SettingsThemeUiTest
         }
     }
 
+    //clickLightModeSavesLightThemeAndHighlightsLightCard: Verifies light mode selection logic and UI highlighting. Returns nothing.
     @Test
-    public void clickLightMode_savesLightTheme_andHighlightsLightCard()
+    public void clickLightModeSavesLightThemeAndHighlightsLightCard()
     {
         Context context = ApplicationProvider.getApplicationContext();
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

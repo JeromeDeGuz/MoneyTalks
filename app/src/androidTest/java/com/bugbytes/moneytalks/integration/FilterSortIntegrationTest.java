@@ -25,7 +25,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-//Integration tests for filtering and sorting logic ensuring SQLite data is correctly ordered and scoped.
 @RunWith(AndroidJUnit4.class)
 public class FilterSortIntegrationTest
 {
@@ -35,7 +34,7 @@ public class FilterSortIntegrationTest
     private ExpenseRepository repo;
     private ExpenseService service;
 
-    //setup: It prepares the Android context and resets the real database before each test. Takes in nothing.
+    //setup: Prepares the Android context and resets the real database before each test. Returns nothing.
     @Before
     public void setup()
     {
@@ -46,14 +45,14 @@ public class FilterSortIntegrationTest
         service = new ExpenseServiceImpl(repo, new ExpenseValidator());
     }
 
-    //tearDown: It ensures the database is wiped after tests to maintain environment cleanliness. Takes in nothing.
+    //tearDown: Ensures the database is wiped after tests to maintain environment cleanliness. Returns nothing.
     @After
     public void tearDown()
     {
         context.deleteDatabase(TEST_DB_NAME);
     }
 
-    //filterByCategoryReturnsOnlyMatchingExpensesFromSqlite: It verifies that the filtering logic correctly narrows down results from the database. Takes in nothing.
+    //filterByCategoryReturnsOnlyMatchingExpensesFromSqlite: Verifies that filtering logic correctly narrows results from the database. Returns nothing.
     @Test
     public void filterByCategoryReturnsOnlyMatchingExpensesFromSqlite() throws ValidationException
     {
@@ -97,7 +96,7 @@ public class FilterSortIntegrationTest
         assertTrue(filtered.get(0).getDate().isAfter(filtered.get(1).getDate()));
     }
 
-    //sortByDateReturnsNewestFirstAndOldestFirstFromSqlite: It confirms that data retrieved from SQLite follows the requested date ordering. Takes in nothing.
+    //sortByDateReturnsNewestFirstAndOldestFirstFromSqlite: Confirms data retrieved from SQLite follows requested date ordering. Returns nothing.
     @Test
     public void sortByDateReturnsNewestFirstAndOldestFirstFromSqlite() throws ValidationException
     {
