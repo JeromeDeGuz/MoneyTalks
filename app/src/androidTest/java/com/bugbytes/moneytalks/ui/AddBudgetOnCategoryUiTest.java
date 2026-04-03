@@ -7,12 +7,12 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -27,7 +27,9 @@ import com.bugbytes.moneytalks.business.validation.ValidationException;
 import com.bugbytes.moneytalks.models.Category;
 import com.bugbytes.moneytalks.presentation.BudgetActivity;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +55,7 @@ public class AddBudgetOnCategoryUiTest
     {
         try (ActivityScenario<BudgetActivity> ignored = ActivityScenario.launch(BudgetActivity.class))
         {
+
             onView(withId(R.id.rvBudgetList)).perform(
                     RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(categoryName)),
@@ -60,14 +63,22 @@ public class AddBudgetOnCategoryUiTest
                     )
             );
 
-            onView(isAssignableFrom(EditText.class)).perform(replaceText("250.00"), closeSoftKeyboard());
+
+            onView(isAssignableFrom(EditText.class))
+                    .perform(replaceText("250.00"), closeSoftKeyboard());
+
             onView(withText("Save")).perform(click());
 
+
             onView(withId(R.id.rvBudgetList)).perform(
-                    RecyclerViewActions.scrollTo(hasDescendant(withText(categoryName)))
+                    RecyclerViewActions.scrollTo(
+                            withBudgetRow(categoryName, "250.00")
+                    )
             );
 
-            onView(withText("250.00")).check(matches(isDisplayed()));
+
+            onView(withId(R.id.rvBudgetList))
+                    .check(matches(hasDescendant(withBudgetRow(categoryName, "250.00"))));
         }
     }
 
@@ -84,7 +95,7 @@ public class AddBudgetOnCategoryUiTest
             @Override
             public String getDescription()
             {
-                return "Click child view";
+                return "Click child view with id " + viewId;
             }
 
             @Override
@@ -94,7 +105,42 @@ public class AddBudgetOnCategoryUiTest
                 if (child != null)
                 {
                     child.performClick();
+                    uiController.loopMainThreadUntilIdle();
                 }
+            }
+        };
+    }
+
+
+    private static Matcher<View> withBudgetRow(String categoryName, String budgetAmount)
+    {
+        return new TypeSafeMatcher<View>()
+        {
+            @Override
+            public void describeTo(Description description)
+            {
+                description.appendText(
+                        "Budget row with category name \"" + categoryName +
+                                "\" and budget amount \"" + budgetAmount + "\""
+                );
+            }
+
+            @Override
+            protected boolean matchesSafely(View view)
+            {
+                TextView tvCategoryName = view.findViewById(R.id.tvCategoryName);
+                TextView tvBudgetAmount = view.findViewById(R.id.tvBudgetAmount);
+
+                if (tvCategoryName == null || tvBudgetAmount == null)
+                {
+                    return false;
+                }
+
+                String actualCategoryName = tvCategoryName.getText().toString();
+                String actualBudgetAmount = tvBudgetAmount.getText().toString();
+
+                return categoryName.equals(actualCategoryName)
+                        && budgetAmount.equals(actualBudgetAmount);
             }
         };
     }
