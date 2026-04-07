@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyTalks Financial Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f1eb 0%, #ede7db 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #faf8f4;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            
+            color: #2c3e50;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="0%" r="50%"><stop offset="0%" stop-color="%23333" stop-opacity="0.03"/><stop offset="100%" stop-color="%23333" stop-opacity="0"/></radialGradient></defs><rect width="100" height="20" fill="url(%23a)"/></svg>');
+            opacity: 0.5;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            color: #2c3e50;
+            text-shadow: none;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.8;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            color: #495057;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 1.2rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #495057, #6c757d);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        nav a span {
+            position: relative;
+            z-index: 2;
+        }
+
+        nav a:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::before {
+            opacity: 1;
+        }
+
+        nav a.active {
+            color: white;
+            border-bottom-color: #495057;
+            background: linear-gradient(135deg, #495057, #6c757d);
+            box-shadow: 0 4px 15px rgba(73, 80, 87, 0.4);
+        }
+
+        main {
+            padding: 3rem 2rem;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.5rem;
+        }
+
+        .vision-box {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .vision-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e9e4d9;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .team-member {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid #8d7053;
+            border: 1px solid #e9e4d9;
+        }
+
+        .team-member h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            margin: 2rem 0;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+
+        .postmortem-section {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e9e4d9;
+        }
+
+        .postmortem-section h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e9e4d9;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .highlight {
+            background: #f0ebe4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 2px solid #d4c5b0;
+            position: relative;
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #8d7053;
+            border-radius: 0 0 0 6px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            nav a {
+                padding: 1rem 2rem;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            header {
+                padding: 3rem 1rem;
+            }
+            
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MoneyTalks</h1>
+            <p>Financial Tracker</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#overview" class="nav-link active">Overview</a></li>
+                <li><a href="#team" class="nav-link">Team</a></li>
+                <li><a href="#demo" class="nav-link">Demo</a></li>
+                <li><a href="#postmortem" class="nav-link">Postmortem</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <h2>Project Overview</h2>
+                
+                <div class="vision-box">
+                    <h3>Vision Statement</h3>
+
+                    <p>
+                        MoneyTalks helps you keep track of every dollar, see exactly where it goes, and make smarter financial choices without the stress of notes, spreadsheets, or forgotten receipts. It makes managing money simple, fast, and even a little satisfying, turning the chaos of daily spending into a clear picture you can actually understand. MoneyTalks helps students, working professionals, parents, part-time workers, or anyone who wants to take control of their finances, spot patterns in their spending, and build healthy, lasting money habits.
+                    </p>
+                    <br>
+                    <p>Designed for everyday life, MoneyTalks makes it easy to see a full list of your expenses, sort and filter by categories or dates, and check all the details for each entry. You can quickly log what you spent, when you spent it, what it was for, and even add a short note to remember the context, whether it’s your morning coffee, a grocery run, or a spontaneous purchase. Alerts help keep budgets on track, making it simple to spot trends, find areas to save, and make smarter financial choices. Over time, this awareness helps you plan for future expenses, save for goals, and avoid surprises at the end of the month, turning everyday spending into actionable insights.</p>
+                    <br>
+                    <p>MoneyTalks provides real value by making expense tracking approachable, stress-free, and meaningful.It gives a clear, visual picture of how small daily purchases add up and affect overall budgets. By encouraging consistent logging and offering insights into spending patterns, MoneyTalks helps people build healthy financial habits, gain confidence, and feel in control of their money. Beyond just tracking, MoneyTalks helps people make their money work for them. It encourages thoughtful spending, promotes better decision-making, and inspires saving for meaningful goals, whether it’s a trip, an emergency fund, or everyday comfort. By breaking financial awareness into simple, actionable steps, people can see progress in real time, celebrate small victories, and gradually build long-term habits that lead to financial freedom. It transforms everyday transactions into insights, helping people feel more secure, organized, and empowered.</p>
+                    <br>
+                    <p>Success will be measured by how consistently people track their expenses and increase their awareness of spending habits. Within the first six months, MoneyTalks aims to have at least 500 active people logging expenses weekly, with at least 70 percent continuing month to month. On average, people should log ten expenses per week, and at least 80 percent should report that MoneyTalks is easy to use, helpful, and improves their understanding of spending. Achieving these goals will show that MoneyTalks is a practical, approachable solution that helps people take control of their finances without stress, giving them confidence and clarity in managing their money.</p>
+                    
+                    
+                </div>
+
+                <h3>Intended Users</h3>
+                <p>The MoneyTalks application is primarily designed for those who are looking to <strong>manage, track, and budget</strong> for all their expenses. Those include, but are not limited to:</p>
+                
+                <div class="feature-grid" style="margin-top: 1rem;">
+                    <div class="feature-card">
+                        <h4>Students</h4>
+                        <p> Manage their limited budgets and daily expenses.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Working Professionals</h4>
+                        <p>Monitor spending and improve financial decisions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Parents</h4>
+                        <p>Banaging household expenses and budgeting for families.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Part-time workers</h4>
+                        <p>Balancing irregular income and expenses.</p>
+                    </div>
+                </div>
+
+                <h3>Features</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>💰 Add Expenses</h4>
+                        <p>Users can add new expenses with name, amount, date, optional note, and category selection from predefined options.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📋 View Expenses</h4>
+                        <p>Display all expenses in a clean list showing name, amount, date, note, and category for easy tracking.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>✏️ Edit Expenses</h4>
+                        <p>Modify existing expenses directly from the list view with quick access edit buttons.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🗑️ Delete Expenses</h4>
+                        <p>Remove unwanted expenses directly from the expense list interface.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔍 Sort & Filter</h4>
+                        <p>Sort expenses by date and filter by category to track specific spending habits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📂 Manage Categories</h4>
+                        <p>Create, edit, and delete custom categories with data integrity protection to prevent orphaned expenses.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📊 Budget Management</h4>
+                        <p>Set monthly budgets per category, view budget vs. spent summaries, and receive over-budget alerts.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🌙 Light & Dark Mode</h4>
+                        <p>Toggle between light and dark themes in settings, following Material 3 design standards.</p>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <h4>🎯 Technical Implementation</h4>
+                    <p>Built with a clean 3-layer architecture:</p>
+                    <ul>
+                        <li><strong>UI Layer: </strong>Responsive interface with separated pages for isolated behaviour.</li>
+                        <li><strong>Logic Layer: </strong></li>
+                        <li><strong>Database Layer: </strong> Persistent storage for all restaurant data with comprehensive testing</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Team Section -->
+            <section id="team" class="content-section">
+                <h2>Team Members</h2>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <h4>Jerome De Guzman</h4>
+                        <p><strong>Role: </strong> Project Leader, Documentation, Logic Layer</p>
+                        <p><strong>Special Skills Gained: </strong> Valuable leadership skills in an agile project management environment, and in-depth knowledge of terminal git version control. Improved technical documentation writing and implemented a local SQLite database from scratch with a scheme, and preconfigured table creation.</p>
+                    </div>
+                    <div class="team-member">
+                        <h4>Zia Ali</h4>
+                        <p><strong>Role: </strong>Enter your info.</p>
+                        <p><strong>Special Skills Gained: </strong>Enter your info</p>
+                    </div>
+                    <div class="team-member">
+                        <h4>Yu-Ting Lo</h4>
+                        <p><strong>Role: </strong>Enter your info.</p>
+                        <p><strong>Special Skills Gained: </strong>Enter your info</p>
+                    </div>
+                    <div class="team-member">
+                        <h4>Chukwuemeka Benedict-Mary Ekeh</h4>
+                        <p><strong>Role: </strong>Enter your info.</p>
+                        <p><strong>Special Skills Gained: </strong>Enter your info</p>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Demo Section -->
+            <section id="demo" class="content-section">
+                <h2>MoneyTalks Demo <strong>STILL NEED TO FILL IN ALL THIS INFORMATION</strong></h2>
+                
+                <p>Watch our Byte Me Inventory System in action! This screen recording demonstrates how restaurant staff can collaboratively track inventory, log orders, and generate reports to optimize their operations. Note that the video seems to not like Microsoft Edge, so we recommend using another browser like Chrome.</p>
+                
+                <div class="video-container">
+                    <!-- <video controls width="100%" height="100%">
+                        <source src="demo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video> -->
+                    <!-- <video controls width="800" height="450">
+                        <source src="demo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video> -->
+                    <video controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        <source src="demo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </section>
+
+            <!-- Postmortem Section -->
+            <section id="postmortem" class="content-section">
+                <h2>Development Postmortem <strong>STILL NEED TO FILL IN ALL THIS INFORMATION</strong></h2>
+                
+                <div class="postmortem-section">
+                    <h4>🎯 Iteration 2 Improvement Area</h4>
+                    <p><strong>What we identified:</strong> After iteration 2, we focused on improving test coverage, technical debt awareness, and refactoring. We had low integration test coverage and accumulated significant technical debt that needed cleanup.</p>
+                    <p><strong>How it went:</strong> We made major improvements! Added extensive unit and integration tests, cleaned up the vast majority of technical debt from iterations 1 and 2, and did significant refactoring. Our integration test coverage is much higher and we're more confident in database stability. We thoroughly documented and integrated technical debt cleanup, making our codebase much more organized and intuitive to navigate.</p>
+                </div>
+
+                <h3>Project Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">8,800</div>
+                        <div>Lines of Java Code</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">111</div>
+                        <div>Java Files</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">507</div>
+                        <div>Total Hours</div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <h4>📊 Code Distribution</h4>
+                    <p><strong>Logic Layer:</strong> ~35% (Managers, validators, reporting, chart services)</p>
+                    <p><strong>Presentation Layer:</strong> ~30% (UI tabs, controllers, models, views)</p>
+                    <p><strong>Database Layer:</strong> ~20% (SQLite implementation, persistence, stubs)</p>
+                    <p><strong>Testing:</strong> ~2,400 lines across unit, integration, and system tests</p>
+                    <p><strong>Objects & Exceptions:</strong> ~15% (DTOs, custom exceptions, validators)</p>
+                </div>
+
+                <div class="postmortem-section">
+                    <h4>✅ What Went Right</h4>
+                    <ul>
+                        <li><strong>Strong Foundation:</strong> Built solid logic, persistence, and UI layer foundations early on</li>
+                        <li><strong>Major Refactoring Success:</strong> Successfully restructured DTOs and cleaned up architecture, making the codebase much more intuitive</li>
+                        <li><strong>Improved Team Workflow:</strong> Better branch naming consistency and more organized git practices over time</li>
+                        <li><strong>Testing Improvements:</strong> Significantly increased integration test coverage and added comprehensive unit tests</li>
+                        <li><strong>Technical Debt Cleanup:</strong> Moved string literals to resource files, implemented validator classes, and eliminated code duplication</li>
+                        <li><strong>Team Collaboration:</strong> Had excellent late-night team moments working together to solve critical issues</li>
+                        <li><strong>Documentation:</strong> Created and maintained clean architecture documentation throughout development</li>
+                    </ul>
+                </div>
+
+                <div class="postmortem-section">
+                    <h4>❌ What Went Wrong</h4>
+                    <ul>
+                        <li><strong>Version Control Issues:</strong> Early iterations had messy commits, inconsistent branch naming, and working branches expanding beyond their goals</li>
+                        <li><strong>Time Management:</strong> Consistently underestimated task complexity and worked too close to deadlines, leading to burnout</li>
+                        <li><strong>Database Implementation Challenges:</strong> Encountered significant issues requiring major DTO refactoring, causing delays and complexity</li>
+                        <li><strong>Copy-Paste Code Problems:</strong> Struggled with code duplication and merging difficulties in early iterations</li>
+                        <li><strong>Planning Difficulties:</strong> Relied heavily on developer tasks over user stories, making task division and progress tracking inconsistent</li>
+                        <li><strong>Documentation Gaps:</strong> Didn't track changes well during iterations, requiring end-of-iteration discussions to figure out what changed</li>
+                        <li><strong>Overambitious Estimates:</strong> Huge overestimation of task completion times, especially in iteration 2</li>
+                    </ul>
+                </div>
+
+                <div class="postmortem-section">
+                    <h4>🔄 What We'd Do Differently</h4>
+                    <p><strong>Better Planning:</strong> Create more developer tasks upfront rather than making them as we go. Establish clearer branch naming standards from the beginning and stick to them consistently.</p>
+                    <p><strong>Documentation:</strong> Track changes better throughout iterations instead of trying to remember everything at the end. Take notes during development rather than discussing changes as a group after the fact.</p>
+                    <p><strong>Timeline Management:</strong> Start major tasks earlier and avoid rushing to meet deadlines. Push to main earlier in the iteration rather than doing everything last minute.</p>
+                    <p><strong>Architecture Decisions:</strong> Think more carefully about DTO structure and database design upfront to avoid major refactoring later. Consider the implications of object relationships before implementation.</p>
+                </div>
+
+                <div class="postmortem-section">
+                    <h4>⏱️ Time Analysis</h4>
+                    <p><strong>Most time-consuming tasks:</strong> Major DTO refactoring due to database implementation issues, technical debt cleanup, and database development with inconsistent success rates</p>
+                    <p><strong>Consistent time spent:</strong> Team worked at "top-gear" throughout the project with relatively consistent effort across iterations</p>
+                    <p><strong>Surprises:</strong> Huge overestimation of task completion times in iteration 2, though some features were pushed to iteration 3. Time estimation for iteration 3 was inflated due to technical debt feedback and pushed features</p>
+                    <p><strong>Velocity insights:</strong> Despite planning challenges, the team maintained consistent work pace and successfully adjusted estimates based on previous iteration learnings</p>
+                </div>
+
+                <div class="postmortem-section">
+                    <h4>📚 Lessons Learned</h4>
+                    <p><strong>About team development:</strong> Learned the importance of consistent version control practices and clear communication. Late-night team collaboration sessions, while stressful, demonstrated strong team cohesion and problem-solving abilities.</p>
+                    <p><strong>Start doing:</strong> Create comprehensive developer tasks before starting work, implement better documentation practices during development, and establish clearer architectural planning upfront</p>
+                    <p><strong>Keep doing:</strong> Maintaining consistent work pace, thorough technical debt cleanup, comprehensive testing, and team collaboration during critical moments</p>
+                    <p><strong>Stop doing:</strong> Working too close to deadlines, inconsistent branch naming, expanding working branches beyond their initial scope, and relying too heavily on post-iteration discussions for tracking changes</p>
+                </div>
+                <div class="postmortem-section">
+                    <h4>🗒️ How Did Our Plan Change</h4>
+                    <p><strong>Features:</strong> Needed to cut out two features due to time constraints but we were able to follow through with the rest of our planning. </p>
+                    <p><strong>User Stories:</strong> Needed to cut out the user stories strongly associated with the two eliminated features, and discovered that some user stories became functionally duplicates with others, and so were eliminated as well</p>
+                    <p><strong>Generally:</strong> Our plan remained largely the same as our initial outline, minus those two features (which were deemed low priority early on in development), and we feel that our vision was realistic and has been fulfilled!</p>
+                </div>
+                <div class="postmortem-section">
+                    <h4>💭 Looking Back At Our Goals This Iteration</h4>
+                    <p><strong>Creating Developer Tasks Before Starting:</strong> Largely, yes, we made sure to create all our technical debt tasks before starting them. As the end of the iteration got closer however, we needed to make more developer tasks to accommodate for new bugs, necessary additions, and required design changes. We still feel that we accomplished this goal, although some adjustment later into the iteration was necessary as unexpected tasks came up.</p>
+                    <p><strong>Reporting Feature and Inventory Update:</strong> Yes! We were able to create and test three new logic layer classes to facilitate the synchronization of inventory and transactions, the creation of our charts, and, as a bonus, the alert system backend. Transaction records and inventory are consistent, our charts are beautiful, and the alert system contains all the expected and up-to-date data.</p>
+                    <p><strong>Presentation Cleanup:</strong> Our once very large presentation layer classes have been split into controller/tab/model/view files to separate UI layout, logic interaction, and functionality. We find it much easier now to navigate around our presentation layer and this change really was helpful when we were writing our system and acceptance tests.</p>
+                </div>
+            </section>
+        </main>
+
+                    <footer>
+            <p>&copy; 2025 MoneyTalks Development Team. Created for COMP 3350 - University of Manitoba</p>
+        </footer>
+    </div>
+
+    <script>
+        // Simple navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                const span = document.createElement('span');
+                span.textContent = link.textContent;
+                link.textContent = '';
+                link.appendChild(span);
+                
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and sections
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    const targetId = this.getAttribute('href').substring(1);
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
