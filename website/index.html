@@ -21,6 +21,30 @@
             --amber: #fbbf24;
             --blue: #60a5fa;
         }
+        .skill-pills {
+        display:flex;
+        flex-wrap:wrap;
+        gap:0.4rem;
+        margin-top:0.8rem;
+    }
+
+    .skill-pill {
+        font-family:'DM Mono',monospace;
+        font-size:0.6rem;
+        letter-spacing:0.08em;
+        text-transform:uppercase;
+        padding:0.25rem 0.6rem;
+        border-radius:100px;
+        background:var(--card2);
+        border:1px solid var(--border);
+        color:var(--text-muted);
+        transition:all 0.2s ease;
+    }
+
+    .skill-pill:hover {
+        color:var(--text);
+        border-color:var(--green);
+    }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Outfit',sans-serif; background:var(--black); color:var(--text); min-height:100vh; overflow-x:hidden; }
         body::before { content:''; position:fixed; top:-20%; left:50%; transform:translateX(-50%); width:900px; height:500px; background:radial-gradient(ellipse,rgba(74,222,128,0.055) 0%,transparent 70%); pointer-events:none; z-index:0; }
@@ -120,7 +144,7 @@
     <div class="wrap">
         <div class="eyebrow">COMP 3350 &middot; University of Manitoba</div>
         <h1>Money<em>Talks</em></h1>
-        <div class="header-sub">Financial Tracker &mdash; 2025</div>
+        <div class="header-sub">Financial Tracker &mdash; 2026</div>
     </div>
 </header>
 <nav>
@@ -177,30 +201,71 @@
 
         <!-- TEAM -->
         <section id="team" class="content-section">
-            <div class="section-title">Team Members</div>
-            <div class="team-grid">
-                <div class="team-card">
-                    <h4>Jerome De Guzman</h4>
-                    <span class="role-tag">Project Leader &middot; Documentation &middot; Logic Layer</span>
-                    <p><strong>Special Skills Gained:</strong> Valuable leadership skills in an agile project management environment, and in-depth knowledge of terminal git version control. Improved technical documentation writing and implemented a local SQLite database from scratch with a schema, and preconfigured table creation.</p>
-                </div>
-                <div class="team-card">
-                    <h4>Zia Ali</h4>
-                    <span class="role-tag">System Analysis Lead &middot; Integration Coordinator</span>
-                    <p><strong>Special Skills Gained:</strong> Developed a strong understanding of how the View, Model, and Persistence layers interact. Worked on resolving build and integration issues, especially in the frontend, and improved debugging skills by tracing errors and dependencies. Also contributed to backend understanding and documentation, while gaining experience in analyzing systems as a whole and collaborating effectively within a team.</p>
-                </div>
-                <div class="team-card">
-                    <h4>Yu-Ting Lo</h4>
-                    <span class="role-tag">Expediter &middot; Frontend Developer &middot; Team Coordinator</span>
-                    <p><strong>Special Skills Gained:</strong> In MoneyTalks, I contributed mainly to the frontend and helped make the app more user-friendly. I also encouraged my teammates, supported a positive team environment, and helped with parts of the business layer when needed. My contribution showed strong teamwork, adaptability, and a good understanding of the overall project.</p>
-                </div>
-                <div class="team-card">
-                    <h4>Chukwuemeka Benedict-Mary Ekeh</h4>
-                    <span class="role-tag">Documentation Lead</span>
-                    <p><strong>Special Skills Gained:</strong> Built Android apps with multiple screens using Activities, RecyclerViews, and a custom SQLite database. Wrote solid tests with Espresso and Mockito across unit, integration, and UI levels. Used a clean layered design with interfaces, validation classes, and dependency injection. Worked with BigDecimal, LocalDate/Time, and enums in Java. Also gained experience working in sprints, doing retrospectives, and collaborating with a team.</p>
+        <div class="section-title">Team Members</div>
+        <div class="team-grid">
+
+            <div class="team-card">
+                <h4>Jerome De Guzman</h4>
+                <span class="role-tag">Project Leader &middot; Documentation &middot; Logic Layer</span>
+                <p><strong>Role &amp; Responsibilities:</strong> Led the overall project direction and ensured the team stayed aligned with goals and deadlines. Contributed heavily to the logic layer and handled documentation. Designed and implemented the SQLite database structure, including schema design and table creation, while also managing version control using Git.</p>
+
+                <div class="skill-pills">
+                    <span class="skill-pill">SQLite</span>
+                    <span class="skill-pill">Database Design</span>
+                    <span class="skill-pill">Schema Creation</span>
+                    <span class="skill-pill">Git (Terminal)</span>
+                    <span class="skill-pill">Documentation</span>
+                    <span class="skill-pill">Agile Leadership</span>
                 </div>
             </div>
-        </section>
+
+            <div class="team-card">
+                <h4>Zia Ali</h4>
+                <span class="role-tag">System Analysis Lead &middot; Integration Coordinator</span>
+                <p><strong>Role &amp; Responsibilities:</strong> Focused on understanding and analyzing how different layers of the system interact. Played a key role in resolving integration and build issues, especially in the frontend. Worked on debugging, tracing errors across layers, and ensuring smooth coordination between components while also contributing to documentation.</p>
+
+                <div class="skill-pills">
+                    <span class="skill-pill">System Analysis</span>
+                    <span class="skill-pill">Debugging</span>
+                    <span class="skill-pill">Integration</span>
+                    <span class="skill-pill">Build Fixes</span>
+                    <span class="skill-pill">Architecture Understanding</span>
+                    <span class="skill-pill">Problem Solving</span>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <h4>Yu-Ting Lo</h4>
+                <span class="role-tag">Expediter &middot; Frontend Developer &middot; Team Coordinator</span>
+                <p><strong>Role &amp; Responsibilities:</strong> Led frontend development and improved the usability and overall feel of the application. Helped coordinate the team and maintain a positive working environment. Contributed to UI components and assisted with business layer tasks when needed, ensuring smooth collaboration across the project.</p>
+
+                <div class="skill-pills">
+                    <span class="skill-pill">Android UI</span>
+                    <span class="skill-pill">RecyclerView</span>
+                    <span class="skill-pill">UI/UX</span>
+                    <span class="skill-pill">Frontend Dev</span>
+                    <span class="skill-pill">Coordination</span>
+                    <span class="skill-pill">Teamwork</span>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <h4>Chukwuemeka Benedict-Mary Ekeh</h4>
+                <span class="role-tag">Documentation Lead</span>
+                <p><strong>Role &amp; Responsibilities:</strong> Focused on documentation and contributed to both development and testing. Built multiple Android screens using Activities and RecyclerViews, implemented SQLite database features, and wrote unit, integration, and UI tests. Helped maintain a clean layered architecture and supported overall project quality.</p>
+
+                <div class="skill-pills">
+                    <span class="skill-pill">Android Dev</span>
+                    <span class="skill-pill">SQLite</span>
+                    <span class="skill-pill">Espresso</span>
+                    <span class="skill-pill">Mockito</span>
+                    <span class="skill-pill">Testing</span>
+                    <span class="skill-pill">Architecture</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
         <!-- DEMO -->
         <section id="demo" class="content-section">
