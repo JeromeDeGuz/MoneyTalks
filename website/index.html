@@ -219,114 +219,112 @@
 
         <!-- POSTMORTEM -->
         <section id="postmortem" class="content-section">
-            <div class="section-title">Development Postmortem </div>
+            <div class="section-title">Development Postmortem</div>
+
+            <h3 class="label">Overall Reflection</h3>
+            <div class="pm-card neutral">
+                <div class="accent"></div>
+                <p>Looking back, our development process started with a lot of confusion, improved steadily, and became much more structured by the end. In early iterations, we struggled with understanding Android architecture, connecting layers, and even knowing where to begin. This caused delays and rushed deadlines.</p>
+                <p>As we progressed, we became more consistent, improved communication, and developed better workflows. By Iteration 3, our codebase was cleaner, our collaboration was stronger, and we had much better control over both development and planning.</p>
+            </div>
 
             <div class="pm-card good">
                 <div class="accent"></div>
-                <h4>Iteration 2 — Improvement Area</h4>
-                <p><strong>What we identified:</strong> After iteration 2, we focused on improving test coverage, technical debt awareness, and refactoring. We had low integration test coverage and accumulated significant technical debt that needed cleanup.</p>
-                <p><strong>How it went:</strong> We made major improvements! Added extensive unit and integration tests, cleaned up the vast majority of technical debt from iterations 1 and 2, and did significant refactoring. Our integration test coverage is much higher and we're more confident in database stability. We thoroughly documented and integrated technical debt cleanup, making our codebase much more organized and intuitive to navigate.</p>
+                <h4>Iteration 2 to Iteration 3 Improvement</h4>
+                <p><strong>What changed:</strong> After Iteration 2, we focused on improving planning, testing, and workflow structure. We broke tasks into smaller pieces, started testing continuously instead of leaving it to the end, improved our Git workflow using proper branching, and became more consistent with refactoring and technical debt cleanup.</p>
+                <p><strong>How it went:</strong> This was a major turning point for our team. Tasks became easier to manage, merge conflicts reduced, testing increased across the team, and overall code quality improved. By Iteration 3, our workflow felt much more structured and controlled compared to earlier iterations.</p>
             </div>
 
             <h3 class="label">Project Statistics</h3>
             <div class="stats-row">
-                <div class="stat-box"><div class="stat-num">8,800</div><div class="stat-lbl">Lines of Java Code</div></div>
-                <div class="stat-box"><div class="stat-num">111</div><div class="stat-lbl">Java Files</div></div>
-                <div class="stat-box"><div class="stat-num">507</div><div class="stat-lbl">Total Hours</div></div>
+                <div class="stat-box"><div class="stat-num">6,025</div><div class="stat-lbl">Lines of Java Code</div></div>
+                <div class="stat-box"><div class="stat-num">52</div><div class="stat-lbl">Java Files</div></div>
+                <div class="stat-box"><div class="stat-num">7</div><div class="stat-lbl">Test Files</div></div>
             </div>
 
             <div class="pm-card info">
                 <div class="accent"></div>
                 <h4>Code Distribution</h4>
                 <div class="code-dist">
-                    <div class="dist-item"><div class="dist-name">Logic Layer</div><div class="dist-pct">~35%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:35%"></div></div></div>
-                    <div class="dist-item"><div class="dist-name">Presentation Layer</div><div class="dist-pct">~30%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:30%"></div></div></div>
-                    <div class="dist-item"><div class="dist-name">Database Layer</div><div class="dist-pct">~20%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:20%"></div></div></div>
-                    <div class="dist-item"><div class="dist-name">Objects &amp; Exceptions</div><div class="dist-pct">~15%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:15%"></div></div></div>
+                    <div class="dist-item"><div class="dist-name">Logic Layer</div><div class="dist-pct">~35 to 40%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:38%"></div></div></div>
+                    <div class="dist-item"><div class="dist-name">Presentation Layer</div><div class="dist-pct">~30 to 35%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:33%"></div></div></div>
+                    <div class="dist-item"><div class="dist-name">Database Layer</div><div class="dist-pct">~20 to 25%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:23%"></div></div></div>
+                    <div class="dist-item"><div class="dist-name">Models &amp; Exceptions</div><div class="dist-pct">~10 to 15%</div><div class="dist-bar"><div class="dist-bar-fill" style="width:13%"></div></div></div>
                 </div>
-                <p><strong>Logic Layer:</strong> Managers, validators, reporting, chart services</p>
-                <p><strong>Presentation Layer:</strong> UI tabs, controllers, models, views</p>
-                <p><strong>Database Layer:</strong> SQLite implementation, persistence, stubs</p>
-                <p><strong>Testing:</strong> ~2,400 lines across unit, integration, and system tests</p>
-                <p><strong>Objects &amp; Exceptions:</strong> DTOs, custom exceptions, validators</p>
+
+                <p><strong>Logic Layer:</strong> Business services, validation logic, and core rules</p>
+                <p><strong>Presentation Layer:</strong> Android activities, adapters, and UI interaction logic</p>
+                <p><strong>Database Layer:</strong> Repositories, SQLite helpers, and persistence implementations</p>
+                <p><strong>Models &amp; Exceptions:</strong> Domain objects and validation structures</p>
+                <p><strong>Testing:</strong> Unit, integration, and UI tests developed throughout the project</p>
             </div>
 
-            <h3 class="label">What Went Right</h3>
+            <h3 class="label">What Went Well</h3>
             <div class="pm-card good">
                 <div class="accent"></div>
-                <h4>Successes</h4>
                 <ul>
-                    <li><strong>Strong Foundation:</strong> Built solid logic, persistence, and UI layer foundations early on</li>
-                    <li><strong>Major Refactoring Success:</strong> Successfully restructured DTOs and cleaned up architecture, making the codebase much more intuitive</li>
-                    <li><strong>Improved Team Workflow:</strong> Better branch naming consistency and more organized git practices over time</li>
-                    <li><strong>Testing Improvements:</strong> Significantly increased integration test coverage and added comprehensive unit tests</li>
-                    <li><strong>Technical Debt Cleanup:</strong> Moved string literals to resource files, implemented validator classes, and eliminated code duplication</li>
-                    <li><strong>Team Collaboration:</strong> Had excellent late-night team moments working together to solve critical issues</li>
-                    <li><strong>Documentation:</strong> Created and maintained clean architecture documentation throughout development</li>
+                    <li><strong>Team Growth:</strong> Collaboration improved significantly in later iterations</li>
+                    <li><strong>Refactoring:</strong> We actively cleaned technical debt instead of ignoring it</li>
+                    <li><strong>Better Git Workflow:</strong> Structured branching reduced merge issues</li>
+                    <li><strong>Testing:</strong> Shifted from last minute testing to continuous testing</li>
+                    <li><strong>Task Management:</strong> Smaller tasks made progress easier to track</li>
+                    <li><strong>Adaptability:</strong> Adjusted plans when features became more complex</li>
                 </ul>
             </div>
 
             <h3 class="label">What Went Wrong</h3>
             <div class="pm-card bad">
                 <div class="accent"></div>
-                <h4>Challenges</h4>
                 <ul>
-                    <li><strong>Version Control Issues:</strong> Early iterations had messy commits, inconsistent branch naming, and working branches expanding beyond their goals</li>
-                    <li><strong>Time Management:</strong> Consistently underestimated task complexity and worked too close to deadlines, leading to burnout</li>
-                    <li><strong>Database Implementation Challenges:</strong> Encountered significant issues requiring major DTO refactoring, causing delays and complexity</li>
-                    <li><strong>Copy-Paste Code Problems:</strong> Struggled with code duplication and merging difficulties in early iterations</li>
-                    <li><strong>Planning Difficulties:</strong> Relied heavily on developer tasks over user stories, making task division and progress tracking inconsistent</li>
-                    <li><strong>Documentation Gaps:</strong> Didn't track changes well during iterations, requiring end-of-iteration discussions to figure out what changed</li>
-                    <li><strong>Overambitious Estimates:</strong> Huge overestimation of task completion times, especially in iteration 2</li>
+                    <li><strong>Late Start:</strong> Took too long to begin real development</li>
+                    <li><strong>Poor Planning:</strong> Early estimates were unrealistic</li>
+                    <li><strong>Branching Issues:</strong> Early Git usage caused messy merges</li>
+                    <li><strong>Communication Gaps:</strong> Limited check-ins caused misalignment</li>
+                    <li><strong>Large Tasks:</strong> Features were not broken down properly</li>
+                    <li><strong>Rushed Deadlines:</strong> Early work was done too close to deadlines</li>
                 </ul>
             </div>
 
-            <h3 class="label">What We'd Do Differently</h3>
+            <h3 class="label">What We Would Do Differently</h3>
             <div class="pm-card neutral">
                 <div class="accent"></div>
-                <h4>Retrospective</h4>
-                <p><strong>Better Planning:</strong> Create more developer tasks upfront rather than making them as we go. Establish clearer branch naming standards from the beginning and stick to them consistently.</p>
-                <p><strong>Documentation:</strong> Track changes better throughout iterations instead of trying to remember everything at the end. Take notes during development rather than discussing changes as a group after the fact.</p>
-                <p><strong>Timeline Management:</strong> Start major tasks earlier and avoid rushing to meet deadlines. Push to main earlier in the iteration rather than doing everything last minute.</p>
-                <p><strong>Architecture Decisions:</strong> Think more carefully about DTO structure and database design upfront to avoid major refactoring later. Consider the implications of object relationships before implementation.</p>
+                <ul>
+                    <li>Start development immediately after Iteration 0</li>
+                    <li>Define project structure clearly at the beginning</li>
+                    <li>Use a proper Git workflow from day one</li>
+                    <li>Break tasks into small issues early</li>
+                    <li>Have regular team check-ins during the week</li>
+                    <li>Test continuously instead of at the end</li>
+                </ul>
             </div>
 
-            <h3 class="label">Time Analysis</h3>
+            <h3 class="label">Time &amp; Challenges</h3>
             <div class="pm-card warn">
                 <div class="accent"></div>
-                <h4>Time Breakdown</h4>
-                <p><strong>Most time-consuming tasks:</strong> Major DTO refactoring due to database implementation issues, technical debt cleanup, and database development with inconsistent success rates</p>
-                <p><strong>Consistent time spent:</strong> Team worked at "top-gear" throughout the project with relatively consistent effort across iterations</p>
-                <p><strong>Surprises:</strong> Huge overestimation of task completion times in iteration 2, though some features were pushed to iteration 3. Time estimation for iteration 3 was inflated due to technical debt feedback and pushed features</p>
-                <p><strong>Velocity insights:</strong> Despite planning challenges, the team maintained consistent work pace and successfully adjusted estimates based on previous iteration learnings</p>
+                <p><strong>Most time-consuming work:</strong> Fixing technical debt, database and model refactoring, and Android UI issues</p>
+                <p><strong>Key challenge:</strong> Tasks that seemed small often became much larger than expected</p>
+                <p><strong>Learning:</strong> We improved estimation by adding buffer time and breaking work into smaller pieces</p>
+            </div>
+
+            <h3 class="label">Design Decisions &amp; Technical Debt</h3>
+            <div class="pm-card info">
+                <div class="accent"></div>
+                <p><strong>Strong decisions:</strong> Applying SOLID principles, separating layers properly, and improving data modeling</p>
+                <p><strong>Early issues:</strong> SRP violations, tight coupling between UI and logic, and weak domain design</p>
+                <p><strong>Resolution:</strong> Most issues were fixed through refactoring in later iterations</p>
             </div>
 
             <h3 class="label">Lessons Learned</h3>
             <div class="pm-card info">
                 <div class="accent"></div>
-                <h4>Key Takeaways</h4>
-                <p><strong>About team development:</strong> Learned the importance of consistent version control practices and clear communication. Late-night team collaboration sessions, while stressful, demonstrated strong team cohesion and problem-solving abilities.</p>
-                <p><strong>Start doing:</strong> Create comprehensive developer tasks before starting work, implement better documentation practices during development, and establish clearer architectural planning upfront</p>
-                <p><strong>Keep doing:</strong> Maintaining consistent work pace, thorough technical debt cleanup, comprehensive testing, and team collaboration during critical moments</p>
-                <p><strong>Stop doing:</strong> Working too close to deadlines, inconsistent branch naming, expanding working branches beyond their initial scope, and relying too heavily on post-iteration discussions for tracking changes</p>
-            </div>
-
-            <h3 class="label">How Our Plan Changed</h3>
-            <div class="pm-card neutral">
-                <div class="accent"></div>
-                <h4>Plan Evolution</h4>
-                <p><strong>Features:</strong> Needed to cut out two features due to time constraints but we were able to follow through with the rest of our planning.</p>
-                <p><strong>User Stories:</strong> Needed to cut out the user stories strongly associated with the two eliminated features, and discovered that some user stories became functionally duplicates with others, and so were eliminated as well.</p>
-                <p><strong>Generally:</strong> Our plan remained largely the same as our initial outline, minus those two features (which were deemed low priority early on in development), and we feel that our vision was realistic and has been fulfilled!</p>
-            </div>
-
-            <h3 class="label">Looking Back at Our Goals This Iteration</h3>
-            <div class="pm-card good">
-                <div class="accent"></div>
-                <h4>Iteration Goals Review</h4>
-                <p><strong>Creating Developer Tasks Before Starting:</strong> Largely, yes, we made sure to create all our technical debt tasks before starting them. As the end of the iteration got closer however, we needed to make more developer tasks to accommodate for new bugs, necessary additions, and required design changes. We still feel that we accomplished this goal, although some adjustment later into the iteration was necessary as unexpected tasks came up.</p>
-                <p><strong>Reporting Feature and Inventory Update:</strong> Yes! We were able to create and test three new logic layer classes to facilitate the synchronization of inventory and transactions, the creation of our charts, and, as a bonus, the alert system backend. Transaction records and inventory are consistent, our charts are beautiful, and the alert system contains all the expected and up-to-date data.</p>
-                <p><strong>Presentation Cleanup:</strong> Our once very large presentation layer classes have been split into controller/tab/model/view files to separate UI layout, logic interaction, and functionality. We find it much easier now to navigate around our presentation layer and this change really was helpful when we were writing our system and acceptance tests.</p>
+                <ul>
+                    <li>Starting early matters more than perfect planning</li>
+                    <li>Good Git practices save a lot of time</li>
+                    <li>Small tasks are easier to manage than large ones</li>
+                    <li>Testing should be continuous</li>
+                    <li>Communication is just as important as coding</li>
+                    <li>Technical debt should never be ignored</li>
+                </ul>
             </div>
 
         </section>
