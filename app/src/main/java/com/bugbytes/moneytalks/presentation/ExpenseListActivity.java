@@ -10,6 +10,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -211,9 +212,24 @@ public class ExpenseListActivity extends AppCompatActivity implements ExpenseAda
     {
         try
         {
-            expenseService.deleteExpense(expense);
-            Toast.makeText(this, "Deleted: " + expense.getName(), Toast.LENGTH_SHORT).show();
-            loadExpenses();
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete Category")
+                    .setMessage("Are you sure you want to delete \"" + expense.getName() + "\"?")
+                    .setPositiveButton("Delete", (dialog, which) ->
+                    {
+                        try
+                        {
+                            expenseService.deleteExpense(expense);
+                            Toast.makeText(this, "Deleted Expense: " + expense.getName(), Toast.LENGTH_SHORT).show();
+                            loadExpenses();
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(this, "Failed To Delete Expense", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         }
         catch (IllegalArgumentException e)
         {
