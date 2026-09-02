@@ -68,8 +68,8 @@ public class MoneyTalksApp extends Application
         }
 
         //centralize default content population, only if both are empty
-        DefaultContent defaultContent = new DefaultContent();
-        defaultContent.populate(expenseRepository, categoryRepository);
+//        DefaultContent defaultContent = new DefaultContent();
+//        defaultContent.populate(expenseRepository, categoryRepository);
 
         CategoryValidator categoryValidator = new CategoryValidator(categoryRepository);
         categoryService = new CategoryServiceImpl(categoryRepository, categoryValidator, expenseRepository);
