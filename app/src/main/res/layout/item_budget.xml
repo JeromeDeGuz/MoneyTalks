@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:minHeight="56dp"
-    android:paddingStart="12dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="12dp"
-    android:paddingBottom="10dp">
+    android:minHeight="64dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
 
     <!--Category name-->
     <TextView
@@ -16,8 +16,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="Food"
-        android:textSize="16sp" />
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        tools:text="Food" />
 
     <!--Budget amount-->
     <TextView
@@ -26,8 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:gravity="center"
-        android:text="0.00"
-        android:textSize="16sp" />
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="$500.00" />
 
     <!--Spent this month-->
     <TextView
@@ -36,17 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:gravity="center"
-        android:text="0.00"
-        android:textSize="16sp" />
+        android:textColor="@color/error"
+        android:textSize="16sp"
+        tools:text="$120.00" />
 
     <!--Edit budget button-->
     <ImageButton
         android:id="@+id/btnEditBudget"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Edit Budget"
-        android:padding="8dp"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@android:drawable/ic_menu_edit"
+        app:tint="?attr/colorPrimary" />
 </LinearLayout>

@@ -25,12 +25,8 @@ public class SettingsActivity extends AppCompatActivity
 
         LinearLayout btnCategorySettings = findViewById(R.id.btnCategorySettings);
         LinearLayout btnBudgetSettings = findViewById(R.id.btnBudgetSettings);
-        LinearLayout btnLightMode = findViewById(R.id.btnLightMode);
-        LinearLayout btnDarkMode = findViewById(R.id.btnDarkMode);
         Button btnBackSettings = findViewById(R.id.btnBackSettings);
 
-        com.google.android.material.card.MaterialCardView cardLightMode = findViewById(R.id.cardLightMode);
-        com.google.android.material.card.MaterialCardView cardDarkMode = findViewById(R.id.cardDarkMode);
 
         btnCategorySettings.setOnClickListener(v ->
         {
@@ -44,24 +40,9 @@ public class SettingsActivity extends AppCompatActivity
             startActivity(intent);
         });
 
-        btnLightMode.setOnClickListener(v ->
-        {
-            saveTheme(AppCompatDelegate.MODE_NIGHT_NO);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            updateActiveIndicator(cardLightMode, cardDarkMode, AppCompatDelegate.MODE_NIGHT_NO);
-        });
-
-        btnDarkMode.setOnClickListener(v ->
-        {
-            saveTheme(AppCompatDelegate.MODE_NIGHT_YES);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            updateActiveIndicator(cardLightMode, cardDarkMode, AppCompatDelegate.MODE_NIGHT_YES);
-        });
-
         // Show which mode is currently saved
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         int savedMode = prefs.getInt(KEY_THEME, AppCompatDelegate.MODE_NIGHT_NO);
-        updateActiveIndicator(cardLightMode, cardDarkMode, savedMode);
 
         btnBackSettings.setOnClickListener(v ->
         {

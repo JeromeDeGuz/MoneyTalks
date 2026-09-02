@@ -20,11 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".presentation.AddAndEditExpense"
-            android:exported="false"
-            android:label="@string/addNew" />
-
+        <activity android:name=".presentation.AddAndEditExpense"/>
         <activity android:name=".presentation.SettingsActivity" />
         <activity android:name=".presentation.ManageCategoriesActivity" />
         <activity android:name=".presentation.BudgetActivity" />
