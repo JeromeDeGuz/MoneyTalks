@@ -38,12 +38,7 @@ public class AddAndEditExpense extends AppCompatActivity
     private EditText etDate;
     private EditText etNotes;
     private AutoCompleteTextView autoCompleteCategory;
-    private Button btnSave;
-    private Button btnCancel;
-    private ImageButton btnAddCategory;
 
-    private List<String> categoryNames;
-    private ArrayAdapter<String> categoryAdapter;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private boolean isEditMode = false;
@@ -61,9 +56,9 @@ public class AddAndEditExpense extends AppCompatActivity
         etDate = findViewById(R.id.etDate);
         etNotes = findViewById(R.id.etNotes);
         autoCompleteCategory = findViewById(R.id.autoCompleteCategory);
-        btnSave = findViewById(R.id.btnSave);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnAddCategory = findViewById(R.id.btnAddCategory);
+        Button btnSave = findViewById(R.id.btnSave);
+        Button btnCancel = findViewById(R.id.btnCancel);
+        ImageButton btnAddCategory = findViewById(R.id.btnAddCategory);
 
         MoneyTalksApp app = (MoneyTalksApp) getApplication();
         loadCategories(app);
@@ -104,6 +99,8 @@ public class AddAndEditExpense extends AppCompatActivity
             btnSave.setText("Save");
         }
 
+        etDate.setText(LocalDate.now().format(DATE_FORMATTER));
+
         btnSave.setOnClickListener(v ->
         {
             saveOrUpdateExpense();
@@ -114,13 +111,13 @@ public class AddAndEditExpense extends AppCompatActivity
     private void loadCategories(MoneyTalksApp app)
     {
         List<Category> categories = app.getCategoryService().getAllCategories();
-        categoryNames = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
         for (Category c : categories)
         {
             categoryNames.add(c.getName());
         }
 
-        categoryAdapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, categoryNames);
         autoCompleteCategory.setAdapter(categoryAdapter);
     }

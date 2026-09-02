@@ -44,8 +44,12 @@ public class MoneyTalksApp extends Application
         super.onCreate();
 
         SharedPreferences prefs = getSharedPreferences("moneytalks_prefs", MODE_PRIVATE);
-        int savedMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(savedMode);
+
+        // Save system mode as the preference
+        prefs.edit().putInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM).apply();
+
+        // Apply the system mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
         final boolean useSqliteDB = true;
 
